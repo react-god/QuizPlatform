@@ -3,14 +3,18 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import ClassRoomPage from "./component/ClassRoomPage";
+import { ThemeProvider } from "@emotion/react";
+import { theme } from "./theme";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
 );
 root.render(
   <React.StrictMode>
-    {/* TODO(민성): App으로 수정하기. CRUD 테스트를 위해 임시로 ClassRoomPage를 루트 페이지로 보이게 했습니다. */}
-    <ClassRoomPage />
+    <ThemeProvider theme={theme}>
+      {/* TODO(민성): App으로 수정하기. CRUD 테스트를 위해 임시로 ClassRoomPage를 루트 페이지로 보이게 했습니다. */}
+      <ClassRoomPage />
+    </ThemeProvider>
   </React.StrictMode>
 );
 
