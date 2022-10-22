@@ -1,5 +1,4 @@
 import { User, user1 } from "./user.js";
-import { ClassRoom, room1 } from "./classroom.js";
 
 // --------------- INTERFACE ---------------
 
@@ -12,7 +11,6 @@ export interface Quiz {
   id: String;
   owner: User;
   name: String;
-  classRoom: ClassRoom;
   items: Array<QuizItem>;
 }
 
@@ -128,7 +126,6 @@ const quiz1: Quiz = {
   id: "b17c80f1",
   owner: user1,
   name: "네트워크 이론1",
-  classRoom: room1,
   items: [quizItem1_1, quizItem1_2, quizItem1_3],
 };
 
