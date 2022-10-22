@@ -15,7 +15,6 @@ export interface Quiz {
 }
 
 export interface QuizItem {
-  index: number;
   question: String;
   type: QuizType;
   answer: QuizAnswer;
@@ -32,7 +31,6 @@ export interface QuizAnswer {
 
 export interface QuizOption {
   title: String;
-  index: number;
   imageUrl?: String;
 }
 
@@ -45,7 +43,6 @@ const quizAnswer1_1: QuizAnswer = {
 
 // 첫번째 퀴즈의 첫번째 질문
 const quizItem1_1: QuizItem = {
-  index: 0,
   question: "세상에서 제일 잘생긴 사람은?",
   type: QuizType.essay,
   answer: quizAnswer1_1,
@@ -55,22 +52,18 @@ const quizItem1_1: QuizItem = {
 // 첫번째 퀴즈의 두번째 질문의 첫번째 보기
 const quizOption1_2_1: QuizOption = {
   title: "1",
-  index: 0,
 };
 
 const quizOption1_2_2: QuizOption = {
   title: "2",
-  index: 1,
 };
 
 const quizOption1_2_3: QuizOption = {
   title: "3",
-  index: 2,
 };
 
 const quizOption1_2_4: QuizOption = {
   title: "4",
-  index: 3,
 };
 
 // 첫번째 퀴즈의 두번째 질문의 답
@@ -80,7 +73,6 @@ const quizAnswer1_2: QuizAnswer = {
 
 // 첫번째 퀴즈의 두번째 질문
 const quizItem1_2: QuizItem = {
-  index: 0,
   question: "1 + 1 = ?",
   type: QuizType.choice,
   answer: quizAnswer1_2,
@@ -96,27 +88,22 @@ const quizAnswer1_3: QuizAnswer = {
 
 const quizOption1_3_1: QuizOption = {
   title: "1",
-  index: 0,
 };
 
 const quizOption1_3_2: QuizOption = {
   title: "2",
-  index: 1,
 };
 
 const quizOption1_3_3: QuizOption = {
   title: "3",
-  index: 2,
 };
 
 const quizOption1_3_4: QuizOption = {
   title: "4",
-  index: 3,
 };
 
 // 첫번째 퀴즈의 세번째 질문
 const quizItem1_3: QuizItem = {
-  index: 0,
   question: "다음 중 홀수인 것은?",
   type: QuizType.choice,
   answer: quizAnswer1_3,
