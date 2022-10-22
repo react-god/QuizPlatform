@@ -17,88 +17,83 @@ export interface Quiz {
 export interface QuizItem {
   question: String;
   type: QuizType;
-  answer: QuizAnswer;
   options: Array<QuizOption>;
+  essayAnswer?: String;
   imageUrl?: String;
 }
 
-export interface QuizAnswer {
-  /** Assert not null if QuizItem type is choice */
-  choice?: Array<number>;
-  /** Assert not null if QuizItem type is essay */
-  essay?: String;
-}
-
 export interface QuizOption {
+  uuid: String;
   title: String;
+  isAnswer: boolean;
   imageUrl?: String;
 }
 
 // --------------- INSTANCE ---------------
 
-// 첫번째 퀴즈의 첫번째 질문의 답
-const quizAnswer1_1: QuizAnswer = {
-  essay: "권대현",
-};
-
 // 첫번째 퀴즈의 첫번째 질문
 const quizItem1_1: QuizItem = {
   question: "세상에서 제일 잘생긴 사람은?",
   type: QuizType.essay,
-  answer: quizAnswer1_1,
+  essayAnswer: "권대현",
   options: [],
 };
 
 // 첫번째 퀴즈의 두번째 질문의 첫번째 보기
 const quizOption1_2_1: QuizOption = {
+  uuid: "dijfw2310",
+  isAnswer: false,
   title: "1",
 };
 
 const quizOption1_2_2: QuizOption = {
+  uuid: "dijfw2311",
+  isAnswer: true,
   title: "2",
 };
 
 const quizOption1_2_3: QuizOption = {
+  uuid: "dijfw2312",
+  isAnswer: false,
   title: "3",
 };
 
 const quizOption1_2_4: QuizOption = {
+  uuid: "dijfw2313",
+  isAnswer: false,
   title: "4",
-};
-
-// 첫번째 퀴즈의 두번째 질문의 답
-const quizAnswer1_2: QuizAnswer = {
-  choice: [1],
 };
 
 // 첫번째 퀴즈의 두번째 질문
 const quizItem1_2: QuizItem = {
   question: "1 + 1 = ?",
   type: QuizType.choice,
-  answer: quizAnswer1_2,
   options: [quizOption1_2_1, quizOption1_2_2, quizOption1_2_3, quizOption1_2_4],
-};
-
-// 첫번째 퀴즈의 세번째 질문의 답
-const quizAnswer1_3: QuizAnswer = {
-  choice: [0, 2],
 };
 
 // 세번 어저구 저저구 보기
 
 const quizOption1_3_1: QuizOption = {
+  uuid: "dijfw2314",
+  isAnswer: true,
   title: "1",
 };
 
 const quizOption1_3_2: QuizOption = {
+  uuid: "dijfw2315",
+  isAnswer: false,
   title: "2",
 };
 
 const quizOption1_3_3: QuizOption = {
+  uuid: "dijfw2317",
+  isAnswer: true,
   title: "3",
 };
 
 const quizOption1_3_4: QuizOption = {
+  uuid: "dijfw2319",
+  isAnswer: false,
   title: "4",
 };
 
@@ -106,7 +101,6 @@ const quizOption1_3_4: QuizOption = {
 const quizItem1_3: QuizItem = {
   question: "다음 중 홀수인 것은?",
   type: QuizType.choice,
-  answer: quizAnswer1_3,
   options: [quizOption1_3_1, quizOption1_3_2, quizOption1_3_3, quizOption1_3_4],
 };
 
