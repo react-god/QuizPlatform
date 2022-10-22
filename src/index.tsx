@@ -1,15 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import ClassRoomPage from "./component/ClassRoomPage";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    {/* TODO(민성): App으로 수정하기. CRUD 테스트를 위해 임시로 ClassRoomPage를 루트 페이지로 보이게 했습니다. */}
+    <ClassRoomPage />
   </React.StrictMode>
 );
 

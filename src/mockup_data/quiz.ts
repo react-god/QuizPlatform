@@ -24,8 +24,10 @@ export interface QuizItem {
 }
 
 export interface QuizAnswer {
-  choice?: Array<number>; // assert not null if choice
-  essay?: String; // assert not null if essay
+  /** Assert not null if QuizItem type is choice */
+  choice?: Array<number>;
+  /** Assert not null if QuizItem type is essay */
+  essay?: String;
 }
 
 export interface QuizOption {
@@ -117,7 +119,7 @@ const quizItem1_3: QuizItem = {
   index: 0,
   question: "다음 중 홀수인 것은?",
   type: QuizType.choice,
-  answer: quizAnswer1_2,
+  answer: quizAnswer1_3,
   options: [quizOption1_3_1, quizOption1_3_2, quizOption1_3_3, quizOption1_3_4],
 };
 
