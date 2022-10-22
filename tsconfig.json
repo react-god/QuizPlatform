@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "include": ["src/components", "src/custom.d.ts"],
+    "include": ["src/components", "src/custom.d.ts", "src/mockup_data/*.ts"],
     /* 기본 옵션
      * ------------------------------------------------------------------------------------------------------------------------------------------------ */
     // "incremental": true,                   /* 증분 컴파일 활성화 */
