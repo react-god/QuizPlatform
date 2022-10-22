@@ -1,4 +1,4 @@
-import { User, user1 } from "./user.js";
+import { User, user1 } from "./user";
 
 // --------------- INTERFACE ---------------
 
