@@ -24,8 +24,10 @@ export interface QuizItem {
 }
 
 export interface QuizAnswer {
-  choice?: Array<number>; // assert not null if choice
-  essay?: String; // assert not null if essay
+  /** Assert not null if QuizItem type is choice */
+  choice?: Array<number>;
+  /** Assert not null if QuizItem type is essay */
+  essay?: String;
 }
 
 export interface QuizOption {
