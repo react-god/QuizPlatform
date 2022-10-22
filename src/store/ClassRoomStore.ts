@@ -17,7 +17,7 @@ class ClassRoomStore {
   }
 
   removeClassRoom(classRoomId: String) {
-    this.rooms = this.rooms.filter((room) => room.id != classRoomId);
+    this.rooms = this.rooms.filter((room) => room.id !== classRoomId);
   }
 }
 
