@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { Key, useState } from "react";
 import { observer } from "mobx-react";
 import { user1 } from "../mockup_data/user";
 import { classRoomStore } from "../store/ClassRoomStore";
@@ -26,7 +26,7 @@ const ClassRoomPage = () => {
       <Button onClick={onAddClick}>추가</Button>
       {classRoomStore.rooms.map((room) => {
         return (
-          <div key={room.id}>
+          <div key={room.id as Key}>
             {room.name}
             <Button onClick={() => onRemoveClick(room)}>삭제</Button>
           </div>
