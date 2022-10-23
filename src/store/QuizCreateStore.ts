@@ -47,6 +47,12 @@ class QuizCreateStore {
   }
 
   submitQuiz() {
+    this.quiz.items = this.quiz.items.map<QuizItem>((item) => {
+      if (item.type === QuizType.essay) {
+        item.options = [];
+      }
+      return item;
+    });
     console.log(JSON.stringify(this.quiz));
     // TODO(민성): ClassRoomStore에 저장하고 홈화면으로 전환하기
   }
