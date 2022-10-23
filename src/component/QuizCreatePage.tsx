@@ -105,6 +105,7 @@ const NavRail = (props: NavRailProps) => {
           {props.items.map((item, index) => {
             return (
               <NavRailItem
+                key={item.uuid as string}
                 number={index + 1}
                 highlighted={props.isItemCompleted(item)}
                 isCurrentItem={props.currentItemIndex === index}

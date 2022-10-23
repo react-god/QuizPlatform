@@ -4,6 +4,7 @@ import { user1 } from "../mockup_data/user";
 import { makeAutoObservable } from "mobx";
 
 const initQuizItem: QuizItem = {
+  uuid: "dsi29gj3f",
   question: "",
   type: QuizType.choice,
   options: [
@@ -46,6 +47,7 @@ class QuizCreateStore {
   }
 
   submitQuiz() {
+    console.log(JSON.stringify(this.quiz));
     // TODO(민성): ClassRoomStore에 저장하고 홈화면으로 전환하기
   }
 
@@ -89,7 +91,7 @@ class QuizCreateStore {
   }
 
   addQuizItem() {
-    this.quiz.items = [...this.quiz.items, initQuizItem];
+    this.quiz.items = [...this.quiz.items, { ...initQuizItem, uuid: uuidv4() }];
     this.currentItemIndex = this.quiz.items.length - 1;
   }
 
