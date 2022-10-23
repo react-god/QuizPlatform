@@ -1,18 +1,18 @@
 import {
   Button,
   Card,
-  Checkbox,
   Chip,
   IconButton,
-  Paper,
+  List,
   Stack,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
-import { Add, Delete, Padding } from "@mui/icons-material";
+import "../css/QuizCreatePage.css";
+import { Add, Delete } from "@mui/icons-material";
 import { observer } from "mobx-react";
-import { useReducer, useState } from "react";
+import { useReducer, useRef, useState } from "react";
 import { QuizItem, QuizOption, QuizType } from "../mockup_data/quiz";
 import QuizCreateStore from "../store/QuizCreateStore";
 
@@ -84,10 +84,11 @@ const NavRail = (props: NavRailProps) => {
   const theme = useTheme();
 
   return (
-    <Paper
-      square={true}
-      elevation={0}
-      style={{ backgroundColor: theme.palette.grey[100], paddingTop: "8px" }}
+    <List
+      style={{
+        backgroundColor: theme.palette.grey[100],
+        paddingTop: "8px",
+      }}
     >
       <Stack
         direction="column"
@@ -95,7 +96,12 @@ const NavRail = (props: NavRailProps) => {
         style={{ height: "100%" }}
       >
         {/* TODO(민성): 뒤로가기 버튼 만들기 */}
-        <Stack direction="column" alignItems="center">
+        <Stack
+          id="noneScrollBar"
+          direction="column"
+          alignItems="center"
+          style={{ overflowY: "scroll" }}
+        >
           {props.items.map((item, index) => {
             return (
               <NavRailItem
@@ -115,7 +121,7 @@ const NavRail = (props: NavRailProps) => {
           onClick={() => props.onSubmitClick()}
         />
       </Stack>
-    </Paper>
+    </List>
   );
 };
 
