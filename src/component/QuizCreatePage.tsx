@@ -7,12 +7,13 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import "../css/QuizCreatePage.css";
 import { Add, Delete } from "@mui/icons-material";
 import { observer } from "mobx-react";
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { QuizItem, QuizOption, QuizType } from "../mockup_data/quiz";
 import QuizCreateStore from "../store/QuizCreateStore";
 
@@ -335,8 +336,20 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
   // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
   // hack을 하고있다. 추후에 고칠 필요가 있다.
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
-
+  let pageMargin: string;
   let optionListOrEssay: JSX.Element;
+
+  const isMobile = useMediaQuery(`(max-width: 780px)`);
+  const isTablet = useMediaQuery(`(max-width: 960px)`);
+
+  if (isMobile) {
+    pageMargin = "40px";
+  } else if (isTablet) {
+    pageMargin = "120px";
+  } else {
+    pageMargin = "240px";
+  }
+
   switch (currentQuizItem.type) {
     case QuizType.choice:
       optionListOrEssay = (
@@ -389,7 +402,7 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
       <Stack
         direction="column"
         width="100%"
-        style={{ marginLeft: "120px", marginRight: "120px" }}
+        style={{ marginLeft: pageMargin, marginRight: pageMargin }}
       >
         <QuestionTitle
           index={store.currentItemIndex}
