@@ -202,8 +202,6 @@ interface OptionBarListProps {
 }
 
 const OptionBarList = (props: OptionBarListProps) => {
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
-
   return (
     <>
       {props.options.map((option, optionIndex) => {
@@ -213,15 +211,11 @@ const OptionBarList = (props: OptionBarListProps) => {
             title={option.title}
             isAnswer={option.isAnswer}
             showRemoveButton={props.showRemoveButton}
-            onTitleChange={(title) => {
-              props.onTitleChange(optionIndex, title);
-              forceUpdate();
-            }}
+            onTitleChange={(title) => props.onTitleChange(optionIndex, title)}
             onRemoveClick={() => props.onRemoveClick(optionIndex)}
-            onAnswerClick={(isAnswer) => {
-              props.onAnswerClick(optionIndex, isAnswer);
-              forceUpdate();
-            }}
+            onAnswerClick={(isAnswer) =>
+              props.onAnswerClick(optionIndex, isAnswer)
+            }
             onImageClick={() => {
               // TODO
             }}
@@ -256,6 +250,9 @@ interface QuizCreatePageProps {
 const QuizCreatePage = (props: QuizCreatePageProps) => {
   const [store] = useState(new QuizCreateStore(props.quizName));
   const currentQuizItem = store.currentQuizItem;
+  // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
+  // hack을 하고있다. 추후에 고칠 필요가 있다.
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   let optionListOrEssay: JSX.Element;
   switch (currentQuizItem.type) {
@@ -265,12 +262,18 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
           options={store.currentQuizItem.options}
           showAddButton={store.showQuizOptionAddButton}
           showRemoveButton={store.showRemoveQuizOptionButton}
-          onTitleChange={(optionIndex, title) =>
-            store.updateQuizOption(optionIndex, title)
-          }
-          onAnswerClick={(optionIndex, isAnswer) =>
-            store.updateQuizOption(optionIndex, undefined, isAnswer)
-          }
+          onTitleChange={(optionIndex, title) => {
+            store.updateQuizOption(optionIndex, title);
+            // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
+            // hack을 하고있다. 추후에 고칠 필요가 있다.
+            forceUpdate();
+          }}
+          onAnswerClick={(optionIndex, isAnswer) => {
+            store.updateQuizOption(optionIndex, undefined, isAnswer);
+            // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
+            // hack을 하고있다. 추후에 고칠 필요가 있다.
+            forceUpdate();
+          }}
           onAddButtonClick={() => store.addQuizOption()}
           onRemoveClick={(optionIndex) => store.removeQuizOption(optionIndex)}
         />
