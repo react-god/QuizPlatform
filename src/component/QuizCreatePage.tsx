@@ -10,11 +10,13 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete, Padding } from "@mui/icons-material";
 import { observer } from "mobx-react";
 import { useReducer, useState } from "react";
 import { QuizItem, QuizOption, QuizType } from "../mockup_data/quiz";
 import QuizCreateStore from "../store/QuizCreateStore";
+
+const textFieldRightMargin = "80px";
 
 interface SubmitButtonProps {
   enabled: boolean;
@@ -25,6 +27,8 @@ const SubmitButton = (props: SubmitButtonProps) => {
   return (
     <Button
       variant="contained"
+      style={{ margin: "8px" }}
+      disableElevation={true}
       onClick={() => props.onClick()}
       disabled={!props.enabled}
     >
@@ -43,6 +47,13 @@ const NavRailItem = (props: NavRailItemProps) => {
   return (
     <Button
       variant="contained"
+      style={{
+        marginTop: "4px",
+        marginBottom: "4px",
+        marginLeft: "12px",
+        marginRight: "12px",
+      }}
+      disableElevation={true}
       color={props.highlighted ? "secondary" : "inherit"}
       onClick={() => props.onClick()}
     >
@@ -61,13 +72,20 @@ interface NavRailProps {
 }
 
 const NavRail = (props: NavRailProps) => {
+  const theme = useTheme();
+
   return (
-    <Paper>
+    <Paper
+      square={true}
+      elevation={0}
+      style={{ backgroundColor: theme.palette.grey[100], paddingTop: "8px" }}
+    >
       <Stack
         direction="column"
         justifyContent="space-between"
         style={{ height: "100%" }}
       >
+        {/* TODO(민성): 뒤로가기 버튼 만들기 */}
         <Stack direction="column" alignItems="center">
           {props.items.map((item, index) => {
             return (
@@ -100,27 +118,37 @@ interface QuestionTitleProps {
 }
 
 const QuestionTitle = (props: QuestionTitleProps) => {
+  const fontSize = 24;
+
   return (
-    <>
-      <Typography variant="h2">
-        {props.index + 1}
-        <TextField
-          placeholder="문제 질문 입력..."
-          margin="normal"
-          size="small"
-          variant="standard"
-          value={props.question}
-          onChange={(e) => props.onQuestionChange(e.target.value)}
-        />
-        {props.showRemoveButton ? (
-          <IconButton onClick={() => props.onRemoveClick()}>
-            <Delete color="error" />
-          </IconButton>
-        ) : (
-          <></>
-        )}
-      </Typography>
-    </>
+    <Typography variant="h2" style={{ paddingTop: "80px", display: "flex" }}>
+      {props.index + 1}
+      <TextField
+        placeholder="문제 질문 입력…"
+        margin="normal"
+        size="small"
+        variant="standard"
+        value={props.question}
+        inputProps={{ style: { fontSize: fontSize } }}
+        InputLabelProps={{ style: { fontSize: fontSize } }}
+        style={{
+          marginLeft: "24px",
+          marginRight: textFieldRightMargin,
+          flexGrow: 1,
+        }}
+        onChange={(e) => props.onQuestionChange(e.target.value)}
+      />
+      {props.showRemoveButton ? (
+        <IconButton
+          onClick={() => props.onRemoveClick()}
+          style={{ marginLeft: "12px", width: "64px" }}
+        >
+          <Delete color="error" />
+        </IconButton>
+      ) : (
+        <></>
+      )}
+    </Typography>
   );
 };
 
@@ -131,9 +159,10 @@ interface OptionChipsProps {
 
 const OptionChips = (props: OptionChipsProps) => {
   return (
-    <div>
+    <div style={{ marginTop: "12px", marginBottom: "20px" }}>
       <Chip
         label="객관식"
+        style={{ marginRight: "8px" }}
         color={props.selectedType === QuizType.choice ? "primary" : "default"}
         onClick={() => props.onChipClick(QuizType.choice)}
       />
@@ -158,28 +187,44 @@ interface OptionBarProps {
 
 const OptioinBar = (props: OptionBarProps) => {
   const theme = useTheme();
-  const cardColor = props.isAnswer
-    ? theme.palette.primary.light
-    : theme.palette.background.default;
+  const answerTextColor = props.isAnswer
+    ? theme.palette.text.primary
+    : theme.palette.grey[700];
 
   return (
     <Card
-      elevation={2}
+      elevation={0}
       style={{
-        padding: "20px",
-        backgroundColor: cardColor,
+        paddingTop: "16px",
+        paddingBottom: "16px",
+        paddingLeft: "12px",
+        paddingRight: "20px",
+        marginBottom: "12px",
+        backgroundColor: theme.palette.grey[200],
+        display: "flex",
       }}
     >
+      <Button
+        variant="contained"
+        color={props.isAnswer ? "secondary" : "inherit"}
+        disableElevation={true}
+        onClick={() => props.onAnswerClick(!props.isAnswer)}
+      >
+        <Typography variant="button" color={answerTextColor}>
+          정답
+        </Typography>
+      </Button>
       <TextField
         variant="standard"
         value={props.title}
-        placeholder="보기 입력..."
+        placeholder="보기 입력…"
+        style={{
+          marginLeft: "12px",
+          marginRight: textFieldRightMargin,
+          flexGrow: 1,
+        }}
         onChange={(e) => props.onTitleChange(e.target.value)}
       ></TextField>
-      <Checkbox
-        checked={props.isAnswer}
-        onClick={() => props.onAnswerClick(!props.isAnswer)}
-      ></Checkbox>
       {props.showRemoveButton ? (
         <IconButton onClick={() => props.onRemoveClick()}>
           <Delete color="error" />
@@ -282,7 +327,8 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
     case QuizType.essay:
       optionListOrEssay = (
         <TextField
-          placeholder="답안 입력..."
+          placeholder="답안 입력…"
+          multiline={true}
           value={currentQuizItem.essayAnswer ?? ""}
           onChange={(e) => store.updateEssayAnswer(e.target.value)}
         />
@@ -291,7 +337,7 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
   }
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" height="100%">
       <NavRail
         items={store.quizItems}
         enableSubmitButton={store.enabledSubmitButton}
@@ -300,7 +346,11 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
         onItemClick={(index) => (store.currentItemIndex = index)}
         onSubmitClick={() => store.submitQuiz()}
       />
-      <Stack direction="column" width="100%" style={{ margin: "60px" }}>
+      <Stack
+        direction="column"
+        width="100%"
+        style={{ marginLeft: "120px", marginRight: "120px" }}
+      >
         <QuestionTitle
           index={store.currentItemIndex}
           question={currentQuizItem.question}
