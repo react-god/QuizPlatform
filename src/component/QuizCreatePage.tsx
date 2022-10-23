@@ -12,7 +12,7 @@ import {
 import "../css/QuizCreatePage.css";
 import { Add, Delete } from "@mui/icons-material";
 import { observer } from "mobx-react";
-import { useReducer, useRef, useState } from "react";
+import { useReducer, useState } from "react";
 import { QuizItem, QuizOption, QuizType } from "../mockup_data/quiz";
 import QuizCreateStore from "../store/QuizCreateStore";
 
@@ -192,6 +192,25 @@ const OptionChips = (props: OptionChipsProps) => {
   );
 };
 
+interface AnswerReasonTextFieldProps {
+  reason: String;
+  onReasonChange: (reason: String) => void;
+}
+
+const AnswerReasonTextField = (props: AnswerReasonTextFieldProps) => {
+  return (
+    <TextField
+      variant="outlined"
+      placeholder="정답 이유 입력…"
+      multiline={true}
+      label="정답 이유"
+      style={{ marginBottom: "16px" }}
+      value={props.reason}
+      onChange={(e) => props.onReasonChange(e.target.value)}
+    ></TextField>
+  );
+};
+
 interface OptionBarProps {
   title: String;
   isAnswer: boolean;
@@ -234,8 +253,8 @@ const OptioinBar = (props: OptionBarProps) => {
       <TextField
         variant="standard"
         value={props.title}
-              placeholder="보기 입력…"
-              multiline={true}
+        placeholder="보기 입력…"
+        multiline={true}
         style={{
           marginLeft: "12px",
           marginRight: textFieldRightMargin,
@@ -346,6 +365,8 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
       optionListOrEssay = (
         <TextField
           placeholder="답안 입력…"
+          variant="filled"
+          label="답안"
           multiline={true}
           value={currentQuizItem.essayAnswer ?? ""}
           onChange={(e) => store.updateEssayAnswer(e.target.value)}
@@ -380,6 +401,10 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
         <OptionChips
           selectedType={currentQuizItem.type}
           onChipClick={(type) => store.updateQuizItemType(type)}
+        />
+        <AnswerReasonTextField
+          reason={currentQuizItem.reason ?? ""}
+          onReasonChange={(reason) => store.updateQuizItemReason(reason)}
         />
         {optionListOrEssay}
       </Stack>

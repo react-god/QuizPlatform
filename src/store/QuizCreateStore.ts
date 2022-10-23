@@ -113,6 +113,10 @@ class QuizCreateStore {
     item.type = newType;
   }
 
+  updateQuizItemReason(reason: String) {
+    this.currentQuizItem.reason = reason.length === 0 ? undefined : reason;
+  }
+
   updateEssayAnswer(answer: String) {
     this.currentQuizItem.essayAnswer = answer;
   }
