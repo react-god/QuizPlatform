@@ -13,11 +13,11 @@ const initQuizItem: QuizItem = {
       title: "",
       isAnswer: true,
     },
-    {
+    ...[...Array(3)].map(() => ({
       uuid: uuidv4(),
       title: "",
       isAnswer: false,
-    },
+    })),
   ],
 };
 
