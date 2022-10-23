@@ -1,0 +1,10 @@
+.sidebar {
+  width: 100px;
+  min-width: 100px;
+  padding: 20px 20px;
+  /* margin: 20px auto 0 auto; */
+  box-shadow: 0 0 6px hsl(210 14% 90%);
+  position: sticky;
+  overflow: auto;
+  height: 100%;
+}
