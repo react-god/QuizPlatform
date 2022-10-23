@@ -60,7 +60,10 @@ const NavRailItem = (props: NavRailItemProps) => {
       color={props.highlighted ? "secondary" : "inherit"}
       onClick={() => props.onClick()}
     >
-      <Typography variant={props.isCurrentItem ? "h6" : "button"}>
+      <Typography
+        variant="button"
+        fontWeight={props.isCurrentItem ? "900" : "400"}
+      >
         {props.number}
       </Typography>
     </Button>
