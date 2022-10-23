@@ -19,6 +19,7 @@ export interface QuizItem {
   question: String;
   type: QuizType;
   options: Array<QuizOption>;
+  reason?: String;
   essayAnswer?: String;
   imageUrl?: String;
 }
@@ -250,6 +251,7 @@ const quiz3 = {
       question: "한성대입구역은 몇호선에 있는 역인가? 숫자만 입력하세요.",
       type: 1,
       options: [],
+      reason: "한성대입구역은 4호선에 위치해있다.",
       essayAnswer: "4",
     },
   ],
@@ -314,6 +316,7 @@ const quiz5 = {
       uuid: "cf8c5709-cc53-4fda-9c7e-e3b58a5f2937",
       question: "1 + 2 x 3 = ?",
       type: 0,
+      reason: "곱셈의 우선순위가 높기 때문에 답은 7이다.",
       options: [
         {
           uuid: "5b866166-f56b-497b-9c56-91ffebf87280",
@@ -524,18 +527,7 @@ const quiz7 = {
       uuid: "7c210a46-c3ff-42c9-9239-19757ba70714",
       question: "은(Silver)의 원소기호를 적으시오.",
       type: 1,
-      options: [
-        {
-          uuid: "982a7167-8216-4328-bae8-83815d38fd10",
-          title: "",
-          isAnswer: true,
-        },
-        {
-          uuid: "cbffdaa2-a840-4180-959f-54953b895418",
-          title: "",
-          isAnswer: false,
-        },
-      ],
+      options: [],
       essayAnswer: "Ag",
     },
   ],
@@ -550,18 +542,7 @@ const quiz8 = {
       uuid: "dsi29gj3f",
       question: "검은색의 색상값은 ? #______ (#을 제외한 6자리만 적으시오)",
       type: 1,
-      options: [
-        {
-          uuid: "1908294b-a863-463e-8def-3e601f681cd1",
-          title: "",
-          isAnswer: true,
-        },
-        {
-          uuid: "f5290a1c-210d-4335-980b-128735e9e2e4",
-          title: "",
-          isAnswer: false,
-        },
-      ],
+      options: [],
       essayAnswer: "000000",
     },
     {
@@ -625,6 +606,7 @@ const quiz9 = {
       uuid: "dsi29gj3f",
       question: "윤도현 밴드 노래가 아닌 것은?",
       type: 0,
+      reason: "Next Level은 에스파, 사랑했나봐는 윤도현 개인의 곡이다.",
       options: [
         {
           uuid: "2e33abc3-7c76-4a6f-9380-1e726b7cb95b",
@@ -652,18 +634,7 @@ const quiz9 = {
       uuid: "ac3d34f8-7518-492d-b1e6-3009337d1696",
       question: "한성대학교를 대표하는 동물을 쓰시오.",
       type: 1,
-      options: [
-        {
-          uuid: "2e33abc3-7c76-4a6f-9380-1e726b7cb95b",
-          title: "",
-          isAnswer: true,
-        },
-        {
-          uuid: "66d305ec-03e8-49f0-94cd-c69f73138417",
-          title: "",
-          isAnswer: false,
-        },
-      ],
+      options: [],
       essayAnswer: "거북이",
     },
     {
