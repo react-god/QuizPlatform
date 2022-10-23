@@ -66,11 +66,11 @@ class QuizCreateStore {
   isItemCompleted(item: QuizItem) {
     const hasQuestion = item.question.length > 0;
     const hasAnswer =
-      item.type == QuizType.choice
+      item.type === QuizType.choice
         ? item.options.some((option) => option.isAnswer)
-        : item.essayAnswer != undefined && item.essayAnswer!.length > 0;
+        : item.essayAnswer !== undefined && item.essayAnswer!.length > 0;
     const hasTitleOfAllOptions =
-      item.type == QuizType.choice
+      item.type === QuizType.choice
         ? item.options.every((option) => option.title.length > 0)
         : true;
     return hasQuestion && hasAnswer && hasTitleOfAllOptions;
