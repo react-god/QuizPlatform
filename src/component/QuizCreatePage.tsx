@@ -1,7 +1,9 @@
 import {
+  Avatar,
   Button,
   Card,
   Chip,
+  Divider,
   IconButton,
   List,
   Stack,
@@ -11,9 +13,9 @@ import {
   useTheme,
 } from "@mui/material";
 import "../css/QuizCreatePage.css";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete, Image } from "@mui/icons-material";
 import { observer } from "mobx-react";
-import { useEffect, useReducer, useState } from "react";
+import { ChangeEvent, useReducer, useRef, useState } from "react";
 import { QuizItem, QuizOption, QuizType } from "../mockup_data/quiz";
 import QuizCreateStore from "../store/QuizCreateStore";
 
@@ -139,7 +141,7 @@ const QuestionTitle = (props: QuestionTitleProps) => {
   const fontSize = 24;
 
   return (
-    <Typography variant="h2" style={{ paddingTop: "80px", display: "flex" }}>
+    <Typography variant="h2" style={{ display: "flex" }}>
       {props.index + 1}
       <TextField
         placeholder="문제 질문 입력…"
@@ -170,26 +172,100 @@ const QuestionTitle = (props: QuestionTitleProps) => {
   );
 };
 
+interface ImagePickerProps {
+  imageUrl?: String;
+  onImageChange: (url?: String) => void;
+}
+
+const ImagePicker = (props: ImagePickerProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const onImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files !== null) {
+      const url = URL.createObjectURL(files[0]);
+      props.onImageChange(url);
+    }
+  };
+
+  const onImageClearClick = () => {
+    inputRef.current!.value = "";
+    props.onImageChange(undefined);
+  };
+
+  return (
+    <>
+      <label htmlFor="imageInput">
+        {props.imageUrl !== undefined ? (
+          <Avatar
+            variant="rounded"
+            src={props.imageUrl as string}
+            sx={{
+              marginLeft: "8px",
+              marginRight: "8px",
+              width: "40px",
+              height: "40px",
+              ":hover": { cursor: "pointer" },
+            }}
+          />
+        ) : (
+          <Image sx={{ margin: "8px", ":hover": { cursor: "pointer" } }} />
+        )}
+      </label>
+      <input
+        id="imageInput"
+        ref={inputRef}
+        type="file"
+        key={"sdifjoj"}
+        accept="image/jpg,impge/png,image/jpeg,image/gif"
+        onChange={(e) => onImageChange(e)}
+        style={{ display: "none" }}
+      ></input>
+      {props.imageUrl !== undefined ? (
+        <IconButton onClick={() => onImageClearClick()}>
+          <Delete />
+        </IconButton>
+      ) : (
+        <></>
+      )}
+    </>
+  );
+};
+
 interface OptionChipsProps {
   selectedType: QuizType;
+  imageUrl?: String;
   onChipClick: (type: QuizType) => void;
+  onImageChange: (url?: String) => void;
 }
 
 const OptionChips = (props: OptionChipsProps) => {
   return (
-    <div style={{ marginTop: "12px", marginBottom: "20px" }}>
+    <Stack
+      direction="row"
+      alignItems="center"
+      style={{ marginTop: "12px", marginBottom: "20px" }}
+    >
       <Chip
         label="객관식"
-        style={{ marginRight: "8px" }}
         color={props.selectedType === QuizType.choice ? "primary" : "default"}
         onClick={() => props.onChipClick(QuizType.choice)}
       />
       <Chip
         label="단답식"
+        style={{ margin: "8px" }}
         color={props.selectedType === QuizType.essay ? "primary" : "default"}
         onClick={() => props.onChipClick(QuizType.essay)}
       />
-    </div>
+      <Divider
+        orientation="vertical"
+        style={{ marginLeft: "8px", marginRight: "8px" }}
+      ></Divider>
+      <ImagePicker
+        imageUrl={props.imageUrl}
+        onImageChange={(url) => props.onImageChange(url)}
+      />
+    </Stack>
   );
 };
 
@@ -205,7 +281,7 @@ const AnswerReasonTextField = (props: AnswerReasonTextFieldProps) => {
       placeholder="정답 이유 입력…"
       multiline={true}
       label="정답 이유"
-      style={{ marginBottom: "16px" }}
+      style={{ marginTop: "16px" }}
       value={props.reason}
       onChange={(e) => props.onReasonChange(e.target.value)}
     ></TextField>
@@ -389,7 +465,7 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
   }
 
   return (
-    <Stack direction="row" height="100%">
+    <Stack direction="row" style={{ height: "100%" }}>
       <NavRail
         items={store.quizItems}
         enableSubmitButton={store.enabledSubmitButton}
@@ -400,9 +476,16 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
         onSubmitClick={() => store.submitQuiz()}
       />
       <Stack
+        id="noneScrollBar"
         direction="column"
         width="100%"
-        style={{ marginLeft: pageMargin, marginRight: pageMargin }}
+        style={{
+          marginLeft: pageMargin,
+          marginRight: pageMargin,
+          paddingTop: "80px",
+          paddingBottom: "80px",
+          overflowY: "scroll",
+        }}
       >
         <QuestionTitle
           index={store.currentItemIndex}
@@ -413,13 +496,15 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
         />
         <OptionChips
           selectedType={currentQuizItem.type}
+          imageUrl={currentQuizItem.imageUrl}
           onChipClick={(type) => store.updateQuizItemType(type)}
+          onImageChange={(imageUrl) => store.updateQuizImageUrl(imageUrl)}
         />
+        {optionListOrEssay}
         <AnswerReasonTextField
           reason={currentQuizItem.reason ?? ""}
           onReasonChange={(reason) => store.updateQuizItemReason(reason)}
         />
-        {optionListOrEssay}
       </Stack>
     </Stack>
   );

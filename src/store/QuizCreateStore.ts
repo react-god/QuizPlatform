@@ -113,6 +113,10 @@ class QuizCreateStore {
     item.type = newType;
   }
 
+  updateQuizImageUrl(imageUrl?: String) {
+    this.currentQuizItem.imageUrl = imageUrl;
+  }
+
   updateQuizItemReason(reason: String) {
     this.currentQuizItem.reason = reason.length === 0 ? undefined : reason;
   }
