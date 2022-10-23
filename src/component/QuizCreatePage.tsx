@@ -234,7 +234,8 @@ const OptioinBar = (props: OptionBarProps) => {
       <TextField
         variant="standard"
         value={props.title}
-        placeholder="보기 입력…"
+              placeholder="보기 입력…"
+              multiline={true}
         style={{
           marginLeft: "12px",
           marginRight: textFieldRightMargin,
