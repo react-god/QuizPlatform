@@ -40,10 +40,13 @@ const SubmitButton = (props: SubmitButtonProps) => {
 interface NavRailItemProps {
   number: number;
   highlighted: boolean;
+  isCurrentItem: boolean;
   onClick: () => void;
 }
 
 const NavRailItem = (props: NavRailItemProps) => {
+  const theme = useTheme();
+
   return (
     <Button
       variant="contained"
@@ -57,7 +60,9 @@ const NavRailItem = (props: NavRailItemProps) => {
       color={props.highlighted ? "secondary" : "inherit"}
       onClick={() => props.onClick()}
     >
-      {props.number}
+      <Typography variant={props.isCurrentItem ? "h6" : "button"}>
+        {props.number}
+      </Typography>
     </Button>
   );
 };
@@ -65,6 +70,7 @@ const NavRailItem = (props: NavRailItemProps) => {
 interface NavRailProps {
   items: Array<QuizItem>;
   enableSubmitButton: boolean;
+  currentItemIndex: number;
   isItemCompleted: (item: QuizItem) => boolean;
   onItemClick: (index: number) => void;
   onAddClick: () => void;
@@ -92,6 +98,7 @@ const NavRail = (props: NavRailProps) => {
               <NavRailItem
                 number={index + 1}
                 highlighted={props.isItemCompleted(item)}
+                isCurrentItem={props.currentItemIndex === index}
                 onClick={() => props.onItemClick(index)}
               />
             );
@@ -342,6 +349,7 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
         items={store.quizItems}
         enableSubmitButton={store.enabledSubmitButton}
         isItemCompleted={(item) => store.isItemCompleted(item)}
+        currentItemIndex={store.currentItemIndex}
         onAddClick={() => store.addQuizItem()}
         onItemClick={(index) => (store.currentItemIndex = index)}
         onSubmitClick={() => store.submitQuiz()}
