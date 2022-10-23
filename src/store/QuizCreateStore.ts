@@ -10,7 +10,7 @@ const initQuizItem: QuizItem = {
     {
       uuid: uuidv4(),
       title: "",
-      isAnswer: false,
+      isAnswer: true,
     },
     {
       uuid: uuidv4(),
