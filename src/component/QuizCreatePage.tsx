@@ -45,8 +45,6 @@ interface NavRailItemProps {
 }
 
 const NavRailItem = (props: NavRailItemProps) => {
-  const theme = useTheme();
-
   return (
     <Button
       variant="contained"
@@ -84,10 +82,9 @@ const NavRail = (props: NavRailProps) => {
   const theme = useTheme();
 
   return (
-    <List
+    <Stack
       style={{
         backgroundColor: theme.palette.grey[100],
-        paddingTop: "8px",
       }}
     >
       <Stack
@@ -100,7 +97,7 @@ const NavRail = (props: NavRailProps) => {
           id="noneScrollBar"
           direction="column"
           alignItems="center"
-          style={{ overflowY: "scroll" }}
+          style={{ overflowY: "scroll", paddingTop: "8px" }}
         >
           {props.items.map((item, index) => {
             return (
@@ -122,7 +119,7 @@ const NavRail = (props: NavRailProps) => {
           onClick={() => props.onSubmitClick()}
         />
       </Stack>
-    </List>
+    </Stack>
   );
 };
 
@@ -494,7 +491,6 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
         onSubmitClick={() => store.submitQuiz()}
       />
       <Stack
-        id="noneScrollBar"
         direction="column"
         width="100%"
         style={{
