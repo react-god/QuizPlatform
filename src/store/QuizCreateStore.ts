@@ -2,6 +2,7 @@ import { Quiz, QuizItem, QuizType } from "../mockup_data/quiz";
 import { v4 as uuidv4 } from "uuid";
 import { user1 } from "../mockup_data/user";
 import { makeAutoObservable } from "mobx";
+import { observable, storeAnnotation } from "mobx/dist/internal";
 
 const initQuizItem: QuizItem = {
   uuid: "dsi29gj3f",
@@ -146,14 +147,19 @@ class QuizCreateStore {
     ];
   }
 
-  updateQuizOption(optionIndex: number, title?: String, isAnswer?: boolean) {
+  updateQuizOptionTitle(optionIndex: number, title: String) {
     const option = this.currentQuizItem.options[optionIndex];
-    if (title !== undefined) {
-      option.title = title;
-    }
-    if (isAnswer !== undefined) {
-      option.isAnswer = isAnswer;
-    }
+    option.title = title;
+  }
+
+  updateQuizOptionIsAnswer(optionIndex: number, isAnswer: boolean) {
+    const option = this.currentQuizItem.options[optionIndex];
+    option.isAnswer = isAnswer;
+  }
+
+  updateQuizOptionImageUrl(optionIndex: number, imageUrl?: String) {
+    const option = this.currentQuizItem.options[optionIndex];
+    option.imageUrl = imageUrl;
   }
 
   removeQuizOption(optionIndex: number) {

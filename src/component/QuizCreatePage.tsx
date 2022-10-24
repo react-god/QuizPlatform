@@ -1,7 +1,6 @@
 import {
   Avatar,
   Button,
-  Card,
   Chip,
   Divider,
   IconButton,
@@ -18,8 +17,6 @@ import { observer } from "mobx-react";
 import { ChangeEvent, useReducer, useRef, useState } from "react";
 import { QuizItem, QuizOption, QuizType } from "../mockup_data/quiz";
 import QuizCreateStore from "../store/QuizCreateStore";
-
-const textFieldRightMargin = "80px";
 
 interface SubmitButtonProps {
   enabled: boolean;
@@ -153,7 +150,7 @@ const QuestionTitle = (props: QuestionTitleProps) => {
         InputLabelProps={{ style: { fontSize: fontSize } }}
         style={{
           marginLeft: "24px",
-          marginRight: textFieldRightMargin,
+          marginRight: "80px",
           flexGrow: 1,
         }}
         onChange={(e) => props.onQuestionChange(e.target.value)}
@@ -173,8 +170,10 @@ const QuestionTitle = (props: QuestionTitleProps) => {
 };
 
 interface ImagePickerProps {
+  id: String;
   imageUrl?: String;
   onImageChange: (url?: String) => void;
+  style?: React.CSSProperties;
 }
 
 const ImagePicker = (props: ImagePickerProps) => {
@@ -194,8 +193,8 @@ const ImagePicker = (props: ImagePickerProps) => {
   };
 
   return (
-    <>
-      <label htmlFor="imageInput">
+    <Stack direction="row" style={props.style}>
+      <label htmlFor={props.id as string}>
         {props.imageUrl !== undefined ? (
           <Avatar
             variant="rounded"
@@ -213,7 +212,7 @@ const ImagePicker = (props: ImagePickerProps) => {
         )}
       </label>
       <input
-        id="imageInput"
+        id={props.id as string}
         ref={inputRef}
         type="file"
         accept="image/jpg,impge/png,image/jpeg,image/gif"
@@ -229,7 +228,7 @@ const ImagePicker = (props: ImagePickerProps) => {
       ) : (
         <></>
       )}
-    </>
+    </Stack>
   );
 };
 
@@ -263,6 +262,7 @@ const OptionChips = (props: OptionChipsProps) => {
         style={{ marginLeft: "8px", marginRight: "8px" }}
       ></Divider>
       <ImagePicker
+        id="quizImage"
         imageUrl={props.imageUrl}
         onImageChange={(url) => props.onImageChange(url)}
       />
@@ -290,64 +290,79 @@ const AnswerReasonTextField = (props: AnswerReasonTextFieldProps) => {
 };
 
 interface OptionBarProps {
-  title: String;
-  isAnswer: boolean;
+  option: QuizOption;
   showRemoveButton: boolean;
   onTitleChange: (title: String) => void;
   onRemoveClick: () => void;
   onAnswerClick: (isAnswer: boolean) => void;
-  onImageClick: () => void;
+  onImageChange: (url?: String) => void;
 }
 
 const OptioinBar = (props: OptionBarProps) => {
   const theme = useTheme();
-  const answerTextColor = props.isAnswer
+  const answerTextColor = props.option.isAnswer
     ? theme.palette.text.primary
     : theme.palette.grey[700];
 
   return (
-    <Card
-      elevation={0}
+    <Stack
+      direction="column"
       style={{
-        paddingTop: "16px",
-        paddingBottom: "16px",
-        paddingLeft: "12px",
+        borderRadius: "20px",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+        paddingLeft: "20px",
         paddingRight: "20px",
-        marginBottom: "12px",
+        marginBottom: "16px",
         backgroundColor: theme.palette.grey[200],
-        display: "flex",
       }}
     >
-      <Button
-        variant="contained"
-        color={props.isAnswer ? "secondary" : "inherit"}
-        disableElevation={true}
-        onClick={() => props.onAnswerClick(!props.isAnswer)}
+      <Stack
+        direction="row"
+        marginBottom="20px"
+        alignItems="center"
+        sx={{ display: "flex" }}
       >
-        <Typography variant="button" color={answerTextColor}>
-          정답
-        </Typography>
-      </Button>
+        <Button
+          variant="contained"
+          color={props.option.isAnswer ? "secondary" : "inherit"}
+          disableElevation={true}
+          onClick={() => props.onAnswerClick(!props.option.isAnswer)}
+          sx={{ height: "32px" }}
+        >
+          <Typography variant="button" color={answerTextColor}>
+            정답
+          </Typography>
+        </Button>
+        <Divider
+          orientation="vertical"
+          style={{ marginLeft: "16px", marginRight: "8px" }}
+        ></Divider>
+        <ImagePicker
+          id={props.option.uuid}
+          imageUrl={props.option.imageUrl}
+          onImageChange={(url) => props.onImageChange(url)}
+          style={{ flexGrow: "1" }}
+        />
+        {props.showRemoveButton ? (
+          <IconButton
+            onClick={() => props.onRemoveClick()}
+            sx={{ position: "end" }}
+          >
+            <Delete color="error" />
+          </IconButton>
+        ) : (
+          <></>
+        )}
+      </Stack>
       <TextField
         variant="standard"
-        value={props.title}
-        placeholder="보기 입력…"
+        value={props.option.title}
+        placeholder="보기 내용 입력…"
         multiline={true}
-        style={{
-          marginLeft: "12px",
-          marginRight: textFieldRightMargin,
-          flexGrow: 1,
-        }}
         onChange={(e) => props.onTitleChange(e.target.value)}
       ></TextField>
-      {props.showRemoveButton ? (
-        <IconButton onClick={() => props.onRemoveClick()}>
-          <Delete color="error" />
-        </IconButton>
-      ) : (
-        <></>
-      )}
-    </Card>
+    </Stack>
   );
 };
 
@@ -359,6 +374,7 @@ interface OptionBarListProps {
   onAnswerClick: (optionIndex: number, isAnswer: boolean) => void;
   onAddButtonClick: () => void;
   onRemoveClick: (optionIndex: number) => void;
+  onImageChange: (optionIndex: number, url?: String) => void;
 }
 
 const OptionBarList = (props: OptionBarListProps) => {
@@ -368,17 +384,14 @@ const OptionBarList = (props: OptionBarListProps) => {
         return (
           <OptioinBar
             key={option.uuid as string}
-            title={option.title}
-            isAnswer={option.isAnswer}
+            option={option}
             showRemoveButton={props.showRemoveButton}
             onTitleChange={(title) => props.onTitleChange(optionIndex, title)}
             onRemoveClick={() => props.onRemoveClick(optionIndex)}
             onAnswerClick={(isAnswer) =>
               props.onAnswerClick(optionIndex, isAnswer)
             }
-            onImageClick={() => {
-              // TODO
-            }}
+            onImageChange={(url) => props.onImageChange(optionIndex, url)}
           />
         );
       })}
@@ -413,18 +426,18 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
   // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
   // hack을 하고있다. 추후에 고칠 필요가 있다.
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
-  let pageMargin: string;
+  let pageHorizontalPadding: string;
   let optionListOrEssay: JSX.Element;
 
   const isMobile = useMediaQuery(`(max-width: 780px)`);
   const isTablet = useMediaQuery(`(max-width: 960px)`);
 
   if (isMobile) {
-    pageMargin = "40px";
+    pageHorizontalPadding = "40px";
   } else if (isTablet) {
-    pageMargin = "120px";
+    pageHorizontalPadding = "120px";
   } else {
-    pageMargin = "240px";
+    pageHorizontalPadding = "240px";
   }
 
   switch (currentQuizItem.type) {
@@ -435,19 +448,23 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
           showAddButton={store.showQuizOptionAddButton}
           showRemoveButton={store.showRemoveQuizOptionButton}
           onTitleChange={(optionIndex, title) => {
-            store.updateQuizOption(optionIndex, title);
+            store.updateQuizOptionTitle(optionIndex, title);
             // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
             // hack을 하고있다. 추후에 고칠 필요가 있다.
             forceUpdate();
           }}
           onAnswerClick={(optionIndex, isAnswer) => {
-            store.updateQuizOption(optionIndex, undefined, isAnswer);
+            store.updateQuizOptionIsAnswer(optionIndex, isAnswer);
             // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
             // hack을 하고있다. 추후에 고칠 필요가 있다.
             forceUpdate();
           }}
           onAddButtonClick={() => store.addQuizOption()}
           onRemoveClick={(optionIndex) => store.removeQuizOption(optionIndex)}
+          onImageChange={(optionIndex, url) => {
+            store.updateQuizOptionImageUrl(optionIndex, url);
+            forceUpdate();
+          }}
         />
       );
       break;
@@ -481,8 +498,8 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
         direction="column"
         width="100%"
         style={{
-          marginLeft: pageMargin,
-          marginRight: pageMargin,
+          paddingLeft: pageHorizontalPadding,
+          paddingRight: pageHorizontalPadding,
           paddingTop: "80px",
           paddingBottom: "80px",
           overflowY: "scroll",
