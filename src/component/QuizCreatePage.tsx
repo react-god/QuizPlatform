@@ -223,7 +223,9 @@ const ImagePicker = (props: ImagePickerProps) => {
       ></input>
       {props.imageUrl !== undefined ? (
         <IconButton onClick={() => onImageClearClick()}>
-          <Delete />
+          <Typography variant="button" color="error">
+            이미지 제거
+          </Typography>
         </IconButton>
       ) : (
         <></>
