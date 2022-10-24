@@ -216,7 +216,6 @@ const ImagePicker = (props: ImagePickerProps) => {
         id="imageInput"
         ref={inputRef}
         type="file"
-        key={"sdifjoj"}
         accept="image/jpg,impge/png,image/jpeg,image/gif"
         onChange={(e) => onImageChange(e)}
         style={{ display: "none" }}
