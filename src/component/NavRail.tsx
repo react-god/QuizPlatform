@@ -31,10 +31,12 @@ const NavRailItem = (props: NavRailItemProps) => {
       onClick={() => props.onClick()}
     >
       <Typography
-        variant="button"
+        variant={props.isSelected ? "h6" : "button"}
         fontWeight={props.isSelected ? "900" : "400"}
       >
-        {props.label}
+        <div style={{ height: "24px", alignItems: "center", display: "flex" }}>
+          {props.label}
+        </div>
       </Typography>
     </Button>
   );
