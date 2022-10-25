@@ -1,30 +1,18 @@
-import { Add } from "@mui/icons-material";
 import { Button, IconButton, Stack, Typography, useTheme } from "@mui/material";
-import { QuizItem } from "../mockup_data/quiz";
-
-interface SubmitButtonProps {
-  enabled: boolean;
-  onClick: () => void;
-}
-
-const SubmitButton = (props: SubmitButtonProps) => {
-  return (
-    <Button
-      variant="contained"
-      style={{ margin: "8px" }}
-      disableElevation={true}
-      onClick={() => props.onClick()}
-      disabled={!props.enabled}
-    >
-      <Typography variant="button">제출</Typography>
-    </Button>
-  );
-};
+import { ArrowBack } from "@mui/icons-material";
 
 interface NavRailItemProps {
-  number: number;
-  highlighted: boolean;
-  isCurrentItem: boolean;
+  label: String;
+  color:
+    | "inherit"
+    | "secondary"
+    | "primary"
+    | "success"
+    | "error"
+    | "info"
+    | "warning"
+    | undefined;
+  isSelected: boolean;
   onClick: () => void;
 }
 
@@ -39,27 +27,26 @@ const NavRailItem = (props: NavRailItemProps) => {
         marginRight: "12px",
       }}
       disableElevation={true}
-      color={props.highlighted ? "secondary" : "inherit"}
+      color={props.color}
       onClick={() => props.onClick()}
     >
       <Typography
         variant="button"
-        fontWeight={props.isCurrentItem ? "900" : "400"}
+        fontWeight={props.isSelected ? "900" : "400"}
       >
-        {props.number}
+        {props.label}
       </Typography>
     </Button>
   );
 };
 
 interface NavRailProps {
-  items: Array<QuizItem>;
-  enableSubmitButton: boolean;
-  currentItemIndex: number;
-  isItemCompleted: (item: QuizItem) => boolean;
-  onItemClick: (index: number) => void;
-  onAddClick: () => void;
-  onSubmitClick: () => void;
+  items: Array<JSX.Element>;
+  trailingItem: JSX.Element;
+  /**
+   * 콜백 함수를 전달하는 경우 뒤로 가기 버튼을 보인다.
+   */
+  onBackClick?: () => void;
 }
 
 const NavRail = (props: NavRailProps) => {
@@ -76,35 +63,31 @@ const NavRail = (props: NavRailProps) => {
         justifyContent="space-between"
         style={{ height: "100%" }}
       >
-        {/* TODO(민성): 뒤로가기 버튼 만들기 */}
         <Stack
           id="noneScrollBar"
           direction="column"
           alignItems="center"
           style={{ overflowY: "scroll", paddingTop: "8px" }}
         >
-          {props.items.map((item, index) => {
-            return (
-              <NavRailItem
-                key={item.uuid as string}
-                number={index + 1}
-                highlighted={props.isItemCompleted(item)}
-                isCurrentItem={props.currentItemIndex === index}
-                onClick={() => props.onItemClick(index)}
-              />
-            );
-          })}
-          <IconButton onClick={() => props.onAddClick()}>
-            <Add />
+          <IconButton
+            onClick={() => props.onBackClick?.()}
+            style={{
+              marginLeft: "12px",
+              marginRight: "12px",
+              marginTop: "8px",
+              marginBottom: "12px",
+            }}
+          >
+            <ArrowBack />
           </IconButton>
+          {props.items.map((item) => {
+            return <>{item}</>;
+          })}
         </Stack>
-        <SubmitButton
-          enabled={props.enableSubmitButton}
-          onClick={() => props.onSubmitClick()}
-        />
+        {props.trailingItem}
       </Stack>
     </Stack>
   );
 };
 
-export default NavRail;
+export { NavRail, NavRailItem };

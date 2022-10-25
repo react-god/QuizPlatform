@@ -16,7 +16,26 @@ import { observer } from "mobx-react";
 import { ChangeEvent, useReducer, useRef, useState } from "react";
 import { QuizOption, QuizType } from "../mockup_data/quiz";
 import QuizCreateStore from "../store/QuizCreateStore";
-import NavRail from "./NavRail";
+import { NavRail, NavRailItem } from "./NavRail";
+
+interface SubmitButtonProps {
+  enabled: boolean;
+  onClick: () => void;
+}
+
+const SubmitButton = (props: SubmitButtonProps) => {
+  return (
+    <Button
+      variant="contained"
+      style={{ margin: "8px" }}
+      disableElevation={true}
+      onClick={() => props.onClick()}
+      disabled={!props.enabled}
+    >
+      <Typography variant="button">제출</Typography>
+    </Button>
+  );
+};
 
 interface QuestionTitleProps {
   index: number;
@@ -377,13 +396,28 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
   return (
     <Stack direction="row" style={{ height: "100%" }}>
       <NavRail
-        items={store.quizItems}
-        enableSubmitButton={store.enabledSubmitButton}
-        isItemCompleted={(item) => store.isItemCompleted(item)}
-        currentItemIndex={store.currentItemIndex}
-        onAddClick={() => store.addQuizItem()}
-        onItemClick={(index) => (store.currentItemIndex = index)}
-        onSubmitClick={() => store.submitQuiz()}
+        items={[
+          ...store.quizItems.map((item, index) => {
+            return (
+              <NavRailItem
+                key={item.uuid as string}
+                label={`${index + 1}`}
+                color={store.isItemCompleted(item) ? "secondary" : "inherit"}
+                isSelected={store.currentItemIndex === index}
+                onClick={() => (store.currentItemIndex = index)}
+              />
+            );
+          }),
+          <IconButton onClick={() => store.addQuizItem()}>
+            <Add />
+          </IconButton>,
+        ]}
+        trailingItem={
+          <SubmitButton
+            enabled={store.enabledSubmitButton}
+            onClick={() => store.submitQuiz()}
+          />
+        }
       />
       <Stack
         direction="column"
