@@ -10,13 +10,13 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import "../css/QuizCreatePage.css";
+import "./QuizCreatePage.css";
 import { Add, Delete, Image } from "@mui/icons-material";
 import { observer } from "mobx-react";
 import { ChangeEvent, useReducer, useRef, useState } from "react";
-import { QuizOption, QuizType } from "../mockup_data/quiz";
-import QuizCreateStore from "../store/QuizCreateStore";
-import { NavRail, NavRailItem } from "./NavRail";
+import { QuizOption, QuizType } from "../../mockup_data/quiz";
+import QuizCreateStore from "../../store/QuizCreateStore";
+import { NavRail, NavRailItem } from "../NavRail";
 
 interface SubmitButtonProps {
   enabled: boolean;
