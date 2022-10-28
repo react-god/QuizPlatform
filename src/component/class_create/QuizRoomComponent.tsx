@@ -10,8 +10,7 @@ import Card from "@mui/material/Card";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
-  // padding: theme.spacing(2),
-  height: "100%",
+  padding: theme.spacing(2),
   flexGrow: 0,
   textAlign: "center",
   color: theme.palette.text.secondary,
@@ -31,16 +30,17 @@ const QuizRoomComponent = ({ room }: any) => {
               sx={{
                 backgroundColor: "#E6E6E6",
                 minWidth: "285px",
-                minHeight: "293px",
+                //minHeight: "293px",
                 maxWidth: "285px",
                 maxHeight: "293px",
                 borderRadius: "20",
               }}
               onClick={() => moveQuizPage()}
             >
-              <CardContent sx={{ margin: "0px" }}>
-                <Stack spacing={5}>
-                  <Item sx={{}}>
+              <CardContent sx={{ margin: "0px", padding: "16px!important" }}>
+                {/* important 말고 다른방법 찾기 */}
+                <Item sx={{ padding: "20px" }}>
+                  <Stack spacing={3}>
                     <Typography variant="h5">{quiz.name}</Typography>
                     <Typography
                       variant="caption"
@@ -56,8 +56,8 @@ const QuizRoomComponent = ({ room }: any) => {
                     >
                       {room.owner}
                     </Typography>
-                  </Item>
-                </Stack>
+                  </Stack>
+                </Item>
               </CardContent>
             </Card>
           </Grid>
