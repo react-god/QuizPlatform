@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import ClassRoomPage from "./component/ClassRoomPage";
+import QuizRoomComponent from "./component/QuizRoomComponent";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
