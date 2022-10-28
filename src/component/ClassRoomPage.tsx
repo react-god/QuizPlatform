@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -7,18 +6,17 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  IconButton,
   List,
   Stack,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
-import { Key, useState } from "react";
+import { useState } from "react";
 import { observer } from "mobx-react";
 import { user1 } from "../mockup_data/user";
 import { classRoomStore } from "../store/ClassRoomStore";
-import { ClassRoom, room1 } from "../mockup_data/classroom";
+import { ClassRoom } from "../mockup_data/classroom";
 import QuizRoomComponent from "../component/QuizRoomComponent";
 import "../css/sidebar.css";
 import React from "react";

@@ -11,7 +11,7 @@ const room1: ClassRoom = {
   id: "516dd7ca",
   name: "네트워크 프로그래밍",
   owner: "정인환 교수님",
-  quizs: [quiz1, quiz1, quiz1, quiz1, quiz1, quiz1],
+  quizs: [quiz1],
 };
 
 const room2: ClassRoom = {
