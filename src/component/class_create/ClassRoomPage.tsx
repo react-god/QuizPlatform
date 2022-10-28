@@ -6,7 +6,6 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  List,
   Stack,
   TextField,
   Typography,
@@ -14,92 +13,13 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { observer } from "mobx-react";
-import { user1 } from "../mockup_data/user";
-import { classRoomStore } from "../store/ClassRoomStore";
-import { ClassRoom } from "../mockup_data/classroom";
-import QuizRoomComponent from "../component/QuizRoomComponent";
-import "../css/sidebar.css";
+import { user1 } from "../../mockup_data/user";
+import { classRoomStore } from "../../store/ClassRoomStore";
+import { ClassRoom } from "../../mockup_data/classroom";
+import QuizRoomComponent from "./QuizRoomComponent";
+import "../../css/sidebar.css";
 import React from "react";
-
-interface NavRailItemProps {
-  number: number;
-  name: string;
-  highlighted: boolean;
-  isCurrentItem: boolean;
-  onClick: () => void;
-}
-
-const NavRailItem = (props: NavRailItemProps) => {
-  const theme = useTheme();
-
-  return (
-    <Button
-      variant="contained"
-      style={{
-        marginTop: "4px",
-        marginBottom: "4px",
-        marginLeft: "12px",
-        marginRight: "12px",
-      }}
-      disableElevation={true}
-      color={props.highlighted ? "secondary" : "inherit"}
-      onClick={() => props.onClick()}
-    >
-      <Typography
-        variant="button"
-        fontWeight={props.isCurrentItem ? "900" : "400"}
-      >
-        {props.name[0]}
-      </Typography>
-    </Button>
-  );
-};
-
-interface NavRailProps {
-  items: Array<ClassRoom>;
-  currentItemIndex: number;
-  onItemClick: (index: number) => void;
-}
-
-const NavRail = (props: NavRailProps) => {
-  const theme = useTheme();
-
-  return (
-    <List
-      style={{
-        backgroundColor: theme.palette.grey[100],
-        paddingTop: "8px",
-      }}
-    >
-      <Stack
-        direction="column"
-        justifyContent="space-between"
-        style={{ height: "100%" }}
-      >
-        {/* TODO(민성): 뒤로가기 버튼 만들기 */}
-        <Stack
-          id="noneScrollBar"
-          direction="column"
-          alignItems="center"
-          style={{ overflowY: "scroll" }}
-        >
-          {props.items.map((item, index) => {
-            return (
-              <NavRailItem
-                key={item.id as string}
-                number={index + 1}
-                name={item.name as string}
-                highlighted={props.currentItemIndex === index}
-                isCurrentItem={props.currentItemIndex === index}
-                onClick={() => props.onItemClick(index)}
-              />
-            );
-          })}
-        </Stack>
-      </Stack>
-    </List>
-  );
-};
+import { NavRail, NavRailItem } from "../NavRail";
 
 const ClassRoomPage = () => {
   const [newRoomName, setNewRoomName] = useState<String>("");
@@ -133,9 +53,32 @@ const ClassRoomPage = () => {
   return (
     <Stack direction="row" height="100%">
       <NavRail
-        items={classRoomStore.rooms}
-        currentItemIndex={classRoomStore.currentItemIndex}
-        onItemClick={(index) => (classRoomStore.currentItemIndex = index)}
+        items={[
+          ...classRoomStore.rooms.map((item, index) => {
+            return (
+              <NavRailItem
+                key={item.id as string}
+                label={item.name[0]}
+                color={
+                  classRoomStore.currentItemIndex === index
+                    ? "secondary"
+                    : "inherit"
+                }
+                isSelected={classRoomStore.currentItemIndex === index}
+                onClick={() => (classRoomStore.currentItemIndex = index)}
+              />
+            );
+          }),
+        ]}
+        trailingItem={
+          <Button
+            variant="contained"
+            style={{ margin: "8px" }}
+            onClick={handleClickOpen}
+          >
+            <Typography variant="button">추가</Typography>
+          </Button>
+        }
       />
       <Stack
         direction="column"
@@ -152,7 +95,12 @@ const ClassRoomPage = () => {
           <p style={{ flexGrow: 1 }}>
             {classRoomStore.rooms[classRoomStore.currentItemIndex].name}
           </p>
-          <Button onClick={handleClickOpen}>퀴즈 만들기</Button>
+          <Button
+            variant="contained"
+            style={{ maxHeight: "36px", margin: "auto" }}
+          >
+            <Typography variant="button">퀴즈 만들기</Typography>
+          </Button>
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle>클래스 생성</DialogTitle>
             <DialogContent>
