@@ -8,9 +8,9 @@ export enum QuizType {
 }
 
 export interface Quiz {
-  id: String;
+  id: string;
   owner: User;
-  name: String;
+  name: string;
   items: Array<QuizItem>;
 }
 
@@ -308,7 +308,7 @@ const quiz4 = {
 };
 
 const quiz5 = {
-  id: "efbf8a40-2d45-4d15-93d7-ffa11dec74dc",
+  id: "efbf8a40-2d45-4d15-93d7-ffa11dec74asd",
   owner: user1,
   name: "상식퀴즈2",
   items: [
