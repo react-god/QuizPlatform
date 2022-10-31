@@ -1,5 +1,11 @@
 import {
+  Button,
   CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
   Paper,
   Stack,
@@ -7,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import Card from "@mui/material/Card";
+import React from "react";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -16,11 +23,20 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const moveQuizPage = () => {
-  console.log(`해당 퀴즈로 이동`);
-};
-
 const QuizRoomComponent = ({ room }: any) => {
+  const [open, setOpen] = React.useState(false);
+  const [dialogTitle, setDialogTitle] = React.useState("");
+
+  const handleClickOpen = (e: any) => {
+    // console.log(e.target);
+    // setDialogTitle(e.target);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       {room.quizs.map((quiz: any) => {
@@ -34,8 +50,9 @@ const QuizRoomComponent = ({ room }: any) => {
                 maxWidth: "285px",
                 maxHeight: "293px",
                 borderRadius: "20",
+                display: "block",
               }}
-              onClick={() => moveQuizPage()}
+              onClick={(e) => handleClickOpen(e)}
             >
               <CardContent sx={{ margin: "0px", padding: "16px!important" }}>
                 {/* important 말고 다른방법 찾기 */}
@@ -63,6 +80,18 @@ const QuizRoomComponent = ({ room }: any) => {
           </Grid>
         );
       })}
+      <Dialog
+        open={open}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{`${dialogTitle} 퀴즈를 시작할까요?`}</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose}>취소</Button>
+          <Button onClick={handleClose}>시작</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
