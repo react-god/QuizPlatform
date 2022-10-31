@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import React from "react";
+import { Quiz } from "../../mockup_data/quiz";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -27,9 +28,9 @@ const QuizRoomComponent = ({ room }: any) => {
   const [open, setOpen] = React.useState(false);
   const [dialogTitle, setDialogTitle] = React.useState("");
 
-  const handleClickOpen = (e: any) => {
-    // console.log(e.target);
-    // setDialogTitle(e.target);
+  const handleClickOpen = () => {
+    // console.log(quiz.name);
+    // setDialogTitle(quiz.name);
     setOpen(true);
   };
 
@@ -39,9 +40,9 @@ const QuizRoomComponent = ({ room }: any) => {
 
   return (
     <>
-      {room.quizs.map((quiz: any) => {
+      {room.quizs.map((quiz: Quiz) => {
         return (
-          <Grid key={quiz.id as number} item xs={4}>
+          <Grid key={quiz.id as string} item xs={4}>
             <Card
               sx={{
                 backgroundColor: "#E6E6E6",
@@ -52,7 +53,7 @@ const QuizRoomComponent = ({ room }: any) => {
                 borderRadius: "20",
                 display: "block",
               }}
-              onClick={(e) => handleClickOpen(e)}
+              onClick={() => handleClickOpen()}
             >
               <CardContent sx={{ margin: "0px", padding: "16px!important" }}>
                 {/* important 말고 다른방법 찾기 */}

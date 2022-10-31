@@ -8,9 +8,9 @@ export enum QuizType {
 }
 
 export interface Quiz {
-  id: String;
+  id: string;
   owner: User;
-  name: String;
+  name: string;
   items: Array<QuizItem>;
 }
 
