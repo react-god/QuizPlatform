@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import ClassRoomPage from "./component/class_create/ClassRoomPage";
-import QuizRoomComponent from "./component/class_create/QuizRoomComponent";
+//import QuizRoomComponent from "./component/class_create/QuizRoomComponent";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./theme";
 
