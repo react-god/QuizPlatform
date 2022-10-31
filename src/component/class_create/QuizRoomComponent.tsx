@@ -3,8 +3,6 @@ import {
   CardContent,
   Dialog,
   DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
   Grid,
   Paper,
@@ -30,7 +28,7 @@ const QuizRoomComponent = ({ room }: any) => {
 
   const handleClickOpen = () => {
     // console.log(quiz.name);
-    // setDialogTitle(quiz.name);
+    setDialogTitle("");
     setOpen(true);
   };
 
