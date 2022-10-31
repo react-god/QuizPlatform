@@ -3,6 +3,8 @@ import {
   CardContent,
   Dialog,
   DialogActions,
+  DialogContent,
+  DialogContentText,
   DialogTitle,
   Grid,
   Paper,
@@ -26,9 +28,9 @@ const QuizRoomComponent = ({ room }: any) => {
   const [open, setOpen] = React.useState(false);
   const [dialogTitle, setDialogTitle] = React.useState("");
 
-  const handleClickOpen = (e: any) => {
+  const handleClickOpen = () => {
     // console.log(quiz.name);
-    setDialogTitle(e.target.text);
+    // setDialogTitle(quiz.name);
     setOpen(true);
   };
 
@@ -51,7 +53,7 @@ const QuizRoomComponent = ({ room }: any) => {
                 borderRadius: "20",
                 display: "block",
               }}
-              onClick={(e) => handleClickOpen(e)}
+              onClick={() => handleClickOpen()}
             >
               <CardContent sx={{ margin: "0px", padding: "16px!important" }}>
                 {/* important 말고 다른방법 찾기 */}
