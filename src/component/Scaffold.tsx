@@ -1,6 +1,4 @@
 import { Stack, useMediaQuery } from "@mui/material";
-import { assert } from "console";
-import { NavRail } from "./NavRail";
 
 interface ScaffoldProps {
   navRail: JSX.Element;
