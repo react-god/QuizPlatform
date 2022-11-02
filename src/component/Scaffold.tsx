@@ -1,7 +1,7 @@
 import { Stack, useMediaQuery } from "@mui/material";
 
 interface ScaffoldProps {
-  navRail: JSX.Element;
+  navRail?: JSX.Element;
   children: React.ReactNode;
 }
 

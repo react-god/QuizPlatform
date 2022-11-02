@@ -163,6 +163,7 @@ const ClassRoomPage = () => {
         </Dialog>
       </Typography>
       <br />
+
       <Grid container spacing={2}>
         <QuizRoomComponent
           room={classRoomStore.rooms[classRoomStore.currentItemIndex]}
