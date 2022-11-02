@@ -1,24 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
+import TakingQuiz from "./component/taking_quiz/TakingQuiz"
+import { quiz1, quiz2, quiz3, quiz4, quiz5, quiz6} from "./mockup_data/quiz"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <TakingQuiz quiz={quiz5}/>
   );
 }
 
