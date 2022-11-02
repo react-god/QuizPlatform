@@ -1,5 +1,5 @@
-import { Quiz, quiz1, QuizType } from "./quiz";
-import { User, user2, user3, user4 } from "./user";
+import { Quiz, quiz1 } from "./quiz";
+import { User, user2, user3 } from "./user";
 
 export interface QuizRecord {
   quiz: Quiz;
@@ -10,6 +10,11 @@ export interface QuizRecord {
 export interface QuizRecordItem {
   index: number;
   essay?: String; //단답식일 때
+  /**
+   * 선택한 보기 문항들의 인덱스를 가지고 있다.
+   *
+   * 0부터 시작한다.
+   */
   choice?: Array<number>;
 }
 

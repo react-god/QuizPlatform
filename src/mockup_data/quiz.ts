@@ -71,6 +71,7 @@ const quizOption1_2_4: QuizOption = {
 const quizItem1_2: QuizItem = {
   uuid: "fio8f2wn3",
   question: "1 + 1 = ?",
+  reason: "수학적으로 1 + 1은 답이 2입니다.",
   type: QuizType.choice,
   options: [quizOption1_2_1, quizOption1_2_2, quizOption1_2_3, quizOption1_2_4],
 };
