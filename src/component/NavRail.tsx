@@ -44,7 +44,7 @@ const NavRailItem = (props: NavRailItemProps) => {
 
 interface NavRailProps {
   items: Array<JSX.Element>;
-  trailingItem: JSX.Element;
+  trailingItem?: JSX.Element;
   /**
    * 콜백 함수를 전달하는 경우 뒤로 가기 버튼을 보인다.
    */

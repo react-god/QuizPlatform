@@ -6,7 +6,6 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,6 +16,7 @@ import QuizRoomComponent from "./QuizRoomComponent";
 import "../../css/sidebar.css";
 import React from "react";
 import { NavRail, NavRailItem } from "../NavRail";
+import Scaffold from "../Scaffold";
 
 const ClassRoomPage = () => {
   const [newRoomName, setNewRoomName] = useState<String>("");
@@ -60,35 +60,38 @@ const ClassRoomPage = () => {
   };
 
   return (
-    <Stack direction="row" height="100%">
-      <NavRail
-        items={[
-          ...classRoomStore.rooms.map((item, index) => {
-            return (
-              <NavRailItem
-                key={item.id as string}
-                label={item.name[0]}
-                color={
-                  classRoomStore.currentItemIndex === index
-                    ? "secondary"
-                    : "inherit"
-                }
-                isSelected={classRoomStore.currentItemIndex === index}
-                onClick={() => (classRoomStore.currentItemIndex = index)}
-              />
-            );
-          }),
-        ]}
-        trailingItem={
-          <Button
-            variant="contained"
-            style={{ margin: "8px" }}
-            onClick={CreateClassButtonClickOpen}
-          >
-            <Typography variant="button">추가</Typography>
-          </Button>
-        }
-      />
+    <Scaffold
+      navRail={
+        <NavRail
+          items={[
+            ...classRoomStore.rooms.map((item, index) => {
+              return (
+                <NavRailItem
+                  key={item.id as string}
+                  label={item.name[0]}
+                  color={
+                    classRoomStore.currentItemIndex === index
+                      ? "secondary"
+                      : "inherit"
+                  }
+                  isSelected={classRoomStore.currentItemIndex === index}
+                  onClick={() => (classRoomStore.currentItemIndex = index)}
+                />
+              );
+            }),
+          ]}
+          trailingItem={
+            <Button
+              variant="contained"
+              style={{ margin: "8px" }}
+              onClick={CreateClassButtonClickOpen}
+            >
+              <Typography variant="button">추가</Typography>
+            </Button>
+          }
+        />
+      }
+    >
       <Dialog open={openCreateClass} onClose={CreateClassButtonClickClose}>
         <DialogTitle>클래스 생성</DialogTitle>
         <DialogContent>
@@ -123,60 +126,50 @@ const ClassRoomPage = () => {
           <Button onClick={addClassRoom}>저장</Button>
         </DialogActions>
       </Dialog>
-      <Stack
-        direction="column"
-        width="100%"
-        height="100%"
-        sx={{
-          paddingLeft: "80px",
-          paddingRight: "80px",
-          marginLeft: "120px",
-          marginRight: "120px",
-        }}
-      >
-        <Typography variant="h2" sx={{ display: "flex" }}>
-          <p style={{ flexGrow: 1 }}>
-            {classRoomStore.rooms[classRoomStore.currentItemIndex].name}
-          </p>
-          <Button
-            variant="contained"
-            style={{ maxHeight: "36px", margin: "auto" }}
-            onClick={() => CreateQuizButtonClickOpen()}
-          >
-            <Typography variant="button">퀴즈 만들기</Typography>
-          </Button>
-          <Dialog open={openCreateQuiz} onClose={CreateQuizButtonClickClose}>
-            <DialogTitle>퀴즈 생성</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                추가할 퀴즈 정보을 입력하세요.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="퀴즈 명"
-                type="text"
-                fullWidth
-                variant="standard"
-                value={newQuizName}
-                onChange={(e) => setNewQuizName(e.target.value)}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={CreateQuizButtonClickClose}>취소</Button>
-              <Button onClick={addQuiz}>저장</Button>
-            </DialogActions>
-          </Dialog>
-        </Typography>
-        <br />
-        <Grid container spacing={2}>
-          <QuizRoomComponent
-            room={classRoomStore.rooms[classRoomStore.currentItemIndex]}
-          ></QuizRoomComponent>
-        </Grid>
-      </Stack>
-    </Stack>
+
+      <Typography variant="h2" sx={{ display: "flex" }}>
+        <p style={{ flexGrow: 1 }}>
+          {classRoomStore.rooms[classRoomStore.currentItemIndex].name}
+        </p>
+        <Button
+          variant="contained"
+          style={{ maxHeight: "36px", margin: "auto" }}
+          onClick={() => CreateQuizButtonClickOpen()}
+        >
+          <Typography variant="button">퀴즈 만들기</Typography>
+        </Button>
+        <Dialog open={openCreateQuiz} onClose={CreateQuizButtonClickClose}>
+          <DialogTitle>퀴즈 생성</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              추가할 퀴즈 정보을 입력하세요.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="퀴즈 명"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={newQuizName}
+              onChange={(e) => setNewQuizName(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={CreateQuizButtonClickClose}>취소</Button>
+            <Button onClick={addQuiz}>저장</Button>
+          </DialogActions>
+        </Dialog>
+      </Typography>
+      <br />
+
+      <Grid container spacing={2}>
+        <QuizRoomComponent
+          room={classRoomStore.rooms[classRoomStore.currentItemIndex]}
+        ></QuizRoomComponent>
+      </Grid>
+    </Scaffold>
   );
 };
 
