@@ -44,8 +44,7 @@ const QuizRoomComponent = ({ room }: any) => {
             <Card
               sx={{
                 backgroundColor: "#E6E6E6",
-                minWidth: "285px",
-                //minHeight: "293px",
+                minWidth: "180px",
                 maxWidth: "285px",
                 maxHeight: "293px",
                 borderRadius: "20",

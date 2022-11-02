@@ -17,6 +17,7 @@ import { ChangeEvent, useReducer, useRef, useState } from "react";
 import { QuizOption, QuizType } from "../../mockup_data/quiz";
 import QuizCreateStore from "../../store/QuizCreateStore";
 import { NavRail, NavRailItem } from "../NavRail";
+import Scaffold from "../Scaffold";
 
 interface SubmitButtonProps {
   enabled: boolean;
@@ -337,19 +338,7 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
   // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
   // hack을 하고있다. 추후에 고칠 필요가 있다.
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
-  let pageHorizontalPadding: string;
   let optionListOrEssay: JSX.Element;
-
-  const isMobile = useMediaQuery(`(max-width: 780px)`);
-  const isTablet = useMediaQuery(`(max-width: 960px)`);
-
-  if (isMobile) {
-    pageHorizontalPadding = "40px";
-  } else if (isTablet) {
-    pageHorizontalPadding = "120px";
-  } else {
-    pageHorizontalPadding = "240px";
-  }
 
   switch (currentQuizItem.type) {
     case QuizType.choice:
@@ -394,62 +383,53 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
   }
 
   return (
-    <Stack direction="row" style={{ height: "100%" }}>
-      <NavRail
-        items={[
-          ...store.quizItems.map((item, index) => {
-            return (
-              <NavRailItem
-                key={item.uuid as string}
-                label={`${index + 1}`}
-                color={store.isItemCompleted(item) ? "secondary" : "inherit"}
-                isSelected={store.currentItemIndex === index}
-                onClick={() => (store.currentItemIndex = index)}
-              />
-            );
-          }),
-          <IconButton onClick={() => store.addQuizItem()}>
-            <Add />
-          </IconButton>,
-        ]}
-        trailingItem={
-          <SubmitButton
-            enabled={store.enabledSubmitButton}
-            onClick={() => store.submitQuiz()}
-          />
-        }
+    <Scaffold
+      navRail={
+        <NavRail
+          items={[
+            ...store.quizItems.map((item, index) => {
+              return (
+                <NavRailItem
+                  key={item.uuid as string}
+                  label={`${index + 1}`}
+                  color={store.isItemCompleted(item) ? "secondary" : "inherit"}
+                  isSelected={store.currentItemIndex === index}
+                  onClick={() => (store.currentItemIndex = index)}
+                />
+              );
+            }),
+            <IconButton onClick={() => store.addQuizItem()}>
+              <Add />
+            </IconButton>,
+          ]}
+          trailingItem={
+            <SubmitButton
+              enabled={store.enabledSubmitButton}
+              onClick={() => store.submitQuiz()}
+            />
+          }
+        />
+      }
+    >
+      <QuestionTitle
+        index={store.currentItemIndex}
+        question={currentQuizItem.question}
+        showRemoveButton={store.showRemoveQuizItemButton}
+        onRemoveClick={() => store.removeCurrentQuizItem()}
+        onQuestionChange={(q) => store.updateQuizItemQuestion(q)}
       />
-      <Stack
-        direction="column"
-        width="100%"
-        style={{
-          paddingLeft: pageHorizontalPadding,
-          paddingRight: pageHorizontalPadding,
-          paddingTop: "80px",
-          paddingBottom: "80px",
-          overflowY: "scroll",
-        }}
-      >
-        <QuestionTitle
-          index={store.currentItemIndex}
-          question={currentQuizItem.question}
-          showRemoveButton={store.showRemoveQuizItemButton}
-          onRemoveClick={() => store.removeCurrentQuizItem()}
-          onQuestionChange={(q) => store.updateQuizItemQuestion(q)}
-        />
-        <OptionChips
-          selectedType={currentQuizItem.type}
-          imageUrl={currentQuizItem.imageUrl}
-          onChipClick={(type) => store.updateQuizItemType(type)}
-          onImageChange={(imageUrl) => store.updateQuizImageUrl(imageUrl)}
-        />
-        {optionListOrEssay}
-        <AnswerReasonTextField
-          reason={currentQuizItem.reason ?? ""}
-          onReasonChange={(reason) => store.updateQuizItemReason(reason)}
-        />
-      </Stack>
-    </Stack>
+      <OptionChips
+        selectedType={currentQuizItem.type}
+        imageUrl={currentQuizItem.imageUrl}
+        onChipClick={(type) => store.updateQuizItemType(type)}
+        onImageChange={(imageUrl) => store.updateQuizImageUrl(imageUrl)}
+      />
+      {optionListOrEssay}
+      <AnswerReasonTextField
+        reason={currentQuizItem.reason ?? ""}
+        onReasonChange={(reason) => store.updateQuizItemReason(reason)}
+      />
+    </Scaffold>
   );
 };
 
