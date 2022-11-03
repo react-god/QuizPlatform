@@ -121,6 +121,7 @@ const OptionCardList = (props: OptionCardListProps) => {
     <>
       {props.quizOptions.map((option, optionIndex) => (
         <OptionCard
+          key={option.uuid as string}
           title={option.title}
           imageUrl={option.imageUrl}
           isAnswer={option.isAnswer}
@@ -197,6 +198,7 @@ const QuizReviewPage = (props: QuizReviewPageProps) => {
         <NavRail
           items={quiz.items.map((quizItem, index) => (
             <NavRailItem
+              key={quizItem.uuid as string}
               label={`${index + 1}`}
               color={
                 isCorrect(quizRecordItems[index], quizItem)
