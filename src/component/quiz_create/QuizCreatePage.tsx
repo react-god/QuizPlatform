@@ -7,10 +7,8 @@ import {
   Stack,
   TextField,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
-import "./QuizCreatePage.css";
 import { Add, Delete, Image } from "@mui/icons-material";
 import { observer } from "mobx-react";
 import { ChangeEvent, useReducer, useRef, useState } from "react";
