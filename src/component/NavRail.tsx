@@ -1,5 +1,6 @@
 import { Button, IconButton, Stack, Typography, useTheme } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
+import "../css/sidebar.css";
 
 interface NavRailItemProps {
   label: String;
