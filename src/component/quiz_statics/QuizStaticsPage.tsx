@@ -1,4 +1,4 @@
-import { Typography, useTheme } from "@mui/material";
+import { List, Typography, useTheme } from "@mui/material";
 import { Bar } from "react-chartjs-2";
 import { Quiz, QuizItem } from "../../mockup_data/quiz";
 import { QuizRecord } from "../../mockup_data/quiz_record";
@@ -12,7 +12,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartOptions,
 } from "chart.js";
 import { isCorrect } from "../quiz_review/QuizReviewPage";
 import Scaffold from "../Scaffold";
@@ -52,12 +51,23 @@ interface CandidateListProps {
 
 const CandidateList = (props: CandidateListProps) => {
   return (
-    <Typography>
-      응시자 목록
-      {props.candidates.map((user) => (
-        <div style={{ marginLeft: "16px" }}>• {user.name}</div>
-      ))}
-    </Typography>
+    <List
+      style={{
+        minHeight: "100px",
+        overflowY: "scroll",
+        border: "0.5px solid #888888",
+        marginTop: "16px",
+        marginBottom: "16px",
+        padding: "8px",
+      }}
+    >
+      <Typography>
+        응시자 목록
+        {props.candidates.map((user) => (
+          <div style={{ marginLeft: "16px" }}>• {user.name}</div>
+        ))}
+      </Typography>
+    </List>
   );
 };
 
