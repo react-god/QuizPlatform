@@ -22,6 +22,7 @@ export interface QuizItem {
   reason?: String;
   essayAnswer?: String;
   imageUrl?: String;
+  score: number;
 }
 
 export interface QuizOption {
@@ -40,6 +41,7 @@ const quizItem1_1: QuizItem = {
   type: QuizType.essay,
   essayAnswer: "권대현",
   options: [],
+  score: 10,
 };
 
 // 첫번째 퀴즈의 두번째 질문의 첫번째 보기
@@ -74,6 +76,7 @@ const quizItem1_2: QuizItem = {
   reason: "수학적으로 1 + 1은 답이 2입니다.",
   type: QuizType.choice,
   options: [quizOption1_2_1, quizOption1_2_2, quizOption1_2_3, quizOption1_2_4],
+  score: 5,
 };
 
 // 세번 어저구 저저구 보기
@@ -108,6 +111,7 @@ const quizItem1_3: QuizItem = {
   question: "다음 중 홀수인 것은?",
   type: QuizType.choice,
   options: [quizOption1_3_1, quizOption1_3_2, quizOption1_3_3, quizOption1_3_4],
+  score: 5,
 };
 
 // 첫번째 퀴즈
@@ -127,6 +131,7 @@ const quiz2: Quiz = {
       uuid: "b76f242e-234c-467f-9071-e880275e2414",
       question: "2조 조장 킹갓정시현이 일하는 카페는?",
       type: 0,
+      score: 25,
       options: [
         {
           uuid: "1748e5b6-a06b-40d5-b978-80df5d6f1f06",
@@ -154,6 +159,7 @@ const quiz2: Quiz = {
       uuid: "fb6f80c1-8b73-4abc-9fb2-ccb92ceb8e2e",
       question: "환승연애2에 나오지 않는 등장인물은?",
       type: 0,
+      score: 20,
       options: [
         {
           uuid: "1748e5b6-a06b-40d5-b978-80df5d6f1f06",
@@ -180,6 +186,7 @@ const quiz2: Quiz = {
     {
       uuid: "b32bb9e0-29bc-4964-b76b-fb77c5d0c516",
       question: "꾸미지 않은 듯 꾸민 것을 줄여서 말하면?",
+      score: 15,
       type: 1,
       options: [],
       essayAnswer: "꾸안꾸",
@@ -187,7 +194,7 @@ const quiz2: Quiz = {
   ],
 };
 
-const quiz3 = {
+const quiz3: Quiz = {
   id: "4b3a2ed0-db45-4181-a8b4-557c2952070b",
   owner: user1,
   name: "재밌는 퀴즈2",
@@ -197,6 +204,7 @@ const quiz3 = {
       question:
         "BTS 봉준호 손흥민 ooo Let’s go 벌스에서 ooo 안에 들어갈 인물은?",
       type: 0,
+      score: 30,
       options: [
         {
           uuid: "1748e5b6-a06b-40d5-b978-80df5d6f1f06",
@@ -223,6 +231,7 @@ const quiz3 = {
     {
       uuid: "dsi29gj3f",
       question: "술을 많이 먹고 다음날 하는 국룰 멘트는?",
+      score: 20,
       type: 0,
       options: [
         {
@@ -251,6 +260,7 @@ const quiz3 = {
       uuid: "01c412f7-7c0e-4997-bd75-8797ff3c0512",
       question: "한성대입구역은 몇호선에 있는 역인가? 숫자만 입력하세요.",
       type: 1,
+      score: 20,
       options: [],
       reason: "한성대입구역은 4호선에 위치해있다.",
       essayAnswer: "4",
@@ -258,7 +268,7 @@ const quiz3 = {
   ],
 };
 
-const quiz4 = {
+const quiz4: Quiz = {
   id: "efbf8a40-2d45-4d15-93d7-ffa11dec74dc",
   owner: user1,
   name: "상식 퀴즈1",
@@ -268,6 +278,7 @@ const quiz4 = {
       question:
         "범죄 신고 번호는 112, 재난 신고 번호는 119입니다. 그렇다면 간첩 신고 번호는 무엇일까요?",
       type: 1,
+      score: 30,
       options: [],
       essayAnswer: "111",
     },
@@ -275,6 +286,7 @@ const quiz4 = {
       uuid: "1518f47c-bf92-48e3-bf69-7ccdd2e29f37",
       question: "다음 중 화력 발전에서 가장 많이 사용되는 원료는 무엇일까요?",
       type: 0,
+      score: 30,
       options: [
         {
           uuid: "5b866166-f56b-497b-9c56-91ffebf87280",
@@ -301,6 +313,7 @@ const quiz4 = {
     {
       uuid: "0cff9fb6-ea4b-49d1-8bc0-69259291e803",
       question: "소가 웃는 소리를 세글자로 하면?",
+      score: 40,
       type: 1,
       options: [],
       essayAnswer: "우하하",
@@ -308,7 +321,7 @@ const quiz4 = {
   ],
 };
 
-const quiz5 = {
+const quiz5: Quiz = {
   id: "efbf8a40-2d45-4d15-93d7-ffa11dec74asd",
   owner: user1,
   name: "상식퀴즈2",
@@ -318,6 +331,7 @@ const quiz5 = {
       question: "1 + 2 x 3 = ?",
       type: 0,
       reason: "곱셈의 우선순위가 높기 때문에 답은 7이다.",
+      score: 30,
       options: [
         {
           uuid: "5b866166-f56b-497b-9c56-91ffebf87280",
@@ -346,6 +360,7 @@ const quiz5 = {
       question:
         "18세기 중엽 영국에서 시작된 기술 혁신과 이에 수반하여 일어난 사회, 경제 구조의 변혁을 무엇이라 할까요?",
       type: 0,
+      score: 30,
       options: [
         {
           uuid: "5b866166-f56b-497b-9c56-91ffebf87280",
@@ -374,6 +389,7 @@ const quiz5 = {
       question:
         "다음 중 프로세스가 메모리에 적재될때 프로세스를 구성하는 영역인 것을 모두 고르세요.",
       type: 0,
+      score: 40,
       options: [
         {
           uuid: "5b866166-f56b-497b-9c56-91ffebf87280",
@@ -400,7 +416,7 @@ const quiz5 = {
   ],
 };
 
-const quiz6 = {
+const quiz6: Quiz = {
   id: "6be24156-b061-4657-b678-9956d5ba97c6",
   owner: user1,
   name: "프로그래밍 기초1",
@@ -409,6 +425,7 @@ const quiz6 = {
       uuid: "dsi29gj3f",
       question: "API의 약어를 소문자로 풀어 쓰시오.",
       type: 1,
+      score: 40,
       options: [
         {
           uuid: "9df01185-7528-4987-97f3-187120b1165f",
@@ -427,6 +444,7 @@ const quiz6 = {
       uuid: "99abd8dd-aaca-48bf-8149-03a9a36d96e4",
       question: "모든 경우에 퀵정렬이 항상 빠르다.",
       type: 0,
+      score: 30,
       options: [
         {
           uuid: "9df01185-7528-4987-97f3-187120b1165f",
@@ -444,6 +462,7 @@ const quiz6 = {
       uuid: "d6672bda-5f78-4e72-9f2d-94960c4444bf",
       question: "js에서 배열 순회 함수를 모두 고르시오",
       type: 0,
+      score: 30,
       options: [
         {
           uuid: "9df01185-7528-4987-97f3-187120b1165f",
@@ -470,7 +489,7 @@ const quiz6 = {
   ],
 };
 
-const quiz7 = {
+const quiz7: Quiz = {
   id: "f9648289-1281-4b44-b944-1c00b747939e",
   owner: user1,
   name: "상식퀴즈2",
@@ -479,6 +498,7 @@ const quiz7 = {
       uuid: "dsi29gj3f",
       question: "한성대학교에 살던 동물의 이름이 아닌 것을 모두 고르시오.",
       type: 0,
+      score: 30,
       options: [
         {
           uuid: "982a7167-8216-4328-bae8-83815d38fd10",
@@ -511,6 +531,7 @@ const quiz7 = {
       uuid: "c8647a98-a7aa-44ba-8962-5781129d0010",
       question: "시카고는 미시간 주에 속해있다.",
       type: 0,
+      score: 30,
       options: [
         {
           uuid: "982a7167-8216-4328-bae8-83815d38fd10",
@@ -528,13 +549,14 @@ const quiz7 = {
       uuid: "7c210a46-c3ff-42c9-9239-19757ba70714",
       question: "은(Silver)의 원소기호를 적으시오.",
       type: 1,
+      score: 30,
       options: [],
       essayAnswer: "Ag",
     },
   ],
 };
 
-const quiz8 = {
+const quiz8: Quiz = {
   id: "a2f2989e-9579-42e9-a90a-639a44775938",
   owner: user1,
   name: "상식퀴즈3",
@@ -543,6 +565,7 @@ const quiz8 = {
       uuid: "dsi29gj3f",
       question: "검은색의 색상값은 ? #______ (#을 제외한 6자리만 적으시오)",
       type: 1,
+      score: 30,
       options: [],
       essayAnswer: "000000",
     },
@@ -550,6 +573,7 @@ const quiz8 = {
       uuid: "6ac7049e-5afd-4c47-ada6-9d99d325bd1a",
       question: "Black Friday는 어떤 기념일 다음 날인가?",
       type: 0,
+      score: 30,
       options: [
         {
           uuid: "1908294b-a863-463e-8def-3e601f681cd1",
@@ -572,6 +596,7 @@ const quiz8 = {
       uuid: "ff78c84e-144e-43a5-8c43-f25bb130d756",
       question: "다음 중 찻잎이 들어가지 않은 차를 고르시오",
       type: 0,
+      score: 30,
       options: [
         {
           uuid: "1908294b-a863-463e-8def-3e601f681cd1",
@@ -598,7 +623,7 @@ const quiz8 = {
   ],
 };
 
-const quiz9 = {
+const quiz9: Quiz = {
   id: "a56dd92b-4c17-4849-9b96-9be4ad9878e6",
   owner: user1,
   name: "문화1",
@@ -607,6 +632,7 @@ const quiz9 = {
       uuid: "dsi29gj3f",
       question: "윤도현 밴드 노래가 아닌 것은?",
       type: 0,
+      score: 50,
       reason: "Next Level은 에스파, 사랑했나봐는 윤도현 개인의 곡이다.",
       options: [
         {
@@ -635,6 +661,7 @@ const quiz9 = {
       uuid: "ac3d34f8-7518-492d-b1e6-3009337d1696",
       question: "한성대학교를 대표하는 동물을 쓰시오.",
       type: 1,
+      score: 30,
       options: [],
       essayAnswer: "거북이",
     },
@@ -642,6 +669,7 @@ const quiz9 = {
       uuid: "1d533756-6fda-4132-8c09-126616f9272f",
       question: "손흥민이 뛰었던 팀을 모두 고르시오.",
       type: 0,
+      score: 20,
       options: [
         {
           uuid: "2e33abc3-7c76-4a6f-9380-1e726b7cb95b",
