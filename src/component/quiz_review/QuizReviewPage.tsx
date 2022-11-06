@@ -65,7 +65,7 @@ const AnswerAndReason = (props: AnswerAndReasonProps) => {
   return (
     <>
       <Typography style={{ margin: "16px" }}>
-        {`정답: ${answerText}`}
+        {`정답:`} <b>{answerText}</b>
         <br></br>
         {props.quizItem.reason ? `이유: ${props.quizItem.reason}` : undefined}
       </Typography>
@@ -221,6 +221,16 @@ const QuizReviewPage = (props: QuizReviewPageProps) => {
         index={itemIndex}
         question={currentQuizItem.question}
       />
+      <Typography style={{ margin: "16px", opacity: 0.6 }}>
+        {currentQuizItem.score}점 중{" "}
+        <b>
+          {isCorrect(currentRecordItem, currentQuizItem)
+            ? currentQuizItem.score
+            : 0}
+          점 획득
+        </b>
+      </Typography>
+      <Divider />
       <AnswerAndReason quizItem={currentQuizItem} />
       {essayOrChoiceList}
     </Scaffold>
