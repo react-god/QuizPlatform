@@ -6,7 +6,10 @@ import { NavRail, NavRailItem } from "../NavRail";
 import { Check, Close } from "@mui/icons-material";
 import Scaffold from "../Scaffold";
 
-function isCorrect(recordItem: QuizRecordItem, quizItem: QuizItem): boolean {
+export function isCorrect(
+  recordItem: QuizRecordItem,
+  quizItem: QuizItem
+): boolean {
   let result = false;
   switch (quizItem.type) {
     case QuizType.choice:
