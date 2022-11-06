@@ -34,13 +34,14 @@ const StaticsTitle = (props: TitleProps) => {
 interface CandidateCountProps {
   candidateUserCount: number;
   submitCount: number;
+  average: number;
 }
 
-const Count = (props: CandidateCountProps) => {
+const QuizRecordSummary = (props: CandidateCountProps) => {
   return (
     <Typography>
       총 응시자 수: {props.candidateUserCount}명<br></br>총 제출 횟수:{" "}
-      {props.submitCount}회
+      {props.submitCount}회<br></br>평균 점수: {props.average}점
     </Typography>
   );
 };
@@ -107,19 +108,14 @@ function getScore(record: QuizRecord, quizItems: QuizItem[]): number {
 }
 
 interface ScoreDistributionChartProps {
-  quizItems: QuizItem[];
-  records: QuizRecord[];
+  scores: number[];
 }
 
 const LABLE_COUNT = 10;
 
 const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
   const palette = useTheme().palette;
-  const scores: number[] = useMemo(() => {
-    return props.records
-      .map((record) => getScore(record, props.quizItems))
-      .sort((a, b) => a - b);
-  }, [props.quizItems, props.records]);
+  const scores = props.scores;
 
   const maxScore: number = useMemo(
     () => scores.reduce((prev, curr) => (prev > curr ? prev : curr)),
@@ -162,7 +158,7 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
     labels,
     datasets: [
       {
-        label: "인원",
+        label: "제출",
         data: scoreDistribution,
         backgroundColor: palette.primary.light,
       },
@@ -182,18 +178,27 @@ const QuizStaticsPage = (props: QuizStaticsPageProps) => {
     ...new Set(props.records.map((record) => record.candidate)),
   ];
 
+  const scores: number[] = useMemo(() => {
+    return props.records
+      .map((record) => getScore(record, props.quiz.items))
+      .sort((a, b) => a - b);
+  }, [props.quiz.items, props.records]);
+
+  const average: number = useMemo(() => {
+    const sum = scores.reduce((prev, curr) => prev + curr);
+    return sum / scores.length;
+  }, [scores]);
+
   return (
     <Scaffold navRail={<NavRail items={[]} />}>
       <StaticsTitle quizName={props.quiz.name} />
-      <Count
+      <QuizRecordSummary
         candidateUserCount={candidates.length}
         submitCount={props.records.length}
+        average={average}
       />
       <CandidateList candidates={candidates} />
-      <ScoreDistributionChart
-        quizItems={props.quiz.items}
-        records={props.records}
-      />
+      <ScoreDistributionChart scores={scores} />
     </Scaffold>
   );
 };
