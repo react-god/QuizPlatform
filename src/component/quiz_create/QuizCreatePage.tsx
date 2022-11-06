@@ -145,11 +145,29 @@ const ImagePicker = (props: ImagePickerProps) => {
 interface OptionChipsProps {
   selectedType: QuizType;
   imageUrl?: String;
+  score: number;
   onChipClick: (type: QuizType) => void;
   onImageChange: (url?: String) => void;
+  onScoreChange: (score: number) => void;
 }
 
-const OptionChips = (props: OptionChipsProps) => {
+const OptionBar = (props: OptionChipsProps) => {
+  const divider = (
+    <Divider
+      orientation="vertical"
+      style={{ marginLeft: "8px", marginRight: "8px" }}
+    ></Divider>
+  );
+
+  const onScoreChange = (scoreText: string) => {
+    const numberRegex = /^[0-9\b]+$/;
+
+    // if value is not blank, then test the regex
+    if (scoreText === "" || numberRegex.test(scoreText)) {
+      props.onScoreChange(Number(scoreText));
+    }
+  };
+
   return (
     <Stack
       direction="row"
@@ -167,10 +185,15 @@ const OptionChips = (props: OptionChipsProps) => {
         color={props.selectedType === QuizType.essay ? "primary" : "default"}
         onClick={() => props.onChipClick(QuizType.essay)}
       />
-      <Divider
-        orientation="vertical"
+      {divider}
+      <TextField
+        label="배점"
+        size="small"
+        value={props.score}
+        onChange={(e) => onScoreChange(e.target.value)}
         style={{ marginLeft: "8px", marginRight: "8px" }}
-      ></Divider>
+      />
+      {divider}
       <ImagePicker
         id="quizImage"
         imageUrl={props.imageUrl}
@@ -327,7 +350,7 @@ const OptionAddButton = (props: OptionAddBarProps) => {
 };
 
 interface QuizCreatePageProps {
-  quizName: String;
+  quizName: string;
 }
 
 const QuizCreatePage = (props: QuizCreatePageProps) => {
@@ -416,11 +439,13 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
         onRemoveClick={() => store.removeCurrentQuizItem()}
         onQuestionChange={(q) => store.updateQuizItemQuestion(q)}
       />
-      <OptionChips
+      <OptionBar
         selectedType={currentQuizItem.type}
         imageUrl={currentQuizItem.imageUrl}
+        score={currentQuizItem.score}
         onChipClick={(type) => store.updateQuizItemType(type)}
         onImageChange={(imageUrl) => store.updateQuizImageUrl(imageUrl)}
+        onScoreChange={(score) => store.updateQuizItemScore(score)}
       />
       {optionListOrEssay}
       <AnswerReasonTextField
