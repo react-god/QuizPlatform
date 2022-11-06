@@ -38,10 +38,10 @@ interface CandidateCountProps {
 
 const Count = (props: CandidateCountProps) => {
   return (
-    <div>
+    <Typography>
       총 응시자 수: {props.candidateUserCount}명<br></br>총 제출 횟수:{" "}
       {props.submitCount}회
-    </div>
+    </Typography>
   );
 };
 
@@ -51,12 +51,12 @@ interface CandidateListProps {
 
 const CandidateList = (props: CandidateListProps) => {
   return (
-    <div>
-      응시자 목록:
+    <Typography>
+      응시자 목록
       {props.candidates.map((user) => (
-        <div>{user.name}</div>
+        <div style={{ marginLeft: "16px" }}>• {user.name}</div>
       ))}
-    </div>
+    </Typography>
   );
 };
 
