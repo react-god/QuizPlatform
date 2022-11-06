@@ -6,23 +6,57 @@ import {
   TextField,
   Box,
   Container,
+  Checkbox,
+  Modal,
 } from "@mui/material";
-import {Quiz, QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
+import { Quiz, QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
+import { ImageNotSupported, Image } from "@mui/icons-material";
 
-const Question: React.FC<{ item: QuizItem, index: number }> = ({ item,index }) => {
+const Question: React.FC<{ item: QuizItem; index: number }> = ({
+  item,
+  index,
+}) => {
   return (
     <Box>
-      <Typography variant="h4">{index+1}</Typography>
+      <Typography variant="h4">{index + 1}</Typography>
       <Typography>{item.question}</Typography>
     </Box>
   );
 };
 
+const ImageModal: React.FC<{ source: String }> = ({ source }) => {
+  const [open, setOpen] = React.useState(false);
+  const modalOpen = () => setOpen(true);
+  const modalClose = () => setOpen(false);
+
+  return (
+    <div>
+      <Button onClick={modalOpen}>
+        <Image />
+      </Button>
+      <Modal open={open} onClose={modalClose}>
+        <Box>
+          <img src={source} alt="img" />
+        </Box>
+      </Modal>
+    </div>
+  );
+};
+
 const QuizChoice: React.FC<{ option: QuizOption }> = ({ option }) => {
+  const [open, setOpen] = React.useState(false);
+  const modalOpen = () => setOpen(true);
+  const modalClose = () => setOpen(false);
   //퀴즈가 객관식일 때만, 하나의 옵션(보기)
-  //checkbox로 바꾸기?
+  let quizImage: JSX.Element;
+
+  if (option.imageUrl) {
+    quizImage = <ImageModal source={option.imageUrl}></ImageModal>;
+  }
+
   return (
     <Card>
+      {quizImage}
       <Typography>{option.title}</Typography>
       {/*해당 Choice에 onClick 이벤트가 일어나면*/}
     </Card>
@@ -30,12 +64,12 @@ const QuizChoice: React.FC<{ option: QuizOption }> = ({ option }) => {
 };
 
 const QuizChoiceList: React.FC<{ currentItem: QuizItem }> = ({
-  currentItem
+  currentItem,
 }) => {
   return (
     <>
       {currentItem.options.map((option, i) => (
-        <QuizChoice option={option} key={i}/>
+        <QuizChoice option={option} key={i} />
       ))}
     </>
   );
@@ -45,7 +79,7 @@ const QuizEssay = () => {
   return <TextField variant="filled" />; //onChange가 일어났을 때 값을 records에 저장 되어야한다.
 };
 
-const TakingQuiz : React.FC<{quiz: Quiz}> = ({quiz}) => {
+const TakingQuiz: React.FC<{ quiz: Quiz }> = ({ quiz }) => {
   //const quiz = quiz; //mockupdata //나중에 quiz1, quiz2, quiz3...각각 들어가도록 해야되겠지.
   const [currentItemIndex, setcurrentItemIndex] = useState(0);
   const currentItem = quiz.items[currentItemIndex];
@@ -58,8 +92,8 @@ const TakingQuiz : React.FC<{quiz: Quiz}> = ({quiz}) => {
       choiceOrEssay = <QuizEssay />;
   }
 
-  const isFirst : boolean =  currentItemIndex === 0;
-  const isLast : boolean = currentItemIndex === ((quiz.items.length)-1);
+  const isFirst: boolean = currentItemIndex === 0;
+  const isLast: boolean = currentItemIndex === quiz.items.length - 1;
 
   const moveNext = () => {
     if (currentItemIndex + 1 !== quiz.items.length) {
