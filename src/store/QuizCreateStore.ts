@@ -8,6 +8,7 @@ const initQuizItem: QuizItem = {
   uuid: "dsi29gj3f",
   question: "",
   type: QuizType.choice,
+  score: 10,
   options: [
     {
       uuid: uuidv4(),
@@ -27,7 +28,7 @@ class QuizCreateStore {
 
   currentItemIndex: number = 0;
 
-  constructor(quizName: String) {
+  constructor(quizName: string) {
     this.quiz = {
       id: uuidv4(),
       owner: user1,
@@ -39,7 +40,7 @@ class QuizCreateStore {
 
   // ------------- 퀴즈 관련 -----------------
 
-  updateQuizName(name: String) {
+  updateQuizName(name: string) {
     this.quiz.name = name;
   }
 
@@ -116,6 +117,10 @@ class QuizCreateStore {
 
   updateQuizImageUrl(imageUrl?: String) {
     this.currentQuizItem.imageUrl = imageUrl;
+  }
+
+  updateQuizItemScore(score: number) {
+    this.currentQuizItem.score = score;
   }
 
   updateQuizItemReason(reason: String) {

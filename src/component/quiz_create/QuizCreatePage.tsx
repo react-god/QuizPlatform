@@ -7,16 +7,15 @@ import {
   Stack,
   TextField,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
-import "./QuizCreatePage.css";
 import { Add, Delete, Image } from "@mui/icons-material";
 import { observer } from "mobx-react";
 import { ChangeEvent, useReducer, useRef, useState } from "react";
 import { QuizOption, QuizType } from "../../mockup_data/quiz";
 import QuizCreateStore from "../../store/QuizCreateStore";
 import { NavRail, NavRailItem } from "../NavRail";
+import Scaffold from "../Scaffold";
 
 interface SubmitButtonProps {
   enabled: boolean;
@@ -146,11 +145,29 @@ const ImagePicker = (props: ImagePickerProps) => {
 interface OptionChipsProps {
   selectedType: QuizType;
   imageUrl?: String;
+  score: number;
   onChipClick: (type: QuizType) => void;
   onImageChange: (url?: String) => void;
+  onScoreChange: (score: number) => void;
 }
 
-const OptionChips = (props: OptionChipsProps) => {
+const OptionBar = (props: OptionChipsProps) => {
+  const divider = (
+    <Divider
+      orientation="vertical"
+      style={{ marginLeft: "8px", marginRight: "8px" }}
+    ></Divider>
+  );
+
+  const onScoreChange = (scoreText: string) => {
+    const numberRegex = /^[0-9\b]+$/;
+
+    // if value is not blank, then test the regex
+    if (scoreText === "" || numberRegex.test(scoreText)) {
+      props.onScoreChange(Number(scoreText));
+    }
+  };
+
   return (
     <Stack
       direction="row"
@@ -168,10 +185,15 @@ const OptionChips = (props: OptionChipsProps) => {
         color={props.selectedType === QuizType.essay ? "primary" : "default"}
         onClick={() => props.onChipClick(QuizType.essay)}
       />
-      <Divider
-        orientation="vertical"
+      {divider}
+      <TextField
+        label="배점"
+        size="small"
+        value={props.score}
+        onChange={(e) => onScoreChange(e.target.value)}
         style={{ marginLeft: "8px", marginRight: "8px" }}
-      ></Divider>
+      />
+      {divider}
       <ImagePicker
         id="quizImage"
         imageUrl={props.imageUrl}
@@ -328,7 +350,7 @@ const OptionAddButton = (props: OptionAddBarProps) => {
 };
 
 interface QuizCreatePageProps {
-  quizName: String;
+  quizName: string;
 }
 
 const QuizCreatePage = (props: QuizCreatePageProps) => {
@@ -337,19 +359,7 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
   // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
   // hack을 하고있다. 추후에 고칠 필요가 있다.
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
-  let pageHorizontalPadding: string;
   let optionListOrEssay: JSX.Element;
-
-  const isMobile = useMediaQuery(`(max-width: 780px)`);
-  const isTablet = useMediaQuery(`(max-width: 960px)`);
-
-  if (isMobile) {
-    pageHorizontalPadding = "40px";
-  } else if (isTablet) {
-    pageHorizontalPadding = "120px";
-  } else {
-    pageHorizontalPadding = "240px";
-  }
 
   switch (currentQuizItem.type) {
     case QuizType.choice:
@@ -394,62 +404,55 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
   }
 
   return (
-    <Stack direction="row" style={{ height: "100%" }}>
-      <NavRail
-        items={[
-          ...store.quizItems.map((item, index) => {
-            return (
-              <NavRailItem
-                key={item.uuid as string}
-                label={`${index + 1}`}
-                color={store.isItemCompleted(item) ? "secondary" : "inherit"}
-                isSelected={store.currentItemIndex === index}
-                onClick={() => (store.currentItemIndex = index)}
-              />
-            );
-          }),
-          <IconButton onClick={() => store.addQuizItem()}>
-            <Add />
-          </IconButton>,
-        ]}
-        trailingItem={
-          <SubmitButton
-            enabled={store.enabledSubmitButton}
-            onClick={() => store.submitQuiz()}
-          />
-        }
+    <Scaffold
+      navRail={
+        <NavRail
+          items={[
+            ...store.quizItems.map((item, index) => {
+              return (
+                <NavRailItem
+                  key={item.uuid as string}
+                  label={`${index + 1}`}
+                  color={store.isItemCompleted(item) ? "secondary" : "inherit"}
+                  isSelected={store.currentItemIndex === index}
+                  onClick={() => (store.currentItemIndex = index)}
+                />
+              );
+            }),
+            <IconButton onClick={() => store.addQuizItem()}>
+              <Add />
+            </IconButton>,
+          ]}
+          trailingItem={
+            <SubmitButton
+              enabled={store.enabledSubmitButton}
+              onClick={() => store.submitQuiz()}
+            />
+          }
+        />
+      }
+    >
+      <QuestionTitle
+        index={store.currentItemIndex}
+        question={currentQuizItem.question}
+        showRemoveButton={store.showRemoveQuizItemButton}
+        onRemoveClick={() => store.removeCurrentQuizItem()}
+        onQuestionChange={(q) => store.updateQuizItemQuestion(q)}
       />
-      <Stack
-        direction="column"
-        width="100%"
-        style={{
-          paddingLeft: pageHorizontalPadding,
-          paddingRight: pageHorizontalPadding,
-          paddingTop: "80px",
-          paddingBottom: "80px",
-          overflowY: "scroll",
-        }}
-      >
-        <QuestionTitle
-          index={store.currentItemIndex}
-          question={currentQuizItem.question}
-          showRemoveButton={store.showRemoveQuizItemButton}
-          onRemoveClick={() => store.removeCurrentQuizItem()}
-          onQuestionChange={(q) => store.updateQuizItemQuestion(q)}
-        />
-        <OptionChips
-          selectedType={currentQuizItem.type}
-          imageUrl={currentQuizItem.imageUrl}
-          onChipClick={(type) => store.updateQuizItemType(type)}
-          onImageChange={(imageUrl) => store.updateQuizImageUrl(imageUrl)}
-        />
-        {optionListOrEssay}
-        <AnswerReasonTextField
-          reason={currentQuizItem.reason ?? ""}
-          onReasonChange={(reason) => store.updateQuizItemReason(reason)}
-        />
-      </Stack>
-    </Stack>
+      <OptionBar
+        selectedType={currentQuizItem.type}
+        imageUrl={currentQuizItem.imageUrl}
+        score={currentQuizItem.score}
+        onChipClick={(type) => store.updateQuizItemType(type)}
+        onImageChange={(imageUrl) => store.updateQuizImageUrl(imageUrl)}
+        onScoreChange={(score) => store.updateQuizItemScore(score)}
+      />
+      {optionListOrEssay}
+      <AnswerReasonTextField
+        reason={currentQuizItem.reason ?? ""}
+        onReasonChange={(reason) => store.updateQuizItemReason(reason)}
+      />
+    </Scaffold>
   );
 };
 

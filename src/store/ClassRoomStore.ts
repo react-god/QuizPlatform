@@ -5,6 +5,8 @@ import { ClassRoom, room1, room2, room3 } from "../mockup_data/classroom";
 class ClassRoomStore {
   rooms: ClassRoom[] = [room1, room2, room3];
 
+  currentItemIndex: number = 0;
+
   constructor() {
     makeAutoObservable(this);
   }

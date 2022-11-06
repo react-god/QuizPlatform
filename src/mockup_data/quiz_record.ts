@@ -1,5 +1,5 @@
-import { Quiz, quiz1, QuizType } from "./quiz";
-import { User, user2, user3, user4 } from "./user";
+import { Quiz, quiz1 } from "./quiz";
+import { User, user1, user2, user3 } from "./user";
 
 export interface QuizRecord {
   quiz: Quiz;
@@ -10,6 +10,11 @@ export interface QuizRecord {
 export interface QuizRecordItem {
   index: number;
   essay?: String; //단답식일 때
+  /**
+   * 선택한 보기 문항들의 인덱스를 가지고 있다.
+   *
+   * 0부터 시작한다.
+   */
   choice?: Array<number>;
 }
 
@@ -79,4 +84,10 @@ const quizRecord1_3: QuizRecord = {
   items: [item3_1, item3_2, item3_3],
 };
 
-export { quizRecord1_1, quizRecord1_2, quizRecord1_3 };
+const quizRecord1_4: QuizRecord = {
+  quiz: quiz1,
+  candidate: user1,
+  items: [item3_1, item3_2, item3_3],
+};
+
+export { quizRecord1_1, quizRecord1_2, quizRecord1_3, quizRecord1_4 };
