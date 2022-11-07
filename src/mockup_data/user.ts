@@ -5,25 +5,25 @@ export interface User {
 }
 
 const user1: User = {
-  id: "jja08111",
+  id: "jja08111@email.com",
   password: "password",
   name: "김민성",
 };
 
 const user2: User = {
-  id: "admin",
+  id: "admin@email.com",
   password: "password",
   name: "정시현",
 };
 
 const user3: User = {
-  id: "siroo",
+  id: "siroo@email.com",
   password: "password",
   name: "권대현",
 };
 
 const user4: User = {
-  id: "eunseo",
+  id: "eunseo@email.com",
   password: "password",
   name: "곽은서",
 };

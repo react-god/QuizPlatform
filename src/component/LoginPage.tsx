@@ -1,3 +1,4 @@
+import { WindowSharp } from "@mui/icons-material";
 import React from "react";
 import {
   Button,
@@ -48,7 +49,7 @@ function LoginPage() {
             setErrorMsg("Login Success");
             window.location.href = "/";
           }, 1000);
-          break
+          break;
         }
       }
 
@@ -59,20 +60,23 @@ function LoginPage() {
       }
     } catch(e) {
       if (e instanceof TypeError) {
-        // TypeError
-        alert(String(e));
+        setErrorMsg(String(e));
       }
       else if (e instanceof SyntaxError) {
-        alert(String(e));
+        setErrorMsg(String(e));
       }
       else if (typeof e === 'string') {
-        alert(String(e));
+        setErrorMsg(String(e));
       }
       else {
-        alert(String(e));
+        setErrorMsg(String(e));
       }
     }
   };
+
+  const signUpHandler = () => {
+    window.location.href = "/signup";
+  }
 
   return (
     <>
@@ -81,7 +85,7 @@ function LoginPage() {
           className="page-header-image"
           style={{
             backgroundImage:
-              "url(" + require("../assets/img/login.jpg").default + ")",
+              "url(" + require("../assets/img/login.jpg") + ")",
           }}
         ></div>
         <div className="content">
@@ -142,9 +146,9 @@ function LoginPage() {
 
                      <Button
                         block
-                        className="btn-round"
-                        color="info"
-                        // onClick={() => loginHandler(email, password)}
+                        className="btn-link"
+                        color="white"
+                        onClick={() => signUpHandler()}
                         size="lg"
                       >
                         Create Account 
@@ -156,9 +160,7 @@ function LoginPage() {
                         isOpen={modalSmall}
                       >
                         <div className="modal-header justify-content-center">
-                          <div className="modal-profile">
-                            <i className="now-ui-icons users_circle-08"></i>
-                          </div>
+                          <div className="modal-profile"></div>
                         </div>
                         <ModalBody>
                           <p>{errorMsg}</p>

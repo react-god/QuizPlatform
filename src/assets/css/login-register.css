@@ -24,6 +24,10 @@
  * Copyright 2012-2013 Mattia Larentis
  * http://www.apache.org/licenses/LICENSE-2.0
  */
+
+.modal-icon {
+  background-image: url("../img/logo.png");
+}
 .bootstrap-switch {
   display: inline-block;
   direction: ltr;
@@ -1609,7 +1613,18 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
       color: #ff5555;
       text-decoration: none;
       box-shadow: none; }
+  .btn-white.btn-link {
+    color: #FFFFFF; }
+    .btn-danger.btn-link:hover, .btn-danger.btn-link:focus, .btn-danger.btn-link:not(:disabled):not(.disabled):active, .btn-danger.btn-link:not(:disabled):not(.disabled).active, .btn-danger.btn-link:not(:disabled):not(.disabled):active:focus, .btn-danger.btn-link:not(:disabled):not(.disabled).active:focus, .btn-danger.btn-link:active:hover, .btn-danger.btn-link.active:hover,
+    .show > .btn-danger.btn-link.dropdown-toggle,
+    .show > .btn-danger.btn-link.dropdown-toggle:focus,
+    .show > .btn-danger.btn-link.dropdown-toggle:hover {
+      background-color: transparent;
+      color: #FFFFFF;
+      text-decoration: none;
+      box-shadow: none; }
 
+    
 .btn-neutral {
   background-color: #FFFFFF;
   color: #f96332; }
@@ -2792,27 +2807,6 @@ License - nucleoapp.com/license/
 Created using IcoMoon - icomoon.io
 
 -------------------------------- */
-@font-face {
-  font-family: 'Nucleo Outline';
-  font-weight: normal;
-  font-style: normal; }
-
-/*------------------------
-	base class definition
--------------------------*/
-.now-ui-icons {
-  display: inline-block;
-  font: normal normal normal 14px/1 'Nucleo Outline';
-  font-size: inherit;
-  speak: none;
-  text-transform: none;
-  /* Better Font Rendering */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
-
-/*------------------------
-  change icon size
--------------------------*/
 /*----------------------------------
   add a square/circle background
 -----------------------------------*/
@@ -3367,7 +3361,7 @@ Created using IcoMoon - icomoon.io
 .bg-primary {
   background-color: #f96332 !important; }
 
-.bg-info {
+.bg-iknfo {
   background-color: #2CA8FF !important; }
 
 .bg-success {
