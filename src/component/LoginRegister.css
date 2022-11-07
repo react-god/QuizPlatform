@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-image:url("/workspaces/QuizPlatform/sample_data/francesco-ungaro-ZDriZvoHeKk-unsplash.jpg");
+    background-image:url("/workspaces/QuizPlatform/sample_data/back.png");
 }
 .loginregister-input {
     width: 300px;
