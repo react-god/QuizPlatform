@@ -13,52 +13,66 @@ import {
   Modal,
   ModalBody,
 } from "reactstrap";
-
-// import "../assets/css/bootsrap.min.css"
-// import "assets/now-ui-kit.css"
+import {user1, user2, user3, user4} from "../mockup_data/user";
 
 function LoginPage() {
-  const [firstFocus, setFirstFocus] = React.useState(false);
-  const [lastFocus, setLastFocus] = React.useState(false);
-  const [email, setEmail] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [modalSmall, setModalSmall] = React.useState(false);
-  const [errorMsg, setErrorMsg] = React.useState("")
-  let User = {};
+  const [firstFocus, setFirstFocus] = React.useState<boolean>(false);
+  const [lastFocus, setLastFocus] = React.useState<boolean>(false);
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
+  const [modalSmall, setModalSmall] = React.useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = React.useState<String>("");
 
-  // const onChangeHandler = (e, value:string) => {
-  //   if (value === "email") setEmail(e.target.value);
-  //   else setPassword(e.target.value);
-  // };
+  const users_data = [user1, user2, user3, user4];
+  let users = new Array;
+  for(const user of users_data){
+    const dat = {"id":user.id, "password":user.password};
+    users.push(dat);
+  }
 
-  // const loginHandler = async (email:string, password:string) => {
-  //   try {
+  const onChangeHandler = (e:React.ChangeEvent<HTMLInputElement>, type:string) => {
+    if (type === "email") setEmail(e.target.value);
+    else setPassword(e.target.value);
+  };
 
-  //     setModalSmall(true);
-  //     setErrorMsg("Loading");
+  const loginHandler = async (email:string, password:string) => {
+    try {
 
-  //     authService.onAuthStateChanged(function (user) {
-  //       if (user) {
-  //         User = user;
-  //         window.location.href = "/index";
-  //       }
-  //     });
-  //   } catch (e) {
-  //     alert(e.toString());
-  //   }
-  // };
+      setModalSmall(true);
+      setErrorMsg("Loading");
+      let auth = false;
+      for (const user of users){
+        if(email===user['id'] && password==user['password']) {
+          auth = true;
+          setTimeout(()=>{
+            setErrorMsg("Login Success");
+            window.location.href = "/";
+          }, 1000);
+          break
+        }
+      }
 
-  React.useEffect(() => {
-    document.body.classList.add("login-page");
-    document.body.classList.add("sidebar-collapse");
-    document.documentElement.classList.remove("nav-open");
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
-    return function cleanup() {
-      document.body.classList.remove("login-page");
-      document.body.classList.remove("sidebar-collapse");
-    };
-  }, []);
+      if(!auth) {
+        setTimeout(()=>{
+          setErrorMsg("Can't find User information");
+        }, 1000);
+      }
+    } catch(e) {
+      if (e instanceof TypeError) {
+        // TypeError
+        alert(String(e));
+      }
+      else if (e instanceof SyntaxError) {
+        alert(String(e));
+      }
+      else if (typeof e === 'string') {
+        alert(String(e));
+      }
+      else {
+        alert(String(e));
+      }
+    }
+  };
 
   return (
     <>
@@ -95,7 +109,7 @@ function LoginPage() {
                         type="email"
                         onFocus={() => setFirstFocus(true)}
                         onBlur={() => setFirstFocus(false)}
-                        // onChange={(e) => onChangeHandler(e, "email")}
+                        onChange={(e) => onChangeHandler(e, "email")}
                         value={email}
                       ></Input>
                     </InputGroup>
@@ -110,7 +124,7 @@ function LoginPage() {
                         type="password"
                         onFocus={() => setLastFocus(true)}
                         onBlur={() => setLastFocus(false)}
-                        // onChange={(e) => onChangeHandler(e, "pw")}
+                        onChange={(e) => onChangeHandler(e, "pw")}
                         value={password}
                       ></Input>
                     </InputGroup>
@@ -120,7 +134,7 @@ function LoginPage() {
                         block
                         className="btn-round"
                         color="info"
-                        // onClick={() => loginHandler(email, password)}
+                        onClick={() => loginHandler(email, password)}
                         size="lg"
                       >
                         Login
