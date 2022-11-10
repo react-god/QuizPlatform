@@ -20,6 +20,10 @@ import Scaffold from "../Scaffold";
 import { Stack } from "@mui/system";
 import userStore from "../../store/UserStore";
 import { ClassRoom } from "../../mockup_data/classroom";
+import quizCreateStore from "../../store/QuizCreateStore";
+import { useNavigate } from "react-router-dom";
+
+userStore.signIn("jja08111", "password");
 
 interface CreateClassRoomDialogProps {
   open: boolean;
@@ -96,7 +100,7 @@ const CreateQuizDialog = (props: CreateQuizDialogProps) => {
             setNewQuizName("");
           }}
         >
-          저장
+          만들기
         </Button>
       </DialogActions>
     </Dialog>
@@ -147,6 +151,7 @@ const AddClassRoomByCodeDialog = (props: AddClassRoomCodeDialog) => {
 };
 
 const ClassRoomPage = () => {
+  const navigate = useNavigate();
   const invitedRooms = classRoomStore.invitedRooms;
   const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
   const currentRoom: ClassRoom | undefined =
@@ -169,7 +174,7 @@ const ClassRoomPage = () => {
 
   const createQuiz = (quizName: String) => {
     setOpenCreateQuizDialog(false);
-    // TODO: 퀴즈 생성 화면으로 전환
+    navigate("/create-quiz", { state: { quizName: quizName } });
   };
 
   const joinClassRoom = (code: String) => {

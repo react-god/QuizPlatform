@@ -2,7 +2,6 @@ import { Quiz, QuizItem, QuizType } from "../mockup_data/quiz";
 import { v4 as uuidv4 } from "uuid";
 import { user1 } from "../mockup_data/user";
 import { makeAutoObservable } from "mobx";
-import { observable, storeAnnotation } from "mobx/dist/internal";
 
 const initQuizItem: QuizItem = {
   uuid: "dsi29gj3f",
@@ -24,15 +23,15 @@ const initQuizItem: QuizItem = {
 };
 
 class QuizCreateStore {
-  quiz: Quiz;
+  private quiz: Quiz;
 
   currentItemIndex: number = 0;
 
-  constructor(quizName: string) {
+  constructor(quizName: String) {
     this.quiz = {
       id: uuidv4(),
       owner: user1,
-      name: quizName,
+      name: quizName as string,
       items: [initQuizItem],
     };
     makeAutoObservable(this);
