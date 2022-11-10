@@ -205,7 +205,7 @@ const ClassRoomPage = () => {
             <Stack>
               <Button
                 variant="outlined"
-                style={{ margin: "8px" }}
+                style={{ margin: "8px", minWidth: "80px" }}
                 onClick={() => setOpenRoomCodeDialog(true)}
               >
                 <Typography variant="button">
@@ -214,7 +214,7 @@ const ClassRoomPage = () => {
               </Button>
               <Button
                 variant="contained"
-                style={{ margin: "8px" }}
+                style={{ margin: "8px", minWidth: "80px" }}
                 onClick={() => setOpenCreateClassRoomDialog(true)}
               >
                 <Typography variant="button">
