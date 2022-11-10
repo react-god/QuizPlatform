@@ -168,11 +168,13 @@ const ClassRoomPage = () => {
   const [snackBarMessage, showSnackBar] = useSnackBarMessage();
 
   useEffect(() => {
+    classRoomStore.fetchClassRooms();
+  }, []);
+
+  useEffect(() => {
     if (state !== null && "snackBarMessage" in state) {
       showSnackBar(state.snackBarMessage);
     }
-
-    classRoomStore.fetchClassRooms();
   }, [state]);
 
   const createClassRoom = (roomName: String) => {
