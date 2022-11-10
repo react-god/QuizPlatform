@@ -3,24 +3,45 @@ import {
   Button,
   Typography,
   Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  ButtonBase,
   TextField,
   Box,
   Container,
   Checkbox,
   Modal,
+  Stack,
+  Grid,
 } from "@mui/material";
 import { Quiz, QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
+import { User } from "../../mockup_data/user";
 import { ImageNotSupported, Image } from "@mui/icons-material";
+import { makeStyles } from "@mui/styles";
+import { NavRail, NavRailItem } from "../NavRail";
+import Scaffold from "../Scaffold";
+
+/*style*/
+const useStyles = makeStyles({
+  cardAction: {
+    display: "block",
+    width: "100%",
+  },
+  cardStyle: {
+    backgroundColor: "lightgray",
+  },
+});
 
 const Question: React.FC<{ item: QuizItem; index: number }> = ({
   item,
   index,
 }) => {
   return (
-    <Box>
+    <Stack direction="row" spacing={2}>
       <Typography variant="h4">{index + 1}</Typography>
       <Typography>{item.question}</Typography>
-    </Box>
+    </Stack>
   );
 };
 
@@ -36,29 +57,39 @@ const ImageModal: React.FC<{ source: String }> = ({ source }) => {
       </Button>
       <Modal open={open} onClose={modalClose}>
         <Box>
-          <img src={source} alt="img" />
+          <img src={`${source}`} alt="img" />
         </Box>
       </Modal>
     </div>
   );
 };
 
-const QuizChoice: React.FC<{ option: QuizOption }> = ({ option }) => {
+const QuizChoice: React.FC<{ option: QuizOption }> = (props) => {
+  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const modalOpen = () => setOpen(true);
   const modalClose = () => setOpen(false);
-  //퀴즈가 객관식일 때만, 하나의 옵션(보기)
-  let quizImage: JSX.Element;
+  let quizImage: JSX.Element | undefined = undefined;
 
-  if (option.imageUrl) {
-    quizImage = <ImageModal source={option.imageUrl}></ImageModal>;
+  if (props.option.imageUrl) {
+    quizImage = <ImageModal source={props.option.imageUrl}></ImageModal>;
   }
 
   return (
-    <Card>
-      {quizImage}
-      <Typography>{option.title}</Typography>
-      {/*해당 Choice에 onClick 이벤트가 일어나면*/}
+    <Card variant="outlined" className={classes.cardStyle}>
+      <Stack direction="row">
+        {quizImage}
+        <ButtonBase
+          className={classes.cardAction}
+          onClick={(event) => {
+            console.log(event.currentTarget.value);
+          }}
+        >
+          <CardContent>
+            <Typography variant="h6">{props.option.title}</Typography>
+          </CardContent>
+        </ButtonBase>
+      </Stack>
     </Card>
   );
 };
@@ -76,30 +107,61 @@ const QuizChoiceList: React.FC<{ currentItem: QuizItem }> = ({
 };
 
 const QuizEssay = () => {
-  return <TextField variant="filled" />; //onChange가 일어났을 때 값을 records에 저장 되어야한다.
+  const classes = useStyles();
+  const onChangeAnswer = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.currentTarget.value);
+  };
+
+  return (
+    <TextField
+      variant="outlined"
+      onChange={onChangeAnswer}
+      className={classes.cardAction}
+      placeholder="정답을 입력하세요."
+    />
+  );
 };
 
-const TakingQuiz: React.FC<{ quiz: Quiz }> = ({ quiz }) => {
-  //const quiz = quiz; //mockupdata //나중에 quiz1, quiz2, quiz3...각각 들어가도록 해야되겠지.
+const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
+  //const quiz = quiz1;
+  //const user = user1;
   const [currentItemIndex, setcurrentItemIndex] = useState(0);
   const currentItem = quiz.items[currentItemIndex];
   let choiceOrEssay: JSX.Element;
   switch (currentItem.type) {
     case QuizType.choice:
-      choiceOrEssay = <QuizChoiceList currentItem={currentItem} />;
+      choiceOrEssay = (
+        <Box sx={{ width: "100%" }}>
+          <Stack spacing={1}>
+            <QuizChoiceList currentItem={currentItem} />
+          </Stack>
+        </Box>
+      );
       break;
     case QuizType.essay:
       choiceOrEssay = <QuizEssay />;
   }
 
-  const isFirst: boolean = currentItemIndex === 0;
-  const isLast: boolean = currentItemIndex === quiz.items.length - 1;
+  const isFirst = (currentItemIndex: number) => {
+    if (currentItemIndex === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const isLast = (currentItemIndex: number) => {
+    if (currentItemIndex === quiz.items.length - 1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   const moveNext = () => {
     if (currentItemIndex + 1 !== quiz.items.length) {
       setcurrentItemIndex(currentItemIndex + 1);
     } else {
-      isLast();
+      isLast(currentItemIndex);
     }
   };
 
@@ -107,21 +169,26 @@ const TakingQuiz: React.FC<{ quiz: Quiz }> = ({ quiz }) => {
     if (currentItemIndex !== 0) {
       setcurrentItemIndex(currentItemIndex - 1);
     } else {
-      isFirst();
+      isFirst(currentItemIndex);
     }
   };
 
   return (
-    <>
-      <Question item={currentItem} index={currentItemIndex} />
-      {choiceOrEssay}
-      <Button variant="contained" onClick={movePrevious} disabled={isFirst}>
-        이전
-      </Button>
-      <Button variant="contained" onClick={moveNext} disabled={isLast}>
-        다음
-      </Button>
-    </>
+    <Scaffold>
+      <Container>
+        <Question item={currentItem} index={currentItemIndex} />
+        {choiceOrEssay}
+
+        <Stack direction="row" spacing={1}>
+          <Button onClick={movePrevious} disabled={isFirst(currentItemIndex)}>
+            이전
+          </Button>
+          <Button onClick={moveNext} disabled={isLast(currentItemIndex)}>
+            다음
+          </Button>
+        </Stack>
+      </Container>
+    </Scaffold>
   );
 };
 
