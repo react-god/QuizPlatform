@@ -14,6 +14,7 @@ import {
   Modal,
   Stack,
   Grid,
+  IconButton,
 } from "@mui/material";
 import { Quiz, QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
 import { User } from "../../mockup_data/user";
@@ -174,19 +175,40 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
   };
 
   return (
-    <Scaffold>
+    <Scaffold
+      navRail={
+        <NavRail
+          items={[
+            ...quiz.items.map((item, index) => {
+              return (
+                <NavRailItem
+                  key={item.uuid as string}
+                  label={`${index + 1}`}
+                  color={"inherit"}
+                  isSelected={true}
+                  onClick={() => console.log()}
+                />
+              );
+            }),
+          ]}
+        />
+      }
+    >
       <Container>
         <Question item={currentItem} index={currentItemIndex} />
         {choiceOrEssay}
-
-        <Stack direction="row" spacing={1}>
-          <Button onClick={movePrevious} disabled={isFirst(currentItemIndex)}>
-            이전
-          </Button>
-          <Button onClick={moveNext} disabled={isLast(currentItemIndex)}>
-            다음
-          </Button>
-        </Stack>
+        <NavRailItem
+          label="이전"
+          color={isFirst(currentItemIndex) ? "inherit" : "secondary"}
+          onClick={movePrevious}
+          isSelected
+        ></NavRailItem>
+        <NavRailItem
+          label="다음"
+          color={isLast(currentItemIndex) ? "inherit" : "secondary"}
+          onClick={moveNext}
+          isSelected
+        ></NavRailItem>
       </Container>
     </Scaffold>
   );
