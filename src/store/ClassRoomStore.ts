@@ -44,7 +44,7 @@ class ClassRoomStore {
     const newClassRoom: ClassRoom = {
       id: uuidv4(),
       name: name,
-      owner: currentUser.name,
+      ownerId: currentUser.id,
       quizs: [],
     };
     this._rooms = [...this._rooms, newClassRoom];
@@ -57,5 +57,5 @@ class ClassRoomStore {
     writeJsonToLocalStorage(CLASS_ROOM_KEY, this._rooms);
   }
 }
-//TODO: classRoom interface에서 owener 저따구로 하면큰일남
+
 export const classRoomStore = new ClassRoomStore();
