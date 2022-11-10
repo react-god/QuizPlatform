@@ -75,7 +75,7 @@ function LoginPage() {
   };
 
   const signUpHandler = () => {
-    window.location.href = "/signup";
+    window.location.href = "/classroom";
   }
 
   return (
