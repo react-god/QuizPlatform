@@ -175,7 +175,7 @@ const ClassRoomPage = () => {
     if (state !== null && "snackBarMessage" in state) {
       showSnackBar(state.snackBarMessage);
     }
-  }, [state]);
+  }, [showSnackBar]);
 
   const createClassRoom = (roomName: String) => {
     setOpenCreateClassRoomDialog(false);
