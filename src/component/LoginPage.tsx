@@ -23,10 +23,17 @@ function LoginPage() {
   const [modalSmall, setModalSmall] = React.useState<boolean>(false);
   const [errorMsg, setErrorMsg] = React.useState<String>("");
 
-  const users_data = [user1, user2, user3, user4];
-  let users = new Array;
-  for(const user of users_data){
-    const dat = {"id":user.id, "password":user.password};
+
+  interface DataFormat {
+    "id":String,
+    "password":String
+  };
+
+  const usersData = [user1, user2, user3, user4];
+  let users:DataFormat[] = [];
+
+  for(const user of usersData){
+    const dat:DataFormat = {id:user.id, password:user.password};
     users.push(dat);
   }
 
@@ -42,7 +49,7 @@ function LoginPage() {
       setErrorMsg("Loading");
       let auth = false;
       for (const user of users){
-        if(email===user['id'] && password==user['password']) {
+        if(email===user['id'] && password===user['password']) {
           auth = true;
           setTimeout(()=>{
             setErrorMsg("Login Success");
