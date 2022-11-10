@@ -20,7 +20,6 @@ import Scaffold from "../Scaffold";
 import { Stack } from "@mui/system";
 import userStore from "../../store/UserStore";
 import { ClassRoom } from "../../mockup_data/classroom";
-import quizCreateStore from "../../store/QuizCreateStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import useSnackBarMessage from "../../util/SnackBarMessage";
 
@@ -174,7 +173,7 @@ const ClassRoomPage = () => {
     }
 
     classRoomStore.fetchClassRooms();
-  }, []);
+  }, [state]);
 
   const createClassRoom = (roomName: String) => {
     setOpenCreateClassRoomDialog(false);
