@@ -20,6 +20,10 @@ import Scaffold from "../Scaffold";
 import { Stack } from "@mui/system";
 import userStore from "../../store/UserStore";
 import { ClassRoom } from "../../mockup_data/classroom";
+import { useLocation, useNavigate } from "react-router-dom";
+import useSnackBarMessage from "../../util/SnackBarMessage";
+
+userStore.signIn("jja08111", "password");
 
 interface CreateClassRoomDialogProps {
   open: boolean;
@@ -96,7 +100,7 @@ const CreateQuizDialog = (props: CreateQuizDialogProps) => {
             setNewQuizName("");
           }}
         >
-          저장
+          만들기
         </Button>
       </DialogActions>
     </Dialog>
@@ -147,20 +151,31 @@ const AddClassRoomByCodeDialog = (props: AddClassRoomCodeDialog) => {
 };
 
 const ClassRoomPage = () => {
-  const invitedRooms = classRoomStore.invitedRooms;
-  const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
-  const currentRoom: ClassRoom | undefined =
-    invitedRooms.length === 0 ? undefined : invitedRooms[currentRoomIndex];
+  const navigate = useNavigate();
+  const { state } = useLocation();
 
-  const [userMessage, setUserMessage] = useState({ open: false, message: "" });
+  const invitedRooms = classRoomStore.invitedRooms;
+  const currentRoom: ClassRoom | undefined =
+    invitedRooms.length === 0
+      ? undefined
+      : invitedRooms[classRoomStore.currentTabIndex];
+
   const [openCreateClassRoomDialog, setOpenCreateClassRoomDialog] =
     useState(false);
   const [openCreateQuizDialog, setOpenCreateQuizDialog] = useState(false);
   const [openRoomCodeDialog, setOpenRoomCodeDialog] = useState(false);
 
+  const [snackBarMessage, showSnackBar] = useSnackBarMessage();
+
   useEffect(() => {
     classRoomStore.fetchClassRooms();
   }, []);
+
+  useEffect(() => {
+    if (state !== null && "snackBarMessage" in state) {
+      showSnackBar(state.snackBarMessage);
+    }
+  }, [showSnackBar, state]);
 
   const createClassRoom = (roomName: String) => {
     setOpenCreateClassRoomDialog(false);
@@ -169,7 +184,9 @@ const ClassRoomPage = () => {
 
   const createQuiz = (quizName: String) => {
     setOpenCreateQuizDialog(false);
-    // TODO: 퀴즈 생성 화면으로 전환
+    navigate("/create-quiz", {
+      state: { quizName: quizName, classRoomId: currentRoom!.id },
+    });
   };
 
   const joinClassRoom = (code: String) => {
@@ -178,8 +195,7 @@ const ClassRoomPage = () => {
       userStore.joinClassRoom(code);
     } catch (e) {
       if (e instanceof Error) {
-        setUserMessage({ open: true, message: e.message });
-        setTimeout(() => setUserMessage({ open: false, message: "" }), 3000);
+        showSnackBar(e.message);
       }
     }
   };
@@ -194,9 +210,13 @@ const ClassRoomPage = () => {
                 <NavRailItem
                   key={item.id as string}
                   label={item.name[0]}
-                  color={currentRoomIndex === index ? "secondary" : "inherit"}
-                  isSelected={currentRoomIndex === index}
-                  onClick={() => setCurrentRoomIndex(index)}
+                  color={
+                    classRoomStore.currentTabIndex === index
+                      ? "secondary"
+                      : "inherit"
+                  }
+                  isSelected={classRoomStore.currentTabIndex === index}
+                  onClick={() => (classRoomStore.currentTabIndex = index)}
                 />
               );
             }),
@@ -242,9 +262,9 @@ const ClassRoomPage = () => {
         onClickAdd={(classRoomCode) => joinClassRoom(classRoomCode)}
       />
       <Snackbar
-        open={userMessage.open}
+        open={snackBarMessage.open}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        message={userMessage.message}
+        message={snackBarMessage.data}
       />
 
       {!currentRoom ? (

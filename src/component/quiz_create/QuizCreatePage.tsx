@@ -13,9 +13,10 @@ import { Add, Delete, Image } from "@mui/icons-material";
 import { observer } from "mobx-react";
 import { ChangeEvent, useReducer, useRef, useState } from "react";
 import { QuizOption, QuizType } from "../../mockup_data/quiz";
-import QuizCreateStore from "../../store/QuizCreateStore";
 import { NavRail, NavRailItem } from "../NavRail";
 import Scaffold from "../Scaffold";
+import { useLocation, useNavigate } from "react-router-dom";
+import QuizCreateStore from "../../store/QuizCreateStore";
 
 interface SubmitButtonProps {
   enabled: boolean;
@@ -349,17 +350,26 @@ const OptionAddButton = (props: OptionAddBarProps) => {
   );
 };
 
-interface QuizCreatePageProps {
-  quizName: string;
-}
-
-const QuizCreatePage = (props: QuizCreatePageProps) => {
-  const [store] = useState(new QuizCreateStore(props.quizName));
+const QuizCreatePage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as { quizName: String; classRoomId: String };
+  const [store] = useState(
+    new QuizCreateStore(state.quizName, state.classRoomId)
+  );
   const currentQuizItem = store.currentQuizItem;
   // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
   // hack을 하고있다. 추후에 고칠 필요가 있다.
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   let optionListOrEssay: JSX.Element;
+
+  const onClickSubmit = () => {
+    store.submitQuiz();
+    navigate("/classroom", {
+      replace: true,
+      state: { snackBarMessage: "퀴즈를 생성했습니다." },
+    });
+  };
 
   switch (currentQuizItem.type) {
     case QuizType.choice:
@@ -426,7 +436,7 @@ const QuizCreatePage = (props: QuizCreatePageProps) => {
           trailingItem={
             <SubmitButton
               enabled={store.enabledSubmitButton}
-              onClick={() => store.submitQuiz()}
+              onClick={() => onClickSubmit()}
             />
           }
         />
