@@ -365,7 +365,10 @@ const QuizCreatePage = () => {
 
   const onClickSubmit = () => {
     store.submitQuiz();
-    navigate("/classroom", { replace: true });
+    navigate("/classroom", {
+      replace: true,
+      state: { snackBarMessage: "퀴즈를 생성했습니다." },
+    });
   };
 
   switch (currentQuizItem.type) {

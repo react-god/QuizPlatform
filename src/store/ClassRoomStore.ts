@@ -13,6 +13,8 @@ const CLASS_ROOM_KEY = "class_rooms";
 class ClassRoomStore {
   private _rooms: ClassRoom[] = [];
 
+  currentTabIndex: number = 0;
+
   constructor() {
     makeAutoObservable(this);
   }
