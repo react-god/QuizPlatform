@@ -23,7 +23,7 @@ class UserStore {
    *
    * 이미 동일한 ID로 가입된 회원이 있는 경우 예외를 던진다.
    */
-  signUp(id: String, password: String, name: String) {
+  signUp(id: String, password: String, name: String): User {
     const users = readJsonFromLocalStorage<Array<User>>(USER_KEY) ?? [];
 
     if (users.some((user) => user.id === id)) {
@@ -47,7 +47,7 @@ class UserStore {
    *
    * 존재하지 않는 ID를 입력하거나 비밀번호가 잘못된 경우 예외를 던진다.
    */
-  signIn(id: String, password: String) {
+  signIn(id: String, password: String): User {
     const users: User[] = readJsonFromLocalStorage<User[]>(USER_KEY) ?? [];
     const user = users.find((user) => user.id === id);
     if (user === undefined) {
