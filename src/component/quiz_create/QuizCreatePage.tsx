@@ -353,8 +353,10 @@ const OptionAddButton = (props: OptionAddBarProps) => {
 const QuizCreatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state as { quizName: String };
-  const [store] = useState(new QuizCreateStore(state.quizName));
+  const state = location.state as { quizName: String; classRoomId: String };
+  const [store] = useState(
+    new QuizCreateStore(state.quizName, state.classRoomId)
+  );
   const currentQuizItem = store.currentQuizItem;
   // TODO(민성): OptionBar의 title, isAnswer를 변경했을 때 rerendering이 발생하지 않아
   // hack을 하고있다. 추후에 고칠 필요가 있다.
@@ -363,6 +365,7 @@ const QuizCreatePage = () => {
 
   const onClickSubmit = () => {
     store.submitQuiz();
+    navigate("/classroom", { replace: true });
   };
 
   switch (currentQuizItem.type) {

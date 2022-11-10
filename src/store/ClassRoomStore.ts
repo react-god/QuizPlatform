@@ -6,6 +6,7 @@ import {
   writeJsonToLocalStorage,
 } from "../util/JsonUtil";
 import userStore from "./UserStore";
+import { Quiz } from "../mockup_data/quiz";
 
 const CLASS_ROOM_KEY = "class_rooms";
 
@@ -54,6 +55,16 @@ class ClassRoomStore {
 
   removeClassRoom(classRoomId: String) {
     this._rooms = this._rooms.filter((room) => room.id !== classRoomId);
+    writeJsonToLocalStorage(CLASS_ROOM_KEY, this._rooms);
+  }
+
+  addQuiz(quiz: Quiz, classRoomId: String) {
+    const room = this._rooms.find((room) => room.id === classRoomId);
+    if (room === undefined) {
+      throw Error("존재하지 않는 클래스룸 입니다.");
+    }
+    room.quizs = [...room.quizs, quiz];
+    this._rooms = [...this._rooms, room];
     writeJsonToLocalStorage(CLASS_ROOM_KEY, this._rooms);
   }
 }

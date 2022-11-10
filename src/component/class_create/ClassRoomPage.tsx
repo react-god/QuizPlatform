@@ -174,7 +174,9 @@ const ClassRoomPage = () => {
 
   const createQuiz = (quizName: String) => {
     setOpenCreateQuizDialog(false);
-    navigate("/create-quiz", { state: { quizName: quizName } });
+    navigate("/create-quiz", {
+      state: { quizName: quizName, classRoomId: currentRoom!.id },
+    });
   };
 
   const joinClassRoom = (code: String) => {
