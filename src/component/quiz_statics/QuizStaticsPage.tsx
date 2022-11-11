@@ -16,7 +16,7 @@ import {
 import { isCorrect } from "../quiz_review/QuizReviewPage";
 import Scaffold from "../Scaffold";
 import { useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { classRoomStore } from "../../store/ClassRoomStore";
 import quizRecordStore from "../../store/QuizRecordStore";
 import userStore from "../../store/UserStore";
@@ -182,12 +182,8 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
   return <Bar options={chartOptions} data={data} />;
 };
 
-// interface QuizStaticsPageProps {
-//   quiz: Quiz;
-//   records: QuizRecord[];
-// }
-
 const QuizStaticsPage = () => {
+  const navigate = useNavigate();
   const { quizId } = useParams();
   if (quizId === undefined) {
     throw Error("URL에 quizId parameter가 누락되었습니다.");
@@ -221,9 +217,9 @@ const QuizStaticsPage = () => {
   }, [scores]);
 
   return (
-    <Scaffold navRail={<NavRail items={[]} />}>
+    <Scaffold navRail={<NavRail items={[]} onBackClick={() => navigate(-1)} />}>
       {records.length === 0 ? (
-        <Typography>아직 퀴즈를 푼 사람이 없어요.</Typography>
+        <Typography variant="h4">아직 퀴즈를 푼 사람이 없어요.</Typography>
       ) : (
         <>
           <StaticsTitle quizName={quiz.name} />
