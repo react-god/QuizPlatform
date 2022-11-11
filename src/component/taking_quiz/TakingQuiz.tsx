@@ -1,31 +1,20 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import {
   Button,
   Typography,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  ButtonBase,
   TextField,
   Box,
   Container,
-  Checkbox,
   Modal,
   Stack,
-  Grid,
-  IconButton,
-  useTheme,
 } from "@mui/material";
 import { Quiz, QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
 import { User } from "../../mockup_data/user";
-import { ImageNotSupported, Image } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { NavRail, NavRailItem } from "../NavRail";
 import Scaffold from "../Scaffold";
-import { QuizRecordItem } from "../../mockup_data/quiz_record";
 import TakingQuizStore from "../../store/TakingQuizStore";
-import { observer, Observer } from "mobx-react";
+import { observer } from "mobx-react";
 
 /*style*/
 const useStyles = makeStyles({
@@ -78,9 +67,7 @@ const QuizChoice: React.FC<{
   const [open, setOpen] = React.useState(false);
   const modalOpen = () => setOpen(true);
   const modalClose = () => setOpen(false);
-  const cardColor = props.chosen
-    ? "primary"
-    : "error";
+  const cardColor = props.chosen ? "primary" : "error";
   let quizImage: JSX.Element | undefined = undefined;
 
   if (props.option.imageUrl) {
@@ -105,16 +92,19 @@ const QuizChoice: React.FC<{
 const QuizChoiceList: React.FC<{
   currentItem: QuizItem;
   store: TakingQuizStore;
-  currentRecord: QuizRecordItem;
-}> = ({ currentItem, store, currentRecord }) => {
+}> = ({ currentItem, store }) => {
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   return (
     <>
       {currentItem.options.map((option, i) => (
         <QuizChoice
           option={option}
           key={i}
-          chosen={store.isOptionChosen(i,currentRecord)}
-          onClicked={() => store.updateChoiceRecordItem(i)}
+          chosen={store.isOptionChosen(i)}
+          onClicked={() => {
+            store.updateChoiceRecordItem(i);
+            forceUpdate();
+          }}
         />
       ))}
     </>
@@ -134,11 +124,9 @@ const QuizEssay = () => {
 };
 
 const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
-  //const quiz = quiz1;
-  //const user = user1;
-  const [currentItemIndex, setcurrentItemIndex] = useState(0);
-  const currentItem = quiz.items[currentItemIndex];
   const [store] = useState(new TakingQuizStore(quiz.id, user.id));
+  const currentItemIndex = store.currentItemIndex;
+  const currentItem = quiz.items[currentItemIndex];
   const currentRecord = store.currentRecordItem;
 
   let choiceOrEssay: JSX.Element;
@@ -147,7 +135,7 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
       choiceOrEssay = (
         <Box sx={{ width: "100%" }}>
           <Stack spacing={1}>
-            <QuizChoiceList currentItem={currentItem} store={store} currentRecord={currentRecord}/>
+            <QuizChoiceList currentItem={currentItem} store={store} />
           </Stack>
         </Box>
       );
@@ -173,7 +161,7 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
 
   const moveNext = () => {
     if (currentItemIndex + 1 !== quiz.items.length) {
-      setcurrentItemIndex(currentItemIndex + 1);
+      store.currentItemIndex = currentItemIndex + 1;
     } else {
       isLast(currentItemIndex);
     }
@@ -181,7 +169,7 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
 
   const movePrevious = () => {
     if (currentItemIndex !== 0) {
-      setcurrentItemIndex(currentItemIndex - 1);
+      store.currentItemIndex = currentItemIndex - 1;
     } else {
       isFirst(currentItemIndex);
     }

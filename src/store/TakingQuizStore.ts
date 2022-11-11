@@ -3,15 +3,13 @@ import { Quiz, QuizItem } from "../mockup_data/quiz";
 import { QuizRecord, QuizRecordItem } from "../mockup_data/quiz_record";
 import { User } from "../mockup_data/user";
 
-const answerRecordItem: QuizRecordItem = {
-  index: 0,
-  essay: "",
-  choice: [],
-};
-
 class TakingQuizStore {
   answerRecord: QuizRecord;
-  currentItemIndex: number = 0; //문제번호 인덱스
+
+  /**
+   * 현재 퀴즈의 인덱스이다.
+   */
+  currentItemIndex: number = 0;
 
   items: Array<QuizRecordItem> = [];
 
@@ -19,24 +17,31 @@ class TakingQuizStore {
     this.answerRecord = {
       quizId: quizId,
       candidateId: candidateId,
-      items: [answerRecordItem],
+      items: [],
     };
     makeAutoObservable(this);
   }
 
-  get currentRecordItem() {
-    return this.answerRecord.items[this.currentItemIndex];
+  get currentRecordItem(): QuizRecordItem | undefined {
+    return this.answerRecord.items.find(
+      (recordItem) => recordItem.index === this.currentItemIndex
+    );
+  }
+
+  get currentRecordItemIndex(): number {
+    return this.answerRecord.items.findIndex(
+      (recordItem) => recordItem.index === this.currentItemIndex
+    );
   }
 
   //퀴즈 답안 저장. QuizRecordItem 으로
   updateChoiceRecordItem(clickedChoiceIndex: number) {
-    const recordItemList = this.answerRecord.items;
-    const recordItem = recordItemList[this.currentItemIndex];
+    const recordItem = this.currentRecordItem;
 
     if (recordItem === undefined) {
       //새로 레코드 추가해줘야하는 상태
       this.answerRecord.items = [
-        ...recordItemList,
+        ...this.answerRecord.items,
         { index: this.currentItemIndex, choice: [clickedChoiceIndex] },
       ];
       return;
@@ -48,9 +53,12 @@ class TakingQuizStore {
     const alreadyChosen = choices.some(
       (choice) => choice === clickedChoiceIndex
     );
+    const recordItemIndex = this.currentRecordItemIndex;
     if (alreadyChosen) {
-      recordItem.choice = choices.filter(
-        (choice) => choice === clickedChoiceIndex
+      this.answerRecord.items[recordItemIndex].choice = choices.filter(
+        (choice) => {
+          return choice !== clickedChoiceIndex;
+        }
       );
     } else {
       recordItem.choice = [...choices, clickedChoiceIndex];
@@ -59,16 +67,19 @@ class TakingQuizStore {
 
   updateEssayRecordItem() {}
   //퀴즈 답안 제출 quizID, candidateID, items 다 저장해서
-  
+
   //옵션 선택되었을 때 true 반환
-  isOptionChosen(choiceIndex:number, recordItem:QuizRecordItem):boolean {
+  isOptionChosen(choiceIndex: number): boolean {
+    const recordItem = this.currentRecordItem;
+    if (recordItem === undefined) {
+      return false;
+    }
     const choices = recordItem.choice;
     if (choices === undefined) {
-        throw Error("객관식 문항이 아닌 다른 유형에서 호출했습니다.");
-      }
-    return choices.some(choice => choice === choiceIndex);
+      throw Error("객관식 문항이 아닌 다른 유형에서 호출했습니다.");
+    }
+    return choices.some((choice) => choice === choiceIndex);
   }
-
 }
 
 export default TakingQuizStore;
