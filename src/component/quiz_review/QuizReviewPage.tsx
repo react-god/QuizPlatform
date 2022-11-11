@@ -24,7 +24,7 @@ export function isCorrect(
       break;
     case QuizType.essay:
       const answer = quizItem.essayAnswer!;
-      result = recordItem.essay! == answer;
+      result = recordItem.essay! === answer;
       break;
   }
   return result;
@@ -194,7 +194,7 @@ const QuizReviewPage = (props: QuizReviewPageProps) => {
       const essay = currentRecordItem.essay!;
       const answer = currentQuizItem.essayAnswer;
       essayOrChoiceList = (
-        <SubmittedEssay essay={essay} correct={essay == answer} />
+        <SubmittedEssay essay={essay} correct={essay === answer} />
       );
       break;
   }
