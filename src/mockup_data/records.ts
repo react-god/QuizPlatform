@@ -3,6 +3,7 @@ import {
   quizRecord1_1,
   quizRecord1_2,
   quizRecord1_3,
+  quizRecord1_4,
 } from "./quiz_record";
 
 export interface Records {
@@ -10,7 +11,7 @@ export interface Records {
 }
 
 const records: Records = {
-  datas: [quizRecord1_1, quizRecord1_2, quizRecord1_3],
+  datas: [quizRecord1_1, quizRecord1_2, quizRecord1_3, quizRecord1_4],
 };
 
 export { records };

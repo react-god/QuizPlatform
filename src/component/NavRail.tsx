@@ -1,5 +1,6 @@
 import { Button, IconButton, Stack, Typography, useTheme } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
+import "../css/sidebar.css";
 
 interface NavRailItemProps {
   label: String;
@@ -44,7 +45,7 @@ const NavRailItem = (props: NavRailItemProps) => {
 
 interface NavRailProps {
   items: Array<JSX.Element>;
-  trailingItem: JSX.Element;
+  trailingItem?: JSX.Element;
   /**
    * 콜백 함수를 전달하는 경우 뒤로 가기 버튼을 보인다.
    */
@@ -71,17 +72,21 @@ const NavRail = (props: NavRailProps) => {
           alignItems="center"
           style={{ overflowY: "scroll", paddingTop: "8px" }}
         >
-          <IconButton
-            onClick={() => props.onBackClick?.()}
-            style={{
-              marginLeft: "12px",
-              marginRight: "12px",
-              marginTop: "8px",
-              marginBottom: "12px",
-            }}
-          >
-            <ArrowBack />
-          </IconButton>
+          {!props.onBackClick ? (
+            <></>
+          ) : (
+            <IconButton
+              onClick={() => props.onBackClick?.()}
+              style={{
+                marginLeft: "12px",
+                marginRight: "12px",
+                marginTop: "8px",
+                marginBottom: "12px",
+              }}
+            >
+              <ArrowBack />
+            </IconButton>
+          )}
           {props.items.map((item) => {
             return <>{item}</>;
           })}
