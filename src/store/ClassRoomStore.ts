@@ -1,25 +1,72 @@
 import { v4 as uuidv4 } from "uuid";
 import { makeAutoObservable } from "mobx";
-import { ClassRoom, room1, room2, room3 } from "../mockup_data/classroom";
+import { ClassRoom } from "../mockup_data/classroom";
+import {
+  readJsonFromLocalStorage,
+  writeJsonToLocalStorage,
+} from "../util/JsonUtil";
+import userStore from "./UserStore";
+import { Quiz } from "../mockup_data/quiz";
+
+const CLASS_ROOM_KEY = "class_rooms";
 
 class ClassRoomStore {
-  rooms: ClassRoom[] = [room1, room2, room3];
+  private _rooms: ClassRoom[] = [];
 
-  currentItemIndex: number = 0;
+  currentTabIndex: number = 0;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  addClassRoom(name: String, owner: String) {
-    this.rooms = [
-      ...this.rooms,
-      { id: uuidv4(), name: name, owner: owner, quizs: [] },
-    ];
+  get invitedRooms(): ClassRoom[] {
+    const currentUser = userStore.currentUser;
+    if (currentUser === undefined) {
+      return [];
+    }
+    const invitedRoomIds = currentUser.invitedClassRooms;
+    const rooms = this._rooms.filter((room) =>
+      invitedRoomIds.some((id) => id === room.id)
+    );
+    return rooms;
+  }
+
+  get allRooms(): ClassRoom[] {
+    return this._rooms;
+  }
+
+  fetchClassRooms() {
+    this._rooms = readJsonFromLocalStorage<ClassRoom[]>(CLASS_ROOM_KEY) ?? [];
+  }
+
+  createClassRoom(name: String) {
+    const currentUser = userStore.currentUser;
+    if (currentUser === undefined) {
+      throw Error("로그인 하지 않은 상태로 퀴즈 생성 시도함.");
+    }
+    const newClassRoom: ClassRoom = {
+      id: uuidv4(),
+      name: name,
+      ownerId: currentUser.id,
+      quizs: [],
+    };
+    this._rooms = [...this._rooms, newClassRoom];
+    userStore.joinClassRoom(newClassRoom.id);
+    writeJsonToLocalStorage(CLASS_ROOM_KEY, this._rooms);
   }
 
   removeClassRoom(classRoomId: String) {
-    this.rooms = this.rooms.filter((room) => room.id !== classRoomId);
+    this._rooms = this._rooms.filter((room) => room.id !== classRoomId);
+    writeJsonToLocalStorage(CLASS_ROOM_KEY, this._rooms);
+  }
+
+  addQuiz(quiz: Quiz, classRoomId: String) {
+    const updatedRoom = this._rooms.find((room) => room.id === classRoomId);
+    if (updatedRoom === undefined) {
+      throw Error("존재하지 않는 클래스룸 입니다.");
+    }
+    updatedRoom.quizs = [...updatedRoom.quizs, quiz];
+    writeJsonToLocalStorage(CLASS_ROOM_KEY, this._rooms);
   }
 }
 

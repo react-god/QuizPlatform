@@ -72,17 +72,21 @@ const NavRail = (props: NavRailProps) => {
           alignItems="center"
           style={{ overflowY: "scroll", paddingTop: "8px" }}
         >
-          <IconButton
-            onClick={() => props.onBackClick?.()}
-            style={{
-              marginLeft: "12px",
-              marginRight: "12px",
-              marginTop: "8px",
-              marginBottom: "12px",
-            }}
-          >
-            <ArrowBack />
-          </IconButton>
+          {!props.onBackClick ? (
+            <></>
+          ) : (
+            <IconButton
+              onClick={() => props.onBackClick?.()}
+              style={{
+                marginLeft: "12px",
+                marginRight: "12px",
+                marginTop: "8px",
+                marginBottom: "12px",
+              }}
+            >
+              <ArrowBack />
+            </IconButton>
+          )}
           {props.items.map((item) => {
             return <>{item}</>;
           })}

@@ -2,7 +2,7 @@ import { Quiz, QuizItem, QuizType } from "../mockup_data/quiz";
 import { v4 as uuidv4 } from "uuid";
 import { user1 } from "../mockup_data/user";
 import { makeAutoObservable } from "mobx";
-import { observable, storeAnnotation } from "mobx/dist/internal";
+import { classRoomStore } from "./ClassRoomStore";
 
 const initQuizItem: QuizItem = {
   uuid: "dsi29gj3f",
@@ -24,17 +24,20 @@ const initQuizItem: QuizItem = {
 };
 
 class QuizCreateStore {
-  quiz: Quiz;
+  private quiz: Quiz;
+
+  private classRoomId: String;
 
   currentItemIndex: number = 0;
 
-  constructor(quizName: string) {
+  constructor(quizName: String, classRoomId: String) {
     this.quiz = {
       id: uuidv4(),
       owner: user1,
-      name: quizName,
+      name: quizName as string,
       items: [initQuizItem],
     };
+    this.classRoomId = classRoomId;
     makeAutoObservable(this);
   }
 
@@ -55,8 +58,7 @@ class QuizCreateStore {
       }
       return item;
     });
-    console.log(JSON.stringify(this.quiz));
-    // TODO(민성): ClassRoomStore에 저장하고 홈화면으로 전환하기
+    classRoomStore.addQuiz(this.quiz, this.classRoomId);
   }
 
   // ----------- 퀴즈의 항목 관련 --------------

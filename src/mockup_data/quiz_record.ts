@@ -1,9 +1,9 @@
-import { Quiz, quiz1 } from "./quiz";
-import { User, user1, user2, user3 } from "./user";
+import { quiz1 } from "./quiz";
+import { user1, user2, user3 } from "./user";
 
 export interface QuizRecord {
-  quiz: Quiz;
-  candidate: User;
+  quizId: String;
+  candidateId: String;
   items: Array<QuizRecordItem>;
 }
 
@@ -67,26 +67,26 @@ const item3_3: QuizRecordItem = {
 // ----------- RECORDS ----------------
 
 const quizRecord1_1: QuizRecord = {
-  quiz: quiz1,
-  candidate: user2,
+  quizId: quiz1.id,
+  candidateId: user2.id,
   items: [item1_1, item1_2, item1_3],
 };
 
 const quizRecord1_2: QuizRecord = {
-  quiz: quiz1,
-  candidate: user3,
+  quizId: quiz1.id,
+  candidateId: user3.id,
   items: [item2_1, item2_2, item2_3],
 };
 
 const quizRecord1_3: QuizRecord = {
-  quiz: quiz1,
-  candidate: user3,
+  quizId: quiz1.id,
+  candidateId: user3.id,
   items: [item3_1, item3_2, item3_3],
 };
 
 const quizRecord1_4: QuizRecord = {
-  quiz: quiz1,
-  candidate: user1,
+  quizId: quiz1.id,
+  candidateId: user1.id,
   items: [item3_1, item3_2, item3_3],
 };
 
