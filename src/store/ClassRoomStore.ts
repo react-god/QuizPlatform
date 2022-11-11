@@ -61,12 +61,11 @@ class ClassRoomStore {
   }
 
   addQuiz(quiz: Quiz, classRoomId: String) {
-    const room = this._rooms.find((room) => room.id === classRoomId);
-    if (room === undefined) {
+    const updatedRoom = this._rooms.find((room) => room.id === classRoomId);
+    if (updatedRoom === undefined) {
       throw Error("존재하지 않는 클래스룸 입니다.");
     }
-    room.quizs = [...room.quizs, quiz];
-    this._rooms = [...this._rooms, room];
+    updatedRoom.quizs = [...updatedRoom.quizs, quiz];
     writeJsonToLocalStorage(CLASS_ROOM_KEY, this._rooms);
   }
 }

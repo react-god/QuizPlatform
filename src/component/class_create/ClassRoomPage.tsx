@@ -174,6 +174,7 @@ const ClassRoomPage = () => {
   useEffect(() => {
     if (state !== null && "snackBarMessage" in state) {
       showSnackBar(state.snackBarMessage);
+      window.history.replaceState({}, document.title);
     }
   }, [showSnackBar, state]);
 
@@ -205,7 +206,7 @@ const ClassRoomPage = () => {
       navRail={
         <NavRail
           items={[
-            ...classRoomStore.invitedRooms.map((item, index) => {
+            ...invitedRooms.map((item, index) => {
               return (
                 <NavRailItem
                   key={item.id as string}
