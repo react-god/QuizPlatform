@@ -294,7 +294,10 @@ const ClassRoomPage = () => {
             {currentRoom === undefined ? (
               "텅"
             ) : (
-              <QuizRoomComponent room={currentRoom}></QuizRoomComponent>
+              <QuizRoomComponent
+                quizs={currentRoom.quizs}
+                ownerName={userStore.getUserById(currentRoom.ownerId)!.name}
+              ></QuizRoomComponent>
             )}
           </Grid>
         </>
