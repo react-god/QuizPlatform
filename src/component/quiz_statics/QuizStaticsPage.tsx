@@ -147,7 +147,7 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
     let lo = i * gap;
     result = [...result, `${lo}~${lo + gap}점`];
     return result;
-  }, [maxScore, gap]);
+  }, [gap]);
 
   const scoreDistribution: number[] = useMemo(() => {
     let result: number[] = [...Array(LABLE_COUNT)].fill(0);
@@ -157,7 +157,7 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
       while (scoreIndex < scores.length) {
         const score = scores[scoreIndex];
         const currentLabelMaxScore =
-          gap * (labelIndex + 1) + (labelIndex == LABLE_COUNT - 1 ? 1 : 0);
+          gap * (labelIndex + 1) + (labelIndex === LABLE_COUNT - 1 ? 1 : 0);
         if (score >= currentLabelMaxScore) {
           break;
         }
@@ -166,7 +166,7 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
       }
     }
     return result;
-  }, [scores]);
+  }, [scores, gap]);
 
   const data = {
     labels,
