@@ -13,7 +13,7 @@ import {
   Modal,
   ModalBody,
 } from "reactstrap";
-import {user1, user2, user3, user4} from "../mockup_data/user";
+import { user1, user2, user3, user4 } from "../mockup_data/user";
 
 function LoginPage() {
   const [firstFocus, setFirstFocus] = React.useState<boolean>(false);
@@ -23,35 +23,36 @@ function LoginPage() {
   const [modalSmall, setModalSmall] = React.useState<boolean>(false);
   const [errorMsg, setErrorMsg] = React.useState<String>("");
 
-
   interface DataFormat {
-    "id":String,
-    "password":String
-  };
+    id: String;
+    password: String;
+  }
 
   const usersData = [user1, user2, user3, user4];
-  let users:DataFormat[] = [];
+  let users: DataFormat[] = [];
 
-  for(const user of usersData){
-    const dat:DataFormat = {id:user.id, password:user.password};
+  for (const user of usersData) {
+    const dat: DataFormat = { id: user.id, password: user.password };
     users.push(dat);
   }
 
-  const onChangeHandler = (e:React.ChangeEvent<HTMLInputElement>, type:string) => {
+  const onChangeHandler = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: string
+  ) => {
     if (type === "email") setEmail(e.target.value);
     else setPassword(e.target.value);
   };
 
-  const loginHandler = async (email:string, password:string) => {
+  const loginHandler = async (email: string, password: string) => {
     try {
-
       setModalSmall(true);
       setErrorMsg("Loading");
       let auth = false;
-      for (const user of users){
-        if(email===user['id'] && password===user['password']) {
+      for (const user of users) {
+        if (email === user["id"] && password === user["password"]) {
           auth = true;
-          setTimeout(()=>{
+          setTimeout(() => {
             setErrorMsg("Login Success");
             window.location.href = "/";
           }, 1000);
@@ -59,30 +60,27 @@ function LoginPage() {
         }
       }
 
-      if(!auth) {
-        setTimeout(()=>{
+      if (!auth) {
+        setTimeout(() => {
           setErrorMsg("Can't find User information");
         }, 1000);
       }
-    } catch(e) {
+    } catch (e) {
       if (e instanceof TypeError) {
         setErrorMsg(String(e));
-      }
-      else if (e instanceof SyntaxError) {
+      } else if (e instanceof SyntaxError) {
         setErrorMsg(String(e));
-      }
-      else if (typeof e === 'string') {
+      } else if (typeof e === "string") {
         setErrorMsg(String(e));
-      }
-      else {
+      } else {
         setErrorMsg(String(e));
       }
     }
   };
 
   const signUpHandler = () => {
-    window.location.href = "/classroom";
-  }
+    window.location.href = "/signUp";
+  };
 
   return (
     <>
@@ -90,8 +88,7 @@ function LoginPage() {
         <div
           className="page-header-image"
           style={{
-            backgroundImage:
-              "url(" + require("../assets/img/login.jpg") + ")",
+            backgroundImage: "url(" + require("../assets/img/login.jpg") + ")",
           }}
         ></div>
         <div className="content">
@@ -140,48 +137,48 @@ function LoginPage() {
                     </InputGroup>
                   </CardBody>
                   <CardFooter className="text-center">
-                       <Button
-                        block
-                        className="btn-round"
-                        color="info"
-                        onClick={() => loginHandler(email, password)}
-                        size="lg"
-                      >
-                        Login
-                      </Button>
+                    <Button
+                      block
+                      className="btn-round"
+                      color="info"
+                      onClick={() => loginHandler(email, password)}
+                      size="lg"
+                    >
+                      Login
+                    </Button>
 
-                     <Button
-                        block
-                        className="btn-link"
-                        color="white"
-                        onClick={() => signUpHandler()}
-                        size="lg"
-                      >
-                        Create Account 
-                      </Button>
+                    <Button
+                      block
+                      className="btn-link"
+                      color="white"
+                      onClick={() => signUpHandler()}
+                      size="lg"
+                    >
+                      Create Account
+                    </Button>
 
-                      <Modal
-                        modalClassName="modal-mini modal-info"
-                        toggle={() => setModalSmall(false)}
-                        isOpen={modalSmall}
-                      >
-                        <div className="modal-header justify-content-center">
-                          <div className="modal-profile"></div>
-                        </div>
-                        <ModalBody>
-                          <p>{errorMsg}</p>
-                        </ModalBody>
-                        <div className="modal-footer">
-                          <Button
-                            className="btn-neutral"
-                            color="link"
-                            type="button"
-                            onClick={() => setModalSmall(false)}
-                          >
-                            Close
-                          </Button>
-                        </div>
-                      </Modal>
+                    <Modal
+                      modalClassName="modal-mini modal-info"
+                      toggle={() => setModalSmall(false)}
+                      isOpen={modalSmall}
+                    >
+                      <div className="modal-header justify-content-center">
+                        <div className="modal-profile"></div>
+                      </div>
+                      <ModalBody>
+                        <p>{errorMsg}</p>
+                      </ModalBody>
+                      <div className="modal-footer">
+                        <Button
+                          className="btn-neutral"
+                          color="link"
+                          type="button"
+                          onClick={() => setModalSmall(false)}
+                        >
+                          Close
+                        </Button>
+                      </div>
+                    </Modal>
                   </CardFooter>
                 </Form>
               </Card>
