@@ -1,10 +1,11 @@
-import { Button, Divider, Stack, Typography, useTheme } from "@mui/material";
-import { useState } from "react";
+import { Divider, Stack, Typography, useTheme } from "@mui/material";
+import { useMemo, useState } from "react";
 import { QuizItem, QuizOption, QuizType } from "../../mockup_data/quiz";
 import { QuizRecord, QuizRecordItem } from "../../mockup_data/quiz_record";
 import { NavRail, NavRailItem } from "../NavRail";
 import { Check, Close } from "@mui/icons-material";
 import Scaffold from "../Scaffold";
+import { classRoomStore } from "../../store/ClassRoomStore";
 
 export function isCorrect(
   recordItem: QuizRecordItem,
@@ -171,8 +172,11 @@ interface QuizReviewPageProps {
 
 const QuizReviewPage = (props: QuizReviewPageProps) => {
   const [itemIndex, setItemIndex] = useState(0);
-  const quiz = props.quizRecord.quiz;
-  const currentQuizItem = props.quizRecord.quiz.items[itemIndex];
+  const quizId = props.quizRecord.quizId;
+  const quiz = useMemo(() => {
+    return classRoomStore.requireQuizById(quizId);
+  }, [quizId]);
+  const currentQuizItem = quiz.items[itemIndex];
   const quizRecordItems = props.quizRecord.items;
   const currentRecordItem = props.quizRecord.items[itemIndex];
 

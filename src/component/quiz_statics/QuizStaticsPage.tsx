@@ -1,8 +1,8 @@
 import { List, Typography, useTheme } from "@mui/material";
 import { Bar } from "react-chartjs-2";
-import { Quiz, QuizItem } from "../../mockup_data/quiz";
+import { QuizItem } from "../../mockup_data/quiz";
 import { QuizRecord } from "../../mockup_data/quiz_record";
-import { User, user1 } from "../../mockup_data/user";
+import { User } from "../../mockup_data/user";
 import { NavRail } from "../NavRail";
 import {
   Chart as ChartJS,
@@ -147,7 +147,7 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
     let lo = i * gap;
     result = [...result, `${lo}~${lo + gap}점`];
     return result;
-  }, [maxScore]);
+  }, [maxScore, gap]);
 
   const scoreDistribution: number[] = useMemo(() => {
     let result: number[] = [...Array(LABLE_COUNT)].fill(0);
