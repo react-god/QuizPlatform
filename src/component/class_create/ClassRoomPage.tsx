@@ -23,8 +23,6 @@ import { ClassRoom } from "../../mockup_data/classroom";
 import { useLocation, useNavigate } from "react-router-dom";
 import useSnackBarMessage from "../../util/SnackBarMessage";
 
-userStore.signIn("jja08111", "password");
-
 interface CreateClassRoomDialogProps {
   open: boolean;
   onClose: () => void;
