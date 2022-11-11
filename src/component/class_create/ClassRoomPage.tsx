@@ -206,7 +206,7 @@ const ClassRoomPage = () => {
       navRail={
         <NavRail
           items={[
-            ...classRoomStore.invitedRooms.map((item, index) => {
+            ...invitedRooms.map((item, index) => {
               return (
                 <NavRailItem
                   key={item.id as string}
