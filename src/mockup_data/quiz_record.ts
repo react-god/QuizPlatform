@@ -2,7 +2,7 @@ import { Quiz, quiz1 } from "./quiz";
 import { User, user1, user2, user3 } from "./user";
 
 export interface QuizRecord {
-  quiz: Quiz;
+  quizId: String;
   candidate: User;
   items: Array<QuizRecordItem>;
 }
@@ -67,25 +67,25 @@ const item3_3: QuizRecordItem = {
 // ----------- RECORDS ----------------
 
 const quizRecord1_1: QuizRecord = {
-  quiz: quiz1,
+  quizId: quiz1.id,
   candidate: user2,
   items: [item1_1, item1_2, item1_3],
 };
 
 const quizRecord1_2: QuizRecord = {
-  quiz: quiz1,
+  quizId: quiz1.id,
   candidate: user3,
   items: [item2_1, item2_2, item2_3],
 };
 
 const quizRecord1_3: QuizRecord = {
-  quiz: quiz1,
+  quizId: quiz1.id,
   candidate: user3,
   items: [item3_1, item3_2, item3_3],
 };
 
 const quizRecord1_4: QuizRecord = {
-  quiz: quiz1,
+  quizId: quiz1.id,
   candidate: user1,
   items: [item3_1, item3_2, item3_3],
 };
