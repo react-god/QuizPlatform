@@ -13,6 +13,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./assets/css/bootstrap.min.css";
 import "./assets/css/login-register.css";
 import QuizCreatePage from "./component/quiz_create/QuizCreatePage";
+import QuizStaticsPage from "./component/quiz_statics/QuizStaticsPage";
 
 >>>>>>> 0f6dd2c3d77c98ccc6e1f9340e2208274c3bdec9
 const root = ReactDOM.createRoot(
@@ -32,6 +33,7 @@ root.render(
           <Route path="/" element={<LoginPage />} />
           <Route path="/classroom" element={<ClassRoomPage />} />
           <Route path="/create-quiz" element={<QuizCreatePage />} />
+          <Route path="/statics/:quizId" element={<QuizStaticsPage />} />
           {/* <Redirect from="/" to="/index" /> */}
         </Routes>
       </ThemeProvider>

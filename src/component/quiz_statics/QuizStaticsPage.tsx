@@ -1,8 +1,8 @@
 import { List, Typography, useTheme } from "@mui/material";
 import { Bar } from "react-chartjs-2";
-import { Quiz, QuizItem } from "../../mockup_data/quiz";
+import { QuizItem } from "../../mockup_data/quiz";
 import { QuizRecord } from "../../mockup_data/quiz_record";
-import { User, user1 } from "../../mockup_data/user";
+import { User } from "../../mockup_data/user";
 import { NavRail } from "../NavRail";
 import {
   Chart as ChartJS,
@@ -16,6 +16,10 @@ import {
 import { isCorrect } from "../quiz_review/QuizReviewPage";
 import Scaffold from "../Scaffold";
 import { useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { classRoomStore } from "../../store/ClassRoomStore";
+import quizRecordStore from "../../store/QuizRecordStore";
+import userStore from "../../store/UserStore";
 
 interface TitleProps {
   quizName: String;
@@ -143,7 +147,7 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
     let lo = i * gap;
     result = [...result, `${lo}~${lo + gap}점`];
     return result;
-  }, [maxScore]);
+  }, [gap]);
 
   const scoreDistribution: number[] = useMemo(() => {
     let result: number[] = [...Array(LABLE_COUNT)].fill(0);
@@ -153,7 +157,7 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
       while (scoreIndex < scores.length) {
         const score = scores[scoreIndex];
         const currentLabelMaxScore =
-          gap * (labelIndex + 1) + (labelIndex == LABLE_COUNT - 1 ? 1 : 0);
+          gap * (labelIndex + 1) + (labelIndex === LABLE_COUNT - 1 ? 1 : 0);
         if (score >= currentLabelMaxScore) {
           break;
         }
@@ -162,7 +166,7 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
       }
     }
     return result;
-  }, [scores]);
+  }, [scores, gap]);
 
   const data = {
     labels,
@@ -178,40 +182,57 @@ const ScoreDistributionChart = (props: ScoreDistributionChartProps) => {
   return <Bar options={chartOptions} data={data} />;
 };
 
-interface QuizStaticsPageProps {
-  quiz: Quiz;
-  records: QuizRecord[];
-}
+const QuizStaticsPage = () => {
+  const navigate = useNavigate();
+  const { quizId } = useParams();
+  if (quizId === undefined) {
+    throw Error("URL에 quizId parameter가 누락되었습니다.");
+  }
+  const quiz = useMemo(() => {
+    return classRoomStore.requireQuizById(quizId);
+  }, [quizId]);
+  const records = useMemo(() => {
+    return quizRecordStore.getRecordsByQuizId(quizId);
+  }, [quizId]);
 
-const QuizStaticsPage = (props: QuizStaticsPageProps) => {
-  const candidateIds = [
-    ...new Set(props.records.map((record) => record.candidateId)),
-  ];
-
-  // TODO: 임시로 넣은 값임 실제 기록에서 불러오도록 수정하기
-  const candidates = [user1];
+  const candidateIds = useMemo(
+    () => [...new Set(records.map((record) => record.candidateId))],
+    [records]
+  );
+  const candidateUsers = useMemo(() => {
+    return userStore.getUserList(candidateIds);
+  }, [candidateIds]);
 
   const scores: number[] = useMemo(() => {
-    return props.records
-      .map((record) => getScore(record, props.quiz.items))
+    return records
+      .map((record) => getScore(record, quiz.items))
       .sort((a, b) => a - b);
-  }, [props.quiz.items, props.records]);
+  }, [quiz.items, records]);
 
   const average: number = useMemo(() => {
+    if (scores.length === 0) {
+      return 0;
+    }
     const sum = scores.reduce((prev, curr) => prev + curr);
     return sum / scores.length;
   }, [scores]);
 
   return (
-    <Scaffold navRail={<NavRail items={[]} />}>
-      <StaticsTitle quizName={props.quiz.name} />
-      <QuizRecordSummary
-        candidateUserCount={candidates.length}
-        submitCount={props.records.length}
-        average={average}
-      />
-      <CandidateList candidates={candidates} />
-      <ScoreDistributionChart scores={scores} />
+    <Scaffold navRail={<NavRail items={[]} onBackClick={() => navigate(-1)} />}>
+      {records.length === 0 ? (
+        <Typography variant="h4">아직 퀴즈를 푼 사람이 없어요.</Typography>
+      ) : (
+        <>
+          <StaticsTitle quizName={quiz.name} />
+          <QuizRecordSummary
+            candidateUserCount={candidateUsers.length}
+            submitCount={records.length}
+            average={average}
+          />
+          <CandidateList candidates={candidateUsers} />
+          <ScoreDistributionChart scores={scores} />
+        </>
+      )}
     </Scaffold>
   );
 };

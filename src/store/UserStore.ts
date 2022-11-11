@@ -103,6 +103,11 @@ class UserStore {
     const users: User[] = readJsonFromLocalStorage<User[]>(USER_KEY) ?? [];
     return users.find((user) => user.id === id);
   }
+
+  getUserList(ids: String[]): User[] {
+    const users: User[] = readJsonFromLocalStorage<User[]>(USER_KEY) ?? [];
+    return users.filter((user) => ids.some((id) => id === user.id));
+  }
 }
 
 const userStore = new UserStore();

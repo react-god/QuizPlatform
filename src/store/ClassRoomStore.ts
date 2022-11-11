@@ -68,6 +68,12 @@ class ClassRoomStore {
     updatedRoom.quizs = [...updatedRoom.quizs, quiz];
     writeJsonToLocalStorage(CLASS_ROOM_KEY, this._rooms);
   }
+
+  requireQuizById(quizId: String): Quiz {
+    return this._rooms
+      .flatMap((room) => room.quizs)
+      .find((quiz) => quiz.id === quizId)!;
+  }
 }
 
 export const classRoomStore = new ClassRoomStore();

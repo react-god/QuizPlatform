@@ -12,7 +12,9 @@ import {
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Quiz } from "../../mockup_data/quiz";
+import userStore from "../../store/UserStore";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -28,21 +30,50 @@ interface QuizRoomComponentProps {
 }
 
 const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
-  const [open, setOpen] = React.useState(false);
-  const [dialogTitle, setDialogTitle] = React.useState("");
+  const navigate = useNavigate();
+  const [openQuizStartDialog, setOpenQuizStartDialog] = React.useState(false);
+  const [selectedQuiz, setSelectedQuiz] = React.useState<Quiz | undefined>(
+    undefined
+  );
 
-  const handleClickOpen = () => {
-    // console.log(quiz.name);
-    setDialogTitle("");
-    setOpen(true);
+  const onCardClick = (quiz: Quiz) => {
+    const currentUser = userStore.currentUser;
+    if (currentUser === undefined) {
+      throw Error("로그인 하지 않고 퀴즈를 클릭함");
+    }
+    const isQuizMine = currentUser.id === quiz.owner.id;
+    if (isQuizMine) {
+      navigate(`/statics/${quiz.id}`);
+    } else {
+      setSelectedQuiz(quiz);
+      setOpenQuizStartDialog(true);
+    }
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const onCancelClick = () => {
+    setSelectedQuiz(undefined);
+    setOpenQuizStartDialog(false);
+  };
+
+  const onStartQuizClick = () => {
+    // TODO: 퀴즈 푸는 화면으로 네비게이션
   };
 
   return (
     <>
+      <Dialog
+        open={openQuizStartDialog}
+        keepMounted
+        onClose={onCancelClick}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{`${selectedQuiz?.name} 퀴즈를 시작할까요?`}</DialogTitle>
+        <DialogActions>
+          <Button onClick={onCancelClick}>취소</Button>
+          <Button onClick={onStartQuizClick}>시작</Button>
+        </DialogActions>
+      </Dialog>
+
       {quizs.map((quiz: Quiz) => {
         return (
           <Grid key={quiz.id as string} item xs={4}>
@@ -55,7 +86,7 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
                 borderRadius: "20",
                 display: "block",
               }}
-              onClick={() => handleClickOpen()}
+              onClick={() => onCardClick(quiz)}
             >
               <CardContent sx={{ margin: "0px", padding: "16px!important" }}>
                 {/* important 말고 다른방법 찾기 */}
@@ -83,18 +114,6 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
           </Grid>
         );
       })}
-      <Dialog
-        open={open}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{`${dialogTitle} 퀴즈를 시작할까요?`}</DialogTitle>
-        <DialogActions>
-          <Button onClick={handleClose}>취소</Button>
-          <Button onClick={handleClose}>시작</Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };
