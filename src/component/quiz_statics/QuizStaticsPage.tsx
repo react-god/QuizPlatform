@@ -195,9 +195,10 @@ const QuizStaticsPage = () => {
     return quizRecordStore.getRecordsByQuizId(quizId);
   }, [quizId]);
 
-  const candidateIds = [
-    ...new Set(records.map((record) => record.candidateId)),
-  ];
+  const candidateIds = useMemo(
+    () => [...new Set(records.map((record) => record.candidateId))],
+    [records]
+  );
   const candidateUsers = useMemo(() => {
     return userStore.getUserList(candidateIds);
   }, [candidateIds]);
