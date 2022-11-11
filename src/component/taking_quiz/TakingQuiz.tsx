@@ -15,6 +15,7 @@ import {
   Stack,
   Grid,
   IconButton,
+  useTheme,
 } from "@mui/material";
 import { Quiz, QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
 import { User } from "../../mockup_data/user";
@@ -22,6 +23,9 @@ import { ImageNotSupported, Image } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { NavRail, NavRailItem } from "../NavRail";
 import Scaffold from "../Scaffold";
+import { QuizRecordItem } from "../../mockup_data/quiz_record";
+import TakingQuizStore from "../../store/TakingQuizStore";
+import { observer, Observer } from "mobx-react";
 
 /*style*/
 const useStyles = makeStyles({
@@ -65,11 +69,18 @@ const ImageModal: React.FC<{ source: String }> = ({ source }) => {
   );
 };
 
-const QuizChoice: React.FC<{ option: QuizOption }> = (props) => {
+const QuizChoice: React.FC<{
+  option: QuizOption;
+  chosen: boolean;
+  onClicked: () => void;
+}> = (props) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const modalOpen = () => setOpen(true);
   const modalClose = () => setOpen(false);
+  const cardColor = props.chosen
+    ? "primary"
+    : "error";
   let quizImage: JSX.Element | undefined = undefined;
 
   if (props.option.imageUrl) {
@@ -77,31 +88,34 @@ const QuizChoice: React.FC<{ option: QuizOption }> = (props) => {
   }
 
   return (
-    <Card variant="outlined" className={classes.cardStyle}>
+    <Button
+      variant="contained"
+      className={classes.cardStyle}
+      onClick={() => props.onClicked()}
+      color={cardColor}
+    >
       <Stack direction="row">
         {quizImage}
-        <ButtonBase
-          className={classes.cardAction}
-          onClick={(event) => {
-            console.log(event.currentTarget.value);
-          }}
-        >
-          <CardContent>
-            <Typography variant="h6">{props.option.title}</Typography>
-          </CardContent>
-        </ButtonBase>
+        <Typography variant="h6">{props.option.title}</Typography>
       </Stack>
-    </Card>
+    </Button>
   );
 };
 
-const QuizChoiceList: React.FC<{ currentItem: QuizItem }> = ({
-  currentItem,
-}) => {
+const QuizChoiceList: React.FC<{
+  currentItem: QuizItem;
+  store: TakingQuizStore;
+  currentRecord: QuizRecordItem;
+}> = ({ currentItem, store, currentRecord }) => {
   return (
     <>
       {currentItem.options.map((option, i) => (
-        <QuizChoice option={option} key={i} />
+        <QuizChoice
+          option={option}
+          key={i}
+          chosen={store.isOptionChosen(i,currentRecord)}
+          onClicked={() => store.updateChoiceRecordItem(i)}
+        />
       ))}
     </>
   );
@@ -109,16 +123,12 @@ const QuizChoiceList: React.FC<{ currentItem: QuizItem }> = ({
 
 const QuizEssay = () => {
   const classes = useStyles();
-  const onChangeAnswer = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget.value);
-  };
 
   return (
     <TextField
       variant="outlined"
-      onChange={onChangeAnswer}
       className={classes.cardAction}
-      placeholder="정답을 입력하세요."
+      placeholder="정답을 입력하시오."
     />
   );
 };
@@ -128,13 +138,16 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
   //const user = user1;
   const [currentItemIndex, setcurrentItemIndex] = useState(0);
   const currentItem = quiz.items[currentItemIndex];
+  const [store] = useState(new TakingQuizStore(quiz.id, user.id));
+  const currentRecord = store.currentRecordItem;
+
   let choiceOrEssay: JSX.Element;
   switch (currentItem.type) {
     case QuizType.choice:
       choiceOrEssay = (
         <Box sx={{ width: "100%" }}>
           <Stack spacing={1}>
-            <QuizChoiceList currentItem={currentItem} />
+            <QuizChoiceList currentItem={currentItem} store={store} currentRecord={currentRecord}/>
           </Stack>
         </Box>
       );
@@ -214,4 +227,4 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
   );
 };
 
-export default TakingQuiz;
+export default observer(TakingQuiz);
