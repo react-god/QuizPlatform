@@ -22,7 +22,12 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const QuizRoomComponent = ({ room }: any) => {
+interface QuizRoomComponentProps {
+  quizs: Quiz[];
+  ownerName: String;
+}
+
+const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
   const [open, setOpen] = React.useState(false);
   const [dialogTitle, setDialogTitle] = React.useState("");
 
@@ -38,7 +43,7 @@ const QuizRoomComponent = ({ room }: any) => {
 
   return (
     <>
-      {room.quizs.map((quiz: Quiz) => {
+      {quizs.map((quiz: Quiz) => {
         return (
           <Grid key={quiz.id as string} item xs={4}>
             <Card
@@ -69,7 +74,7 @@ const QuizRoomComponent = ({ room }: any) => {
                       display={"block"}
                       textAlign="center"
                     >
-                      {room.owner}
+                      {ownerName}
                     </Typography>
                   </Stack>
                 </Item>

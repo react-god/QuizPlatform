@@ -98,6 +98,11 @@ class UserStore {
     ];
     writeJsonToLocalStorage(USER_KEY, newUsers);
   }
+
+  getUserById(id: String): User | undefined {
+    const users: User[] = readJsonFromLocalStorage<User[]>(USER_KEY) ?? [];
+    return users.find((user) => user.id === id);
+  }
 }
 
 const userStore = new UserStore();
