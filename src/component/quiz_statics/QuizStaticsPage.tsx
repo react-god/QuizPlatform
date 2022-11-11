@@ -2,7 +2,7 @@ import { List, Typography, useTheme } from "@mui/material";
 import { Bar } from "react-chartjs-2";
 import { Quiz, QuizItem } from "../../mockup_data/quiz";
 import { QuizRecord } from "../../mockup_data/quiz_record";
-import { User } from "../../mockup_data/user";
+import { User, user1 } from "../../mockup_data/user";
 import { NavRail } from "../NavRail";
 import {
   Chart as ChartJS,
@@ -184,9 +184,12 @@ interface QuizStaticsPageProps {
 }
 
 const QuizStaticsPage = (props: QuizStaticsPageProps) => {
-  const candidates = [
-    ...new Set(props.records.map((record) => record.candidate)),
+  const candidateIds = [
+    ...new Set(props.records.map((record) => record.candidateId)),
   ];
+
+  // TODO: 임시로 넣은 값임 실제 기록에서 불러오도록 수정하기
+  const candidates = [user1];
 
   const scores: number[] = useMemo(() => {
     return props.records
