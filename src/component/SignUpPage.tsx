@@ -8,7 +8,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import logo from "../logo.svg";
 import userStore from "../store/UserStore";
 import { useNavigate } from "react-router-dom";
 
@@ -58,11 +57,11 @@ const SignUpPage = () => {
 
   return (
     <>
-      <div>
+      <div style={{ overflow: "hidden" }}>
         <header>
           <Box>
             <Typography
-              variant="h6"
+              variant="h5"
               sx={{ m: 2 }}
               color="secondary"
               style={{ fontFamily: "LuckiestGuy" }}
