@@ -112,7 +112,7 @@ const QuizChoiceList: React.FC<{
   );
 };
 
-const QuizEssay = () => {
+const QuizEssay: React.FC<{currentItemIndex:number, store:TakingQuizStore}> = ({currentItemIndex, store}) => {
   const classes = useStyles();
 
   return (
@@ -120,6 +120,8 @@ const QuizEssay = () => {
       variant="outlined"
       className={classes.cardAction}
       placeholder="정답을 입력하시오."
+      onChange={(event)=>store.updateEssayRecordItem(event.currentTarget.value)} //글쓰기. 답안 기록
+      value={store.showUpdatedEssay(currentItemIndex)}
     />
   );
 };
@@ -142,7 +144,7 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
       );
       break;
     case QuizType.essay:
-      choiceOrEssay = <QuizEssay />;
+      choiceOrEssay = <QuizEssay currentItemIndex={currentItemIndex} store={store}/>;
   }
 
   const isFirst = (currentItemIndex: number) => {
