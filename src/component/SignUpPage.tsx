@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -22,22 +22,28 @@ const SignUpPage = () => {
   );
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (error === undefined && email !== "" && password !== "" && name !== "") {
+      setSignUpButton("");
+    } else {
+      setSignUpButton(undefined);
+    }
+  }, [error, email, password, name]);
+
   function checkValidEmail(email: string) {
     if (/\S+@\S+\.\S+/.test(email)) {
       setError(undefined);
       setEmail(email);
-      setSignUpButton("");
       return true;
     } else {
       setError("이메일 형식이 틀렸습니다.");
       setEmail(email);
-      setSignUpButton(undefined);
       return false;
     }
   }
 
   const signUp = (email: string, password: string, name: string) => {
-    if (!checkValidEmail(email)) return;
+    if (!checkValidEmail(email) || password === "" || name === "") return;
 
     try {
       var user = userStore.signUp(email, password, name);
