@@ -1,192 +1,110 @@
-import React from "react";
 import {
   Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Form,
-  Input,
-  InputGroup,
-  Container,
-  Col,
-  Modal,
-  ModalBody,
-} from "reactstrap";
-import { user1, user2, user3, user4 } from "../mockup_data/user";
+  Stack,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import React, { useMemo } from "react";
 
 function LoginPage() {
-  const [firstFocus, setFirstFocus] = React.useState<boolean>(false);
-  const [lastFocus, setLastFocus] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
-  const [modalSmall, setModalSmall] = React.useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = React.useState<String>("");
+  const isMobile = useMediaQuery(`(max-width: 780px)`);
+  const isTablet = useMediaQuery(`(max-width: 960px)`);
 
-  interface DataFormat {
-    id: String;
-    password: String;
+  const isEmailValid = useMemo(() => /\S+@\S+\.\S+/.test(email), [email]);
+
+  const showEmailError = useMemo(
+    () => email.length > 0 && !isEmailValid,
+    [email]
+  );
+
+  const enableLoginButton = useMemo(
+    () => isEmailValid && password.length > 0,
+    [email, password]
+  );
+
+  let horizontalPadding: string;
+  if (isMobile) {
+    horizontalPadding = "40px";
+  } else if (isTablet) {
+    horizontalPadding = "220px";
+  } else {
+    horizontalPadding = "340px";
   }
 
-  const usersData = [user1, user2, user3, user4];
-  let users: DataFormat[] = [];
-
-  for (const user of usersData) {
-    const dat: DataFormat = { id: user.id, password: user.password };
-    users.push(dat);
-  }
-
-  const onChangeHandler = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: string
-  ) => {
-    if (type === "email") setEmail(e.target.value);
-    else setPassword(e.target.value);
+  const onEmailChange = (email: string) => {
+    setEmail(email);
   };
 
-  const loginHandler = async (email: string, password: string) => {
-    try {
-      setModalSmall(true);
-      setErrorMsg("Loading");
-      let auth = false;
-      for (const user of users) {
-        if (email === user["id"] && password === user["password"]) {
-          auth = true;
-          setTimeout(() => {
-            setErrorMsg("Login Success");
-            window.location.href = "/";
-          }, 1000);
-          break;
-        }
-      }
-
-      if (!auth) {
-        setTimeout(() => {
-          setErrorMsg("Can't find User information");
-        }, 1000);
-      }
-    } catch (e) {
-      if (e instanceof TypeError) {
-        setErrorMsg(String(e));
-      } else if (e instanceof SyntaxError) {
-        setErrorMsg(String(e));
-      } else if (typeof e === "string") {
-        setErrorMsg(String(e));
-      } else {
-        setErrorMsg(String(e));
-      }
-    }
+  const onPasswordChange = (password: string) => {
+    setPassword(password);
   };
 
-  const signUpHandler = () => {
-    window.location.href = "/signUp";
-  };
+  const onSignInButtonClick = () => {};
+
+  const onSignUpButtonClick = () => {};
 
   return (
-    <>
-      <div className="page-header clear-filter" filter-color="blue">
-        <div
-          className="page-header-image"
+    <Stack
+      alignItems="center"
+      justifyContent="center"
+      style={{ height: "80%" }}
+    >
+      <Typography
+        align="center"
+        variant="h1"
+        color="secondary"
+        style={{ fontFamily: "LuckiestGuy" }}
+      >
+        QUIZ<br></br>PLATFORM
+      </Typography>
+      <Stack
+        style={{
+          minWidth: "440px",
+          marginLeft: horizontalPadding,
+          marginRight: horizontalPadding,
+        }}
+      >
+        <TextField
+          placeholder="abc@gmail.com"
+          label="이메일"
+          type="email"
+          error={showEmailError}
+          helperText={showEmailError ? "이메일 형식이 아니에요." : undefined}
+          onChange={(e) => onEmailChange(e.target.value)}
+          value={email}
           style={{
-            backgroundImage: "url(" + require("../assets/img/login.jpg") + ")",
+            marginTop: "24px",
           }}
-        ></div>
-        <div className="content">
-          <Container>
-            <Col className="ml-auto mr-auto" md="4">
-              <Card className="card-login card-plain">
-                <Form action="" className="form" method="">
-                  <CardHeader className="text-center">
-                    <div className="logo-container">
-                      <img
-                        alt="..."
-                        src={require("../assets/img/logo.png")}
-                      ></img>
-                    </div>
-                  </CardHeader>
-                  <CardBody>
-                    <InputGroup
-                      className={
-                        "no-border input-lg" +
-                        (firstFocus ? " input-group-focus" : "")
-                      }
-                    >
-                      <Input
-                        placeholder="Email..."
-                        type="email"
-                        onFocus={() => setFirstFocus(true)}
-                        onBlur={() => setFirstFocus(false)}
-                        onChange={(e) => onChangeHandler(e, "email")}
-                        value={email}
-                      ></Input>
-                    </InputGroup>
-                    <InputGroup
-                      className={
-                        "no-border input-lg" +
-                        (lastFocus ? " input-group-focus" : "")
-                      }
-                    >
-                      <Input
-                        placeholder="Password..."
-                        type="password"
-                        onFocus={() => setLastFocus(true)}
-                        onBlur={() => setLastFocus(false)}
-                        onChange={(e) => onChangeHandler(e, "pw")}
-                        value={password}
-                      ></Input>
-                    </InputGroup>
-                  </CardBody>
-                  <CardFooter className="text-center">
-                    <Button
-                      block
-                      className="btn-round"
-                      color="info"
-                      onClick={() => loginHandler(email, password)}
-                      size="lg"
-                    >
-                      Login
-                    </Button>
-
-                    <Button
-                      block
-                      className="btn-link"
-                      color="white"
-                      onClick={() => signUpHandler()}
-                      size="lg"
-                    >
-                      Create Account
-                    </Button>
-
-                    <Modal
-                      modalClassName="modal-mini modal-info"
-                      toggle={() => setModalSmall(false)}
-                      isOpen={modalSmall}
-                    >
-                      <div className="modal-header justify-content-center">
-                        <div className="modal-profile"></div>
-                      </div>
-                      <ModalBody>
-                        <p>{errorMsg}</p>
-                      </ModalBody>
-                      <div className="modal-footer">
-                        <Button
-                          className="btn-neutral"
-                          color="link"
-                          type="button"
-                          onClick={() => setModalSmall(false)}
-                        >
-                          Close
-                        </Button>
-                      </div>
-                    </Modal>
-                  </CardFooter>
-                </Form>
-              </Card>
-            </Col>
-          </Container>
-        </div>
-      </div>
-    </>
+        ></TextField>
+        <TextField
+          label="비밀번호"
+          type="password"
+          onChange={(e) => onPasswordChange(e.target.value)}
+          style={{
+            marginTop: "24px",
+            marginBottom: "24px",
+          }}
+          value={password}
+        ></TextField>
+        <Button
+          variant="contained"
+          disabled={!enableLoginButton}
+          onClick={() => onSignInButtonClick()}
+          style={{
+            marginBottom: "12px",
+            minHeight: "48px",
+          }}
+        >
+          로그인
+        </Button>
+        <Button onClick={() => onSignUpButtonClick()}>
+          회원이 아니신가요? 계정 생성
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
 
