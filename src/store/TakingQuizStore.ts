@@ -33,35 +33,29 @@ class TakingQuizStore {
     return this.answerRecord.items[index];
   }
 
-  /** 클릭된 객관식인덱스 인자로 받아서, 객관식 답안 업데이트. 빈 배열에서 추가해주고, 없애주고.   */
   updateChoiceRecordItem(clickedChoiceIndex: number) {
     const recordItem = this.currentRecordItem;
 
     if (recordItem === undefined) {
-      //기록이 안되어있으면
       this.answerRecord.items = [
         ...this.answerRecord.items,
-        { index: this.currentItemIndex, choice: [clickedChoiceIndex] }, //choice에 기록을 해준다.
+        { index: this.currentItemIndex, choice: [clickedChoiceIndex] },
       ];
       return;
     }
-    const choices = recordItem.choice; //답안의 number[]
+    const choices = recordItem.choice;
     if (choices === undefined) {
-      //답안의 choices가 undefined다 -> essay라는 뜻이지.
       throw Error("객관식 문항이 아닌 다른 유형에서 호출했습니다.");
     }
     const alreadyChosen = choices.some(
-      //true, false 리턴
-      (choice) => choice === clickedChoiceIndex //choices 답안지의 choice가 클릭된 인덱스면 true.
+      (choice) => choice === clickedChoiceIndex
     );
     if (alreadyChosen) {
-      //이미 클릭된 index면
       recordItem.choice = choices.filter((choice) => {
-        return choice !== clickedChoiceIndex; //false...?
+        return choice !== clickedChoiceIndex;
       });
     } else {
-      //이미 클릭된 index가 아니면
-      recordItem.choice = [...choices, clickedChoiceIndex]; //추가 객관식 문항에 추가.
+      recordItem.choice = [...choices, clickedChoiceIndex];
     }
   }
 

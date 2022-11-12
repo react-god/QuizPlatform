@@ -68,7 +68,7 @@ const QuizChoice: React.FC<{
   const [open, setOpen] = React.useState(false);
   const modalOpen = () => setOpen(true);
   const modalClose = () => setOpen(false);
-  const cardColor = props.chosen ? "primary" : "error";
+  const cardColor = props.chosen ? "primary" : "inherit";
   let quizImage: JSX.Element | undefined = undefined;
 
   if (props.option.imageUrl) {
@@ -116,7 +116,7 @@ const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
   const classes = useStyles();
   const [essay, setEssay] = useState(store.getCurrentQuizEssay());
 
-  const onEssayChange = (value: String) => {
+  const onEssayChange = (value: String) => { 
     store.updateEssayRecordItem(value);
     setEssay(value as string);
   };
@@ -194,7 +194,7 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
                 <NavRailItem
                   key={item.uuid as string}
                   label={`${index + 1}`}
-                  color={"inherit"}
+                  color={"inherit"} //todo(은서): 퀴즈답안기록이 있으면 색깔 secondary(민트)로 바뀌게
                   isSelected={true}
                   onClick={() => {
                     store.moveToTheQuestion(index);
