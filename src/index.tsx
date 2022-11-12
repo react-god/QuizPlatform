@@ -11,6 +11,7 @@ import "./assets/css/bootstrap.min.css";
 import "./assets/css/login-register.css";
 import QuizCreatePage from "./component/quiz_create/QuizCreatePage";
 import QuizStaticsPage from "./component/quiz_statics/QuizStaticsPage";
+import SignUpPage from "./component/SignUpPage";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
@@ -21,6 +22,7 @@ root.render(
       <ThemeProvider theme={theme}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
+          <Route path="/signUp" element={<SignUpPage />} />
           <Route path="/classroom" element={<ClassRoomPage />} />
           <Route path="/create-quiz" element={<QuizCreatePage />} />
           <Route path="/statics/:quizId" element={<QuizStaticsPage />} />
