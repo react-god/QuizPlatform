@@ -16,17 +16,22 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [signUpButton, setSignUpButton] = useState<string | undefined>(
+    undefined
+  );
   const navigate = useNavigate();
 
   function checkValidEmail(email: string) {
     if (/\S+@\S+\.\S+/.test(email)) {
-      setError(null);
+      setError(undefined);
       setEmail(email);
+      setSignUpButton("");
       return true;
     } else {
-      setError("Email is invalid");
+      setError("이메일 형식이 틀렸습니다.");
       setEmail(email);
+      setSignUpButton(undefined);
       return false;
     }
   }
@@ -63,11 +68,11 @@ const SignUpPage = () => {
             <Paper variant="outlined" style={{ padding: "12px" }}>
               <form>
                 <TextField
-                  error={error != null}
+                  error={error !== undefined}
                   required
                   fullWidth
                   id="standard-email-input"
-                  label="Email"
+                  label="이메일"
                   type="email"
                   variant="standard"
                   margin="dense"
@@ -80,7 +85,7 @@ const SignUpPage = () => {
                   required
                   fullWidth
                   id="standard-password-input"
-                  label="Password"
+                  label="비밀번호"
                   type="password"
                   autoComplete="current-password"
                   variant="standard"
@@ -93,7 +98,7 @@ const SignUpPage = () => {
                   required
                   fullWidth
                   id="standard-name-input"
-                  label="Name"
+                  label="이름"
                   type="text"
                   variant="standard"
                   margin="dense"
@@ -103,12 +108,12 @@ const SignUpPage = () => {
                 <br />
                 <Button
                   fullWidth
-                  disabled={error != null}
+                  disabled={signUpButton === undefined}
                   variant="contained"
                   style={{ marginTop: "24px" }}
                   onClick={() => signUp(email, password, name)}
                 >
-                  Create account
+                  계정 생성 하기
                 </Button>
               </form>
               <hr />
