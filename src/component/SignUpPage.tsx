@@ -10,23 +10,40 @@ import {
 } from "@mui/material";
 import logo from "../logo.svg";
 import userStore from "../store/UserStore";
-
-const SignUp = (email: string, password: string, name: string) => {
-  try {
-    var user = userStore.signUp(email, password, name);
-    if (user !== null) {
-      alert("회원가입이 완료되었습니다.");
-      window.location.href = "/";
-    }
-  } catch (e: any) {
-    alert(e.message);
-  }
-};
+import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState<any>(null);
+  const navigate = useNavigate();
+
+  function checkValidEmail(email: string) {
+    if (/\S+@\S+\.\S+/.test(email)) {
+      setError(null);
+      setEmail(email);
+      return true;
+    } else {
+      setError("Email is invalid");
+      setEmail(email);
+      return false;
+    }
+  }
+
+  const signUp = (email: string, password: string, name: string) => {
+    if (!checkValidEmail(email)) return;
+
+    try {
+      var user = userStore.signUp(email, password, name);
+      if (user !== null) {
+        alert("회원가입이 완료되었습니다.");
+        navigate(`/`);
+      }
+    } catch (e: any) {
+      alert(e.message);
+    }
+  };
 
   return (
     <>
@@ -46,6 +63,7 @@ const SignUpPage = () => {
             <Paper variant="outlined" style={{ padding: "12px" }}>
               <form>
                 <TextField
+                  error={error != null}
                   required
                   fullWidth
                   id="standard-email-input"
@@ -54,7 +72,8 @@ const SignUpPage = () => {
                   variant="standard"
                   margin="dense"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => checkValidEmail(e.target.value)}
+                  helperText={error}
                 />
                 <br />
                 <TextField
@@ -84,19 +103,17 @@ const SignUpPage = () => {
                 <br />
                 <Button
                   fullWidth
+                  disabled={error != null}
                   variant="contained"
                   style={{ marginTop: "24px" }}
-                  onClick={() => SignUp(email, password, name)}
+                  onClick={() => signUp(email, password, name)}
                 >
                   Create account
                 </Button>
               </form>
               <hr />
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button
-                  variant="text"
-                  onClick={() => (window.location.href = "/")}
-                >
+                <Button variant="text" onClick={() => navigate(`/`)}>
                   이미 계정이 있으신가요? 로그인 하기
                 </Button>
               </div>
