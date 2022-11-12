@@ -18,19 +18,22 @@ class TakingQuizStore {
     };
     makeAutoObservable(this);
   }
-  /**현재 문제 번호에 대응하는 답안 QuizRecordItem index, choice나 essay 리턴 */
+  /**
+   * 현재 문제 번호에 대응하는 답안 QuizRecordItem을 반환한다.
+   *
+   * 복사본이 아닌 참조를 반환한다.
+   */
   get currentRecordItem(): QuizRecordItem | undefined {
-    return this.answerRecord.items.find(
+    const index = this.answerRecord.items.findIndex(
       (recordItem) => recordItem.index === this.currentItemIndex
     );
+    if (index === -1) {
+      return undefined;
+    }
+    return this.answerRecord.items[index];
   }
-  /**현재 문제 번호에 대응하는 답안 인덱스 리턴 */
-  get currentRecordItemIndex(): number {
-    return this.answerRecord.items.findIndex(
-      (recordItem) => recordItem.index === this.currentItemIndex
-    );
-  }
-  /**클릭된 객관식인덱스 인자로 받아서, 객관식 답안 업데이트. 빈 배열에서 추가해주고, 없애주고.   */
+
+  /** 클릭된 객관식인덱스 인자로 받아서, 객관식 답안 업데이트. 빈 배열에서 추가해주고, 없애주고.   */
   updateChoiceRecordItem(clickedChoiceIndex: number) {
     const recordItem = this.currentRecordItem;
 
@@ -51,14 +54,11 @@ class TakingQuizStore {
       //true, false 리턴
       (choice) => choice === clickedChoiceIndex //choices 답안지의 choice가 클릭된 인덱스면 true.
     );
-    const recordItemIndex = this.currentRecordItemIndex;
     if (alreadyChosen) {
       //이미 클릭된 index면
-      this.answerRecord.items[recordItemIndex].choice = choices.filter(
-        (choice) => {
-          return choice !== clickedChoiceIndex; //false...?
-        }
-      );
+      recordItem.choice = choices.filter((choice) => {
+        return choice !== clickedChoiceIndex; //false...?
+      });
     } else {
       //이미 클릭된 index가 아니면
       recordItem.choice = [...choices, clickedChoiceIndex]; //추가 객관식 문항에 추가.
@@ -78,29 +78,30 @@ class TakingQuizStore {
   }
 
   updateEssayRecordItem(inputEssay: String) {
-    //currentTarget.value 받음.
-    const recordItem = this.currentRecordItem; //지금 현재 레코드, 아무것도 안들어가있음
-    const recordItemIndex = this.currentRecordItemIndex; //현재 레코드 인덱스
-    console.log(inputEssay);
-    //undefined이든 뭐가 들어가있든 간에 값은 계속 바뀌니까.
+    const recordItem = this.currentRecordItem;
     if (recordItem === undefined) {
       this.answerRecord.items = [
         ...this.answerRecord.items,
-        { index: recordItemIndex, essay: inputEssay },
+        { index: this.currentItemIndex, essay: inputEssay },
       ];
-      console.log(this.answerRecord.items[this.currentItemIndex]);
     } else {
-      //뭐라도 들어가있을 때
-      recordItem.essay = inputEssay; //현재 essay 새로 갱신
-      console.log(this.answerRecord.items[this.currentItemIndex]);
-    }
-
-    if (inputEssay === undefined) {
-      throw Error("단답식 문항이 아닌 다른 유형에서 호출했습니다.");
+      recordItem.essay = inputEssay;
     }
   }
-  /** 현재 레코드아이템에 답안이 작성되어있는거 보여준다.*/
-  showUpdatedEssay(currentItemIndex: number) {}
+
+  /**
+   * 현재 퀴즈의 작성된 단답식 답안을 반환한다.
+   */
+  getCurrentQuizEssay(): String {
+    const recordItem = this.currentRecordItem;
+    if (recordItem === undefined) {
+      return "";
+    }
+    if (recordItem.essay === undefined) {
+      throw Error("단답식이 아닌 문제에서 단답을 요구했습니다.");
+    }
+    return recordItem.essay;
+  }
 
   moveToTheQuestion(clickedItemIndex: number) {
     this.currentItemIndex = clickedItemIndex;
