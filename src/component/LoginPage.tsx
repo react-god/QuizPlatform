@@ -26,7 +26,7 @@ function LoginPage() {
   );
   const enableLoginButton = useMemo(
     () => isEmailValid && password.length > 0,
-    [email, password, isEmailValid]
+    [password, isEmailValid]
   );
 
   const cloasErrorMessage = () => {
