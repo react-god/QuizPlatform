@@ -1,29 +1,37 @@
 import {
+  Alert,
   Button,
+  Snackbar,
   Stack,
   TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import React, { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import userStore from "../store/UserStore";
 
 function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
-  const isMobile = useMediaQuery(`(max-width: 780px)`);
-  const isTablet = useMediaQuery(`(max-width: 960px)`);
+  const [errorMessage, setErrorMessage] = React.useState<string | undefined>(
+    undefined
+  );
+  const openErrorMessage = errorMessage !== undefined;
 
   const isEmailValid = useMemo(() => /\S+@\S+\.\S+/.test(email), [email]);
-
   const showEmailError = useMemo(
     () => email.length > 0 && !isEmailValid,
     [email]
   );
-
   const enableLoginButton = useMemo(
     () => isEmailValid && password.length > 0,
     [email, password]
   );
+
+  const isMobile = useMediaQuery(`(max-width: 780px)`);
+  const isTablet = useMediaQuery(`(max-width: 960px)`);
 
   let horizontalPadding: string;
   if (isMobile) {
@@ -34,6 +42,10 @@ function LoginPage() {
     horizontalPadding = "340px";
   }
 
+  const cloasErrorMessage = () => {
+    setErrorMessage(undefined);
+  };
+
   const onEmailChange = (email: string) => {
     setEmail(email);
   };
@@ -42,16 +54,41 @@ function LoginPage() {
     setPassword(password);
   };
 
-  const onSignInButtonClick = () => {};
+  const onLoginButtonClick = () => {
+    try {
+      userStore.signIn(email, password);
+      navigate("/", { replace: true });
+    } catch (e) {
+      if (e instanceof Error) {
+        setErrorMessage(e.message);
+      }
+    }
+  };
 
-  const onSignUpButtonClick = () => {};
+  const onSignUpButtonClick = () => {
+    navigate("/signUp");
+  };
 
   return (
     <Stack
       alignItems="center"
       justifyContent="center"
-      style={{ height: "80%" }}
+      style={{ height: "100%" }}
     >
+      <Snackbar
+        open={openErrorMessage}
+        autoHideDuration={5000}
+        onClose={cloasErrorMessage}
+      >
+        <Alert
+          onClose={cloasErrorMessage}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+      {userStore.currentUser !== undefined ? "로그인됨" : "로그인 안됨"}
       <Typography
         align="center"
         variant="h1"
@@ -92,7 +129,7 @@ function LoginPage() {
         <Button
           variant="contained"
           disabled={!enableLoginButton}
-          onClick={() => onSignInButtonClick()}
+          onClick={() => onLoginButtonClick()}
           style={{
             marginBottom: "12px",
             minHeight: "48px",
