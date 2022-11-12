@@ -8,7 +8,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import logo from "../logo.svg";
 import userStore from "../store/UserStore";
 import { useNavigate } from "react-router-dom";
 
@@ -58,12 +57,16 @@ const SignUpPage = () => {
 
   return (
     <>
-      <div>
+      <div style={{ overflow: "hidden" }}>
         <header>
           <Box>
-            <Typography variant="h6" sx={{ m: 2 }}>
-              <img src={logo} alt="logo" width={34} height={34} />
-              React-God
+            <Typography
+              variant="h5"
+              sx={{ m: 2 }}
+              color="secondary"
+              style={{ fontFamily: "LuckiestGuy" }}
+            >
+              QUIZ PLATFORM
             </Typography>
             <Divider />
           </Box>
@@ -74,6 +77,7 @@ const SignUpPage = () => {
             <Paper variant="outlined" style={{ padding: "12px" }}>
               <form>
                 <TextField
+                  placeholder="abc@gmail.com"
                   error={error !== undefined}
                   required
                   fullWidth
@@ -116,16 +120,24 @@ const SignUpPage = () => {
                   fullWidth
                   disabled={signUpButton === undefined}
                   variant="contained"
-                  style={{ marginTop: "24px" }}
+                  style={{ marginTop: "24px", minHeight: "48px" }}
                   onClick={() => signUp(email, password, name)}
                 >
                   계정 생성 하기
                 </Button>
               </form>
-              <hr />
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button variant="text" onClick={() => navigate(`/`)}>
-                  이미 계정이 있으신가요? 로그인 하기
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "12px",
+                }}
+              >
+                <Button
+                  variant="text"
+                  onClick={() => navigate(`/`, { replace: true })}
+                >
+                  로그인 화면으로 돌아가기
                 </Button>
               </div>
             </Paper>
