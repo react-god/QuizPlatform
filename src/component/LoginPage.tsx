@@ -5,12 +5,10 @@ import {
   Stack,
   TextField,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import userStore from "../store/UserStore";
-import { useKeyEvent } from "../util/UseKeyEvent";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -30,7 +28,6 @@ function LoginPage() {
     () => isEmailValid && password.length > 0,
     [email, password, isEmailValid]
   );
-
 
   const cloasErrorMessage = () => {
     setErrorMessage(undefined);
@@ -57,6 +54,12 @@ function LoginPage() {
 
   const onSignUpButtonClick = () => {
     navigate("/signUp");
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && enableLoginButton) {
+      onLoginButtonClick();
+    }
   };
 
   return (
@@ -98,6 +101,7 @@ function LoginPage() {
           style={{
             marginTop: "24px",
           }}
+          onKeyDown={onKeyDown}
         ></TextField>
         <TextField
           label="비밀번호"
@@ -108,6 +112,7 @@ function LoginPage() {
             marginBottom: "24px",
           }}
           value={password}
+          onKeyDown={onKeyDown}
         ></TextField>
         <Button
           variant="contained"
