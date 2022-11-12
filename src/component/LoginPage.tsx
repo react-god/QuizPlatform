@@ -23,11 +23,11 @@ function LoginPage() {
   const isEmailValid = useMemo(() => /\S+@\S+\.\S+/.test(email), [email]);
   const showEmailError = useMemo(
     () => email.length > 0 && !isEmailValid,
-    [email]
+    [email, isEmailValid]
   );
   const enableLoginButton = useMemo(
     () => isEmailValid && password.length > 0,
-    [email, password]
+    [email, password, isEmailValid]
   );
 
   const isMobile = useMediaQuery(`(max-width: 780px)`);
