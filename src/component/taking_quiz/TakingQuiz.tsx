@@ -15,6 +15,7 @@ import { NavRail, NavRailItem } from "../NavRail";
 import Scaffold from "../Scaffold";
 import TakingQuizStore from "../../store/TakingQuizStore";
 import { observer } from "mobx-react";
+import { Image } from "@mui/icons-material";
 
 /*style*/
 const useStyles = makeStyles({
@@ -187,7 +188,9 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
                   label={`${index + 1}`}
                   color={"inherit"}
                   isSelected={true}
-                  onClick={() => console.log()}
+                  onClick={() => {
+                    store.moveToTheQuestion(index);
+                  }}
                 />
               );
             }),

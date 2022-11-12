@@ -5,10 +5,6 @@ import { User } from "../mockup_data/user";
 
 class TakingQuizStore {
   answerRecord: QuizRecord;
-
-  /**
-   * 현재 퀴즈의 인덱스이다.
-   */
   currentItemIndex: number = 0;
 
   items: Array<QuizRecordItem> = [];
@@ -34,12 +30,10 @@ class TakingQuizStore {
     );
   }
 
-  //퀴즈 답안 저장. QuizRecordItem 으로
   updateChoiceRecordItem(clickedChoiceIndex: number) {
     const recordItem = this.currentRecordItem;
 
     if (recordItem === undefined) {
-      //새로 레코드 추가해줘야하는 상태
       this.answerRecord.items = [
         ...this.answerRecord.items,
         { index: this.currentItemIndex, choice: [clickedChoiceIndex] },
@@ -66,9 +60,7 @@ class TakingQuizStore {
   }
 
   updateEssayRecordItem() {}
-  //퀴즈 답안 제출 quizID, candidateID, items 다 저장해서
 
-  //옵션 선택되었을 때 true 반환
   isOptionChosen(choiceIndex: number): boolean {
     const recordItem = this.currentRecordItem;
     if (recordItem === undefined) {
@@ -79,6 +71,10 @@ class TakingQuizStore {
       throw Error("객관식 문항이 아닌 다른 유형에서 호출했습니다.");
     }
     return choices.some((choice) => choice === choiceIndex);
+  }
+
+  moveToTheQuestion(clickedItemIndex: number) {
+    this.currentItemIndex = clickedItemIndex;
   }
 }
 
