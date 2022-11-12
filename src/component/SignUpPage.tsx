@@ -116,16 +116,24 @@ const SignUpPage = () => {
                   fullWidth
                   disabled={signUpButton === undefined}
                   variant="contained"
-                  style={{ marginTop: "24px" }}
+                  style={{ marginTop: "24px", minHeight: "48px" }}
                   onClick={() => signUp(email, password, name)}
                 >
                   계정 생성 하기
                 </Button>
               </form>
-              <hr />
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button variant="text" onClick={() => navigate(`/`)}>
-                  이미 계정이 있으신가요? 로그인 하기
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "12px",
+                }}
+              >
+                <Button
+                  variant="text"
+                  onClick={() => navigate(`/`, { replace: true })}
+                >
+                  로그인 화면으로 돌아가기
                 </Button>
               </div>
             </Paper>
