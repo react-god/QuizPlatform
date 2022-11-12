@@ -61,9 +61,13 @@ const SignUpPage = () => {
       <div>
         <header>
           <Box>
-            <Typography variant="h6" sx={{ m: 2 }}>
-              <img src={logo} alt="logo" width={34} height={34} />
-              React-God
+            <Typography
+              variant="h6"
+              sx={{ m: 2 }}
+              color="secondary"
+              style={{ fontFamily: "LuckiestGuy" }}
+            >
+              QUIZ PLATFORM
             </Typography>
             <Divider />
           </Box>
@@ -74,6 +78,7 @@ const SignUpPage = () => {
             <Paper variant="outlined" style={{ padding: "12px" }}>
               <form>
                 <TextField
+                  placeholder="abc@gmail.com"
                   error={error !== undefined}
                   required
                   fullWidth
