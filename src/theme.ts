@@ -8,10 +8,6 @@ export const theme = createTheme({
     secondary: {
       main: "#00c795",
     },
-    success: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
   },
   shape: {
     borderRadius: 20,
