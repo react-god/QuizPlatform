@@ -10,6 +10,7 @@ import {
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import userStore from "../store/UserStore";
+import { useKeyEvent } from "../util/UseKeyEvent";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -30,17 +31,6 @@ function LoginPage() {
     [email, password, isEmailValid]
   );
 
-  const isMobile = useMediaQuery(`(max-width: 780px)`);
-  const isTablet = useMediaQuery(`(max-width: 960px)`);
-
-  let horizontalPadding: string;
-  if (isMobile) {
-    horizontalPadding = "40px";
-  } else if (isTablet) {
-    horizontalPadding = "220px";
-  } else {
-    horizontalPadding = "340px";
-  }
 
   const cloasErrorMessage = () => {
     setErrorMessage(undefined);
@@ -96,13 +86,7 @@ function LoginPage() {
       >
         QUIZ<br></br>PLATFORM
       </Typography>
-      <Stack
-        style={{
-          minWidth: "440px",
-          marginLeft: horizontalPadding,
-          marginRight: horizontalPadding,
-        }}
-      >
+      <Stack style={{ minWidth: "440px" }}>
         <TextField
           placeholder="abc@gmail.com"
           label="이메일"
