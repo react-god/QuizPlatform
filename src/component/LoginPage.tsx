@@ -88,7 +88,6 @@ function LoginPage() {
           {errorMessage}
         </Alert>
       </Snackbar>
-      {userStore.currentUser !== undefined ? "로그인됨" : "로그인 안됨"}
       <Typography
         align="center"
         variant="h1"
