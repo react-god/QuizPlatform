@@ -6,7 +6,7 @@ import { User } from "../mockup_data/user";
 
 class TakingQuizStore {
   answerRecord: QuizRecord;
-  currentItemIndex: number = 0;
+  currentQuizItemIndex: number = 0;
 
   items: Array<QuizRecordItem> = [];
 
@@ -18,19 +18,24 @@ class TakingQuizStore {
     };
     makeAutoObservable(this);
   }
+
+  private getRecordItemAt(quizItemIndex: number): QuizRecordItem | undefined {
+    const index = this.answerRecord.items.findIndex(
+      (recordItem) => recordItem.index === quizItemIndex
+    );
+    if (index === -1) {
+      return undefined;
+    }
+    return this.answerRecord.items[index];
+  }
+
   /**
    * 현재 문제 번호에 대응하는 답안 QuizRecordItem을 반환한다.
    *
    * 복사본이 아닌 참조를 반환한다.
    */
   get currentRecordItem(): QuizRecordItem | undefined {
-    const index = this.answerRecord.items.findIndex(
-      (recordItem) => recordItem.index === this.currentItemIndex
-    );
-    if (index === -1) {
-      return undefined;
-    }
-    return this.answerRecord.items[index];
+    return this.getRecordItemAt(this.currentQuizItemIndex);
   }
 
   updateChoiceRecordItem(clickedChoiceIndex: number) {
@@ -39,7 +44,7 @@ class TakingQuizStore {
     if (recordItem === undefined) {
       this.answerRecord.items = [
         ...this.answerRecord.items,
-        { index: this.currentItemIndex, choice: [clickedChoiceIndex] },
+        { index: this.currentQuizItemIndex, choice: [clickedChoiceIndex] },
       ];
       return;
     }
@@ -76,7 +81,7 @@ class TakingQuizStore {
     if (recordItem === undefined) {
       this.answerRecord.items = [
         ...this.answerRecord.items,
-        { index: this.currentItemIndex, essay: inputEssay },
+        { index: this.currentQuizItemIndex, essay: inputEssay },
       ];
     } else {
       recordItem.essay = inputEssay;
@@ -98,20 +103,21 @@ class TakingQuizStore {
   }
 
   moveToTheQuestion(clickedItemIndex: number) {
-    this.currentItemIndex = clickedItemIndex;
+    this.currentQuizItemIndex = clickedItemIndex;
   }
 
-  isCurrentQuizRecordItemExisted(currentItemIndex:number){ //문제번호 인덱스 매개변수로 받으니까...
-    const recordItem = this.answerRecord.items[currentItemIndex]; //3번 문제 답안 index:2 choice:2, currentItemIndex는 2라고 가정
-        if(recordItem.essay){
-          return true;
-        }
-        else {
-          if(recordItem.choice)
-            return true;
-          else
-            return false;
-        }
+  hasQuizRecordAt(quizItemIndex: number): boolean {
+    const recordItem = this.getRecordItemAt(quizItemIndex);
+    if (recordItem === undefined) {
+      return false;
+    }
+    if (recordItem.essay !== undefined && recordItem.essay.length > 0) {
+      return true;
+    }
+    if (recordItem.choice !== undefined && recordItem.choice.length > 0) {
+      return true;
+    }
+    return false;
   }
 }
 

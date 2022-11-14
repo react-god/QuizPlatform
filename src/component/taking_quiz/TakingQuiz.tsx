@@ -116,7 +116,7 @@ const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
   const classes = useStyles();
   const [essay, setEssay] = useState(store.getCurrentQuizEssay());
 
-  const onEssayChange = (value: String) => { 
+  const onEssayChange = (value: String) => {
     store.updateEssayRecordItem(value);
     setEssay(value as string);
   };
@@ -134,7 +134,7 @@ const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
 
 const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
   const [store] = useState(new TakingQuizStore(quiz.id, user.id));
-  const currentItemIndex = store.currentItemIndex;
+  const currentItemIndex = store.currentQuizItemIndex;
   const currentItem = quiz.items[currentItemIndex];
   const currentRecord = store.currentRecordItem;
 
@@ -170,7 +170,7 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
 
   const moveNext = () => {
     if (currentItemIndex + 1 !== quiz.items.length) {
-      store.currentItemIndex = currentItemIndex + 1;
+      store.currentQuizItemIndex = currentItemIndex + 1;
     } else {
       isLast(currentItemIndex);
     }
@@ -178,7 +178,7 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
 
   const movePrevious = () => {
     if (currentItemIndex !== 0) {
-      store.currentItemIndex = currentItemIndex - 1;
+      store.currentQuizItemIndex = currentItemIndex - 1;
     } else {
       isFirst(currentItemIndex);
     }
@@ -189,12 +189,13 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
       navRail={
         <NavRail
           items={[
-            ...quiz.items.map((item, index) => { //index는 0,1,2고이게 곧 문제번호인덱스
+            ...quiz.items.map((item, index) => {
+              //index는 0,1,2고이게 곧 문제번호인덱스
               return (
                 <NavRailItem
                   key={item.uuid as string}
-                  label={`${index+1}`}
-                  color={store.isCurrentQuizRecordItemExisted(index) ? "secondary":"inherit"} //todo(은서): 퀴즈답안기록이 있으면 색깔 secondary(민트)로 바뀌게
+                  label={`${index + 1}`}
+                  color={store.hasQuizRecordAt(index) ? "secondary" : "inherit"} // TODO(은서): 퀴즈답안기록이 있으면 색깔 secondary(민트)로 바뀌게
                   isSelected={true}
                   onClick={() => {
                     store.moveToTheQuestion(index);
