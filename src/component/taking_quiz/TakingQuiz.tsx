@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import {
   Button,
   Typography,
@@ -57,6 +57,7 @@ const ExpandableImage: React.FC<{
 
   return (
     <img
+      alt="퀴즈 이미지"
       src={src as string}
       style={{
         borderRadius: borderRadius,
