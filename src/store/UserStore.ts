@@ -42,6 +42,7 @@ class UserStore {
     };
     const newUsers: User[] = [...users, this._currentUser];
     writeJsonToLocalStorage(USER_KEY, newUsers);
+    writeJsonToSessionStorage<User>(CURRENT_USER_KEY, this._currentUser);
     return this._currentUser;
   }
 
