@@ -38,7 +38,7 @@ const Question: React.FC<{ item: QuizItem; index: number }> = ({
   index,
 }) => {
   return (
-    <Stack direction="row" alignItems="center" marginBottom="24px">
+    <Stack direction="row" alignItems="center">
       <Typography variant="h2" marginRight="16px" fontWeight="bold">
         {index + 1}.
       </Typography>
@@ -270,6 +270,14 @@ const TakingQuiz = () => {
 
       <Container>
         <Question item={currentQuiz} index={currentQuizIndex} />
+        <Typography
+          variant="subtitle1"
+          color="primary"
+          fontWeight="bold"
+          marginBottom="24px"
+        >
+          {currentQuiz.score}점
+        </Typography>
         {currentQuiz.imageUrl !== undefined ? (
           <ExpandableImage
             expanded={imageExpandedList[currentQuizIndex]}
