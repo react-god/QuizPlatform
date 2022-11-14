@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
 import {
   Button,
   Typography,
@@ -126,7 +126,7 @@ const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
       variant="outlined"
       className={classes.cardAction}
       placeholder="정답을 입력하시오."
-      onChange={(event) => onEssayChange(event.currentTarget.value)} //글쓰기. 답안 기록
+      onChange={(event) => onEssayChange(event.currentTarget.value)}
       value={essay}
     />
   );
@@ -136,7 +136,6 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
   const [store] = useState(new TakingQuizStore(quiz.id, user.id));
   const currentQuizIndex = store.currentQuizItemIndex;
   const currentQuiz = quiz.items[currentQuizIndex];
-  const currentRecord = store.getCurrentRecordItem;
 
   let choiceOrEssay: JSX.Element;
   switch (currentQuiz.type) {
@@ -190,7 +189,6 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
         <NavRail
           items={[
             ...quiz.items.map((item, index) => {
-              //index는 0,1,2고이게 곧 문제번호인덱스
               return (
                 <NavRailItem
                   key={item.uuid as string}
