@@ -196,7 +196,7 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
                   key={item.uuid as string}
                   label={`${index + 1}`}
                   color={store.hasQuizRecordAt(index) ? "secondary" : "inherit"}
-                  isSelected={true}
+                  isSelected={index === currentQuizIndex}
                   onClick={() => {
                     store.moveToTheQuestion(index);
                   }}
