@@ -7,15 +7,22 @@ import {
   Container,
   Modal,
   Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
-import { Quiz, QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
-import { User } from "../../mockup_data/user";
+import { QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
 import { makeStyles } from "@mui/styles";
 import { NavRail, NavRailItem } from "../NavRail";
 import Scaffold from "../Scaffold";
 import TakingQuizStore from "../../store/TakingQuizStore";
 import { observer } from "mobx-react";
 import { Image } from "@mui/icons-material";
+import { useNavigate, useParams } from "react-router-dom";
+import userStore from "../../store/UserStore";
+import { classRoomStore } from "../../store/ClassRoomStore";
 
 /*style*/
 const useStyles = makeStyles({
@@ -132,10 +139,16 @@ const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
   );
 };
 
-const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
-  const [store] = useState(new TakingQuizStore(quiz.id, user.id));
+const TakingQuiz = () => {
+  const navigate = useNavigate();
+  const { quizId } = useParams();
+  const user = userStore.currentUser!;
+  const quiz = classRoomStore.requireQuizById(quizId!);
+
+  const [store] = useState(new TakingQuizStore(quiz, user.id));
   const currentQuizIndex = store.currentQuizItemIndex;
   const currentQuiz = quiz.items[currentQuizIndex];
+  const [openSubmitAlertDialog, setOpenSubmitAlertDialog] = useState(false);
 
   let choiceOrEssay: JSX.Element;
   switch (currentQuiz.type) {
@@ -183,6 +196,11 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
     }
   };
 
+  const submit = () => {
+    store.submit();
+    navigate("/", { replace: true });
+  };
+
   return (
     <Scaffold
       navRail={
@@ -202,9 +220,35 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
               );
             }),
           ]}
+          trailingItem={
+            <Button
+              disabled={!store.enableSendButton}
+              variant="contained"
+              style={{ margin: "8px" }}
+              onClick={() => setOpenSubmitAlertDialog(true)}
+            >
+              제출
+            </Button>
+          }
         />
       }
     >
+      <Dialog
+        open={openSubmitAlertDialog}
+        onClose={() => setOpenSubmitAlertDialog(false)}
+      >
+        <DialogTitle>답안 제출</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            답안을 제출하고 퀴즈를 종료합니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenSubmitAlertDialog(false)}>취소</Button>
+          <Button onClick={() => submit()}>제출</Button>
+        </DialogActions>
+      </Dialog>
+
       <Container>
         <Question item={currentQuiz} index={currentQuizIndex} />
         {choiceOrEssay}

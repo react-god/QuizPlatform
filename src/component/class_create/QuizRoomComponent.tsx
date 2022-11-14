@@ -51,12 +51,15 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
   };
 
   const onCancelClick = () => {
-    setSelectedQuiz(undefined);
     setOpenQuizStartDialog(false);
+    setSelectedQuiz(undefined);
   };
 
   const onStartQuizClick = () => {
-    // TODO: 퀴즈 푸는 화면으로 네비게이션
+    if (selectedQuiz === undefined) {
+      throw Error("선택된 퀴즈 없이 퀴즈를 시작하려 했습니다.");
+    }
+    navigate(`/take-quiz/${selectedQuiz.id}`);
   };
 
   return (

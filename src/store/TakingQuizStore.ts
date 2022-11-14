@@ -1,13 +1,17 @@
 import { makeAutoObservable } from "mobx";
+import { Quiz } from "../mockup_data/quiz";
 import { QuizRecord, QuizRecordItem } from "../mockup_data/quiz_record";
+import recordStore from "./RecordStore";
 
 class TakingQuizStore {
+  quiz: Quiz;
   answerRecord: QuizRecord;
   currentQuizItemIndex: number = 0;
 
-  constructor(quizId: String, candidateId: String) {
+  constructor(quiz: Quiz, candidateId: String) {
+    this.quiz = quiz;
     this.answerRecord = {
-      quizId: quizId,
+      quizId: quiz.id,
       candidateId: candidateId,
       items: [],
     };
@@ -113,6 +117,18 @@ class TakingQuizStore {
       return true;
     }
     return false;
+  }
+
+  get enableSendButton(): boolean {
+    const recordItems = this.answerRecord.items;
+    if (recordItems.length !== this.quiz.items.length) {
+      return false;
+    }
+    return recordItems.every((_, index) => this.hasQuizRecordAt(index));
+  }
+
+  submit() {
+    recordStore.addRecord(this.answerRecord);
   }
 }
 
