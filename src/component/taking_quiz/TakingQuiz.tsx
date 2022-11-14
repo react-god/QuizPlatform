@@ -3,15 +3,14 @@ import {
   Button,
   Typography,
   TextField,
-  Box,
   Container,
-  Modal,
   Stack,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
+  ButtonGroup,
 } from "@mui/material";
 import { QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
 import { makeStyles } from "@mui/styles";
@@ -19,7 +18,6 @@ import { NavRail, NavRailItem } from "../NavRail";
 import Scaffold from "../Scaffold";
 import TakingQuizStore from "../../store/TakingQuizStore";
 import { observer } from "mobx-react";
-import { Image } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import userStore from "../../store/UserStore";
 import { classRoomStore } from "../../store/ClassRoomStore";
@@ -40,9 +38,11 @@ const Question: React.FC<{ item: QuizItem; index: number }> = ({
   index,
 }) => {
   return (
-    <Stack direction="row" spacing={2}>
-      <Typography variant="h4">{index + 1}</Typography>
-      <Typography>{item.question}</Typography>
+    <Stack direction="row" alignItems="center" marginBottom="24px">
+      <Typography variant="h2" marginRight="16px" fontWeight="bold">
+        {index + 1}.
+      </Typography>
+      <Typography variant="h3">{item.question}</Typography>
     </Stack>
   );
 };
@@ -147,6 +147,7 @@ const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
   return (
     <TextField
       variant="outlined"
+      fullWidth
       className={classes.cardAction}
       placeholder="여기에 정답 입력..."
       onChange={(event) => onEssayChange(event.currentTarget.value)}
@@ -281,22 +282,26 @@ const TakingQuiz = () => {
           />
         ) : undefined}
         {choiceOrEssay}
-        <Button
-          disabled={currentQuizIndex === 0}
-          variant="contained"
-          color="secondary"
-          onClick={movePrevious}
-        >
-          이전
-        </Button>
-        <Button
-          disabled={quiz.items.length - 1 === currentQuizIndex}
-          variant="contained"
-          color="secondary"
-          onClick={moveNext}
-        >
-          다음
-        </Button>
+        <Stack alignItems="flex-end">
+          <ButtonGroup style={{ marginTop: "54px" }}>
+            <Button
+              disabled={currentQuizIndex === 0}
+              variant="contained"
+              color="secondary"
+              onClick={movePrevious}
+            >
+              이전
+            </Button>
+            <Button
+              disabled={quiz.items.length - 1 === currentQuizIndex}
+              variant="contained"
+              color="secondary"
+              onClick={moveNext}
+            >
+              다음
+            </Button>
+          </ButtonGroup>
+        </Stack>
       </Container>
     </Scaffold>
   );
