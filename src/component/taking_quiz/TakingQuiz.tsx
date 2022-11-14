@@ -189,12 +189,12 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
       navRail={
         <NavRail
           items={[
-            ...quiz.items.map((item, index) => {
+            ...quiz.items.map((item, index) => { //index는 0,1,2고이게 곧 문제번호인덱스
               return (
                 <NavRailItem
                   key={item.uuid as string}
-                  label={`${index + 1}`}
-                  color={"inherit"} //todo(은서): 퀴즈답안기록이 있으면 색깔 secondary(민트)로 바뀌게
+                  label={`${index+1}`}
+                  color={store.isCurrentQuizRecordItemExisted(index) ? "secondary":"inherit"} //todo(은서): 퀴즈답안기록이 있으면 색깔 secondary(민트)로 바뀌게
                   isSelected={true}
                   onClick={() => {
                     store.moveToTheQuestion(index);

@@ -100,6 +100,19 @@ class TakingQuizStore {
   moveToTheQuestion(clickedItemIndex: number) {
     this.currentItemIndex = clickedItemIndex;
   }
+
+  isCurrentQuizRecordItemExisted(currentItemIndex:number){ //문제번호 인덱스 매개변수로 받으니까...
+    const recordItem = this.answerRecord.items[currentItemIndex]; //3번 문제 답안 index:2 choice:2, currentItemIndex는 2라고 가정
+        if(recordItem.essay){
+          return true;
+        }
+        else {
+          if(recordItem.choice)
+            return true;
+          else
+            return false;
+        }
+  }
 }
 
 export default TakingQuizStore;
