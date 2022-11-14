@@ -7,12 +7,10 @@ import LoginPage from "./component/LoginPage";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./theme";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./assets/css/bootstrap.min.css";
-import "./assets/css/login-register.css";
 import QuizCreatePage from "./component/quiz_create/QuizCreatePage";
 import QuizStaticsPage from "./component/quiz_statics/QuizStaticsPage";
-
-import App from "./App";
+import SignUpPage from "./component/SignUpPage";
+import PrivateRoute from "./component/PrivateRoute";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
@@ -20,16 +18,20 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <React.StrictMode>
-     
       <ThemeProvider theme={theme}>
-         {/*<Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/classroom" element={<ClassRoomPage />} />
-          <Route path="/create-quiz" element={<QuizCreatePage />} />
-          <Route path="/statics/:quizId" element={<QuizStaticsPage />} />
-          {/* <Redirect from="/" to="/index" /> */}
-        {/*</Routes>*/}
-        <App />
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signUp" element={<SignUpPage />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/" element={<ClassRoomPage />} />
+          </Route>
+          <Route element={<PrivateRoute />}>
+            <Route path="/create-quiz" element={<QuizCreatePage />} />
+          </Route>
+          <Route element={<PrivateRoute />}>
+            <Route path="/statics/:quizId" element={<QuizStaticsPage />} />
+          </Route>
+        </Routes>
       </ThemeProvider>
     </React.StrictMode>
   </BrowserRouter>

@@ -3,13 +3,17 @@ import { User } from "../mockup_data/user";
 import {
   writeJsonToLocalStorage,
   readJsonFromLocalStorage,
+  writeJsonToSessionStorage,
+  readJsonFromSessionStorage,
 } from "../util/JsonUtil";
 import { classRoomStore } from "./ClassRoomStore";
 
 const USER_KEY = "users";
 
+const CURRENT_USER_KEY = "current_user";
+
 class UserStore {
-  private _currentUser?: User = undefined;
+  private _currentUser?: User = readJsonFromSessionStorage(CURRENT_USER_KEY);
 
   constructor() {
     makeAutoObservable(this);
@@ -57,6 +61,7 @@ class UserStore {
     if (user.password !== password) {
       throw Error("비밀번호가 잘못되었습니다.");
     }
+    writeJsonToSessionStorage<User>(CURRENT_USER_KEY, user);
     return (this._currentUser = user);
   }
 
@@ -102,6 +107,11 @@ class UserStore {
   getUserById(id: String): User | undefined {
     const users: User[] = readJsonFromLocalStorage<User[]>(USER_KEY) ?? [];
     return users.find((user) => user.id === id);
+  }
+
+  getUserList(ids: String[]): User[] {
+    const users: User[] = readJsonFromLocalStorage<User[]>(USER_KEY) ?? [];
+    return users.filter((user) => ids.some((id) => id === user.id));
   }
 }
 
