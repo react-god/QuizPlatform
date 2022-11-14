@@ -63,6 +63,7 @@ const ExpandableImage: React.FC<{
         maxWidth: size,
         minWidth: size,
         margin: "8px",
+        cursor: "pointer",
       }}
       onClick={(e) => {
         e.stopPropagation();
@@ -147,7 +148,7 @@ const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
     <TextField
       variant="outlined"
       className={classes.cardAction}
-      placeholder="정답을 입력하시오."
+      placeholder="여기에 정답 입력..."
       onChange={(event) => onEssayChange(event.currentTarget.value)}
       value={essay}
     />
@@ -163,6 +164,9 @@ const TakingQuiz = () => {
   const [store] = useState(new TakingQuizStore(quiz, user.id));
   const currentQuizIndex = store.currentQuizItemIndex;
   const currentQuiz = quiz.items[currentQuizIndex];
+  const [imageExpandedList, setImageExpandedList] = useState<boolean[]>(
+    [...Array(quiz.items.length)].map((_) => true)
+  );
   const [openSubmitAlertDialog, setOpenSubmitAlertDialog] = useState(false);
 
   let choiceOrEssay: JSX.Element;
@@ -265,6 +269,17 @@ const TakingQuiz = () => {
 
       <Container>
         <Question item={currentQuiz} index={currentQuizIndex} />
+        {currentQuiz.imageUrl !== undefined ? (
+          <ExpandableImage
+            expanded={imageExpandedList[currentQuizIndex]}
+            onClick={() => {
+              const newList = [...imageExpandedList];
+              newList[currentQuizIndex] = !imageExpandedList[currentQuizIndex];
+              setImageExpandedList(newList);
+            }}
+            src={currentQuiz.imageUrl}
+          />
+        ) : undefined}
         {choiceOrEssay}
         <Button
           disabled={currentQuizIndex === 0}
