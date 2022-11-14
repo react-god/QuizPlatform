@@ -1,14 +1,9 @@
-import { TurnedIn } from "@mui/icons-material";
-import { action, makeAutoObservable, makeObservable, observable } from "mobx";
-import { Quiz, QuizItem } from "../mockup_data/quiz";
+import { makeAutoObservable } from "mobx";
 import { QuizRecord, QuizRecordItem } from "../mockup_data/quiz_record";
-import { User } from "../mockup_data/user";
 
 class TakingQuizStore {
   answerRecord: QuizRecord;
   currentQuizItemIndex: number = 0;
-
-  items: Array<QuizRecordItem> = [];
 
   constructor(quizId: String, candidateId: String) {
     this.answerRecord = {
@@ -34,12 +29,12 @@ class TakingQuizStore {
    *
    * 복사본이 아닌 참조를 반환한다.
    */
-  get currentRecordItem(): QuizRecordItem | undefined {
+  getCurrentRecordItem(): QuizRecordItem | undefined {
     return this.getRecordItemAt(this.currentQuizItemIndex);
   }
 
   updateChoiceRecordItem(clickedChoiceIndex: number) {
-    const recordItem = this.currentRecordItem;
+    const recordItem = this.getCurrentRecordItem();
 
     if (recordItem === undefined) {
       this.answerRecord.items = [
@@ -65,7 +60,7 @@ class TakingQuizStore {
   }
 
   isOptionChosen(choiceIndex: number): boolean {
-    const recordItem = this.currentRecordItem;
+    const recordItem = this.getCurrentRecordItem();
     if (recordItem === undefined) {
       return false;
     }
@@ -77,7 +72,7 @@ class TakingQuizStore {
   }
 
   updateEssayRecordItem(inputEssay: String) {
-    const recordItem = this.currentRecordItem;
+    const recordItem = this.getCurrentRecordItem();
     if (recordItem === undefined) {
       this.answerRecord.items = [
         ...this.answerRecord.items,
@@ -92,7 +87,7 @@ class TakingQuizStore {
    * 현재 퀴즈의 작성된 단답식 답안을 반환한다.
    */
   getCurrentQuizEssay(): String {
-    const recordItem = this.currentRecordItem;
+    const recordItem = this.getCurrentRecordItem();
     if (recordItem === undefined) {
       return "";
     }

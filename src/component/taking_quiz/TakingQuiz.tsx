@@ -134,17 +134,17 @@ const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
 
 const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
   const [store] = useState(new TakingQuizStore(quiz.id, user.id));
-  const currentItemIndex = store.currentQuizItemIndex;
-  const currentItem = quiz.items[currentItemIndex];
-  const currentRecord = store.currentRecordItem;
+  const currentQuizIndex = store.currentQuizItemIndex;
+  const currentQuiz = quiz.items[currentQuizIndex];
+  const currentRecord = store.getCurrentRecordItem;
 
   let choiceOrEssay: JSX.Element;
-  switch (currentItem.type) {
+  switch (currentQuiz.type) {
     case QuizType.choice:
       choiceOrEssay = (
         <Box sx={{ width: "100%" }}>
           <Stack spacing={1}>
-            <QuizChoiceList currentItem={currentItem} store={store} />
+            <QuizChoiceList currentItem={currentQuiz} store={store} />
           </Stack>
         </Box>
       );
@@ -169,18 +169,18 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
   };
 
   const moveNext = () => {
-    if (currentItemIndex + 1 !== quiz.items.length) {
-      store.currentQuizItemIndex = currentItemIndex + 1;
+    if (currentQuizIndex + 1 !== quiz.items.length) {
+      store.currentQuizItemIndex = currentQuizIndex + 1;
     } else {
-      isLast(currentItemIndex);
+      isLast(currentQuizIndex);
     }
   };
 
   const movePrevious = () => {
-    if (currentItemIndex !== 0) {
-      store.currentQuizItemIndex = currentItemIndex - 1;
+    if (currentQuizIndex !== 0) {
+      store.currentQuizItemIndex = currentQuizIndex - 1;
     } else {
-      isFirst(currentItemIndex);
+      isFirst(currentQuizIndex);
     }
   };
 
@@ -195,7 +195,7 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
                 <NavRailItem
                   key={item.uuid as string}
                   label={`${index + 1}`}
-                  color={store.hasQuizRecordAt(index) ? "secondary" : "inherit"} // TODO(은서): 퀴즈답안기록이 있으면 색깔 secondary(민트)로 바뀌게
+                  color={store.hasQuizRecordAt(index) ? "secondary" : "inherit"}
                   isSelected={true}
                   onClick={() => {
                     store.moveToTheQuestion(index);
@@ -208,20 +208,24 @@ const TakingQuiz: React.FC<{ quiz: Quiz; user: User }> = ({ quiz, user }) => {
       }
     >
       <Container>
-        <Question item={currentItem} index={currentItemIndex} />
+        <Question item={currentQuiz} index={currentQuizIndex} />
         {choiceOrEssay}
-        <NavRailItem
-          label="이전"
-          color={isFirst(currentItemIndex) ? "inherit" : "secondary"}
+        <Button
+          disabled={currentQuizIndex === 0}
+          variant="contained"
+          color="secondary"
           onClick={movePrevious}
-          isSelected
-        ></NavRailItem>
-        <NavRailItem
-          label="다음"
-          color={isLast(currentItemIndex) ? "inherit" : "secondary"}
+        >
+          이전
+        </Button>
+        <Button
+          disabled={quiz.items.length - 1 === currentQuizIndex}
+          variant="contained"
+          color="secondary"
           onClick={moveNext}
-          isSelected
-        ></NavRailItem>
+        >
+          다음
+        </Button>
       </Container>
     </Scaffold>
   );
