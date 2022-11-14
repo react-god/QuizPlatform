@@ -47,51 +47,66 @@ const Question: React.FC<{ item: QuizItem; index: number }> = ({
   );
 };
 
-const ImageModal: React.FC<{ source: String }> = ({ source }) => {
-  const [open, setOpen] = React.useState(false);
-  const modalOpen = () => setOpen(true);
-  const modalClose = () => setOpen(false);
+const ExpandableImage: React.FC<{
+  expanded: boolean;
+  onClick: () => void;
+  src: String;
+}> = ({ expanded, onClick, src }) => {
+  const size = expanded ? "100%" : "54px";
+  const borderRadius = expanded ? "3%" : "30%";
 
   return (
-    <div>
-      <Button onClick={modalOpen}>
-        <Image />
-      </Button>
-      <Modal open={open} onClose={modalClose}>
-        <Box>
-          <img src={`${source}`} alt="img" />
-        </Box>
-      </Modal>
-    </div>
+    <img
+      src={src as string}
+      style={{
+        borderRadius: borderRadius,
+        maxWidth: size,
+        minWidth: size,
+        margin: "8px",
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+    />
   );
 };
 
 const QuizChoice: React.FC<{
   option: QuizOption;
   chosen: boolean;
-  onClicked: () => void;
+  onClick: () => void;
 }> = (props) => {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const modalOpen = () => setOpen(true);
-  const modalClose = () => setOpen(false);
+  const [imageExpanded, setImageExpanded] = useState(false);
   const cardColor = props.chosen ? "primary" : "inherit";
-  let quizImage: JSX.Element | undefined = undefined;
+  let image: JSX.Element | undefined = undefined;
 
   if (props.option.imageUrl) {
-    quizImage = <ImageModal source={props.option.imageUrl}></ImageModal>;
+    image = (
+      <ExpandableImage
+        src={props.option.imageUrl as string}
+        onClick={() => setImageExpanded(!imageExpanded)}
+        expanded={imageExpanded}
+      />
+    );
   }
 
   return (
     <Button
       variant="contained"
-      className={classes.cardStyle}
-      onClick={() => props.onClicked()}
+      onClick={() => props.onClick()}
       color={cardColor}
     >
-      <Stack direction="row">
-        {quizImage}
-        <Typography variant="h6">{props.option.title}</Typography>
+      <Stack
+        direction={imageExpanded ? "column" : "row"}
+        alignItems="center"
+        justifyContent={imageExpanded ? "center" : "flex-start"}
+        style={{ width: "100%" }}
+      >
+        {image}
+        <Typography variant="subtitle1" padding="12px">
+          {props.option.title}
+        </Typography>
       </Stack>
     </Button>
   );
@@ -103,19 +118,19 @@ const QuizChoiceList: React.FC<{
 }> = ({ currentItem, store }) => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   return (
-    <>
+    <Stack spacing={2}>
       {currentItem.options.map((option, i) => (
         <QuizChoice
           option={option}
-          key={i}
+          key={option.uuid as string}
           chosen={store.isOptionChosen(i)}
-          onClicked={() => {
+          onClick={() => {
             store.updateChoiceRecordItem(i);
             forceUpdate();
           }}
         />
       ))}
-    </>
+    </Stack>
   );
 };
 
@@ -154,15 +169,14 @@ const TakingQuiz = () => {
   switch (currentQuiz.type) {
     case QuizType.choice:
       choiceOrEssay = (
-        <Box sx={{ width: "100%" }}>
-          <Stack spacing={1}>
-            <QuizChoiceList currentItem={currentQuiz} store={store} />
-          </Stack>
-        </Box>
+        <QuizChoiceList currentItem={currentQuiz} store={store} />
       );
       break;
     case QuizType.essay:
       choiceOrEssay = <QuizEssay store={store} />;
+      break;
+    default:
+      throw Error("존재하지 않는 퀴즈 타입입니다.");
   }
 
   const isFirst = (currentItemIndex: number) => {
