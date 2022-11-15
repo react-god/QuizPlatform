@@ -1,6 +1,5 @@
 import { Quiz, QuizItem, QuizType } from "../mockup_data/quiz";
 import { v4 as uuidv4 } from "uuid";
-import { user1 } from "../mockup_data/user";
 import { makeAutoObservable } from "mobx";
 import { classRoomStore } from "./ClassRoomStore";
 import userStore from "./UserStore";
