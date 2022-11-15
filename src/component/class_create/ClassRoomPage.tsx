@@ -25,7 +25,6 @@ import SpeedDialTooltipOpen, { Action } from "../SpeedDial";
 import AddIcon from "@mui/icons-material/Add";
 import InputIcon from "@mui/icons-material/Input";
 import LogoutIcon from "@mui/icons-material/Logout";
-import QuizIcon from "@mui/icons-material/Quiz";
 
 interface CreateClassRoomDialogProps {
   open: boolean;
@@ -196,11 +195,6 @@ const ClassRoomPage = () => {
       icon: <LogoutIcon />,
       name: "로그아웃",
       action: () => setOpenLogoutDialog(true),
-    },
-    {
-      icon: <QuizIcon />,
-      name: "퀴즈 만들기",
-      action: () => setOpenCreateQuizDialog(true),
     },
     {
       icon: <AddIcon />,
