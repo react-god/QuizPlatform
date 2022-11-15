@@ -42,6 +42,7 @@ class UserStore {
     };
     const newUsers: User[] = [...users, this._currentUser];
     writeJsonToLocalStorage(USER_KEY, newUsers);
+    writeJsonToSessionStorage<User>(CURRENT_USER_KEY, this._currentUser);
     return this._currentUser;
   }
 
@@ -63,6 +64,20 @@ class UserStore {
     }
     writeJsonToSessionStorage<User>(CURRENT_USER_KEY, user);
     return (this._currentUser = user);
+  }
+
+  /**
+   * 로그아웃을 시도한다.
+   *
+   * 로그아웃에 성공하면 세션이 초기화된다.
+   */
+  signOut() {
+    try {
+      sessionStorage.clear();
+      return true;
+    } catch (e) {
+      throw Error("로그아웃 실패");
+    }
   }
 
   /**

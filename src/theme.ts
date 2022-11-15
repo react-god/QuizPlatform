@@ -12,4 +12,14 @@ export const theme = createTheme({
   shape: {
     borderRadius: 20,
   },
+  components: {
+    // 스피드 다이얼 펴쳤을 때 라벨 한 줄로 보이게 설정
+    MuiSpeedDialAction: {
+      styleOverrides: {
+        staticTooltipLabel: {
+          width: "max-content",
+        },
+      },
+    },
+  },
 });

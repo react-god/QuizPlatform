@@ -365,7 +365,7 @@ const QuizCreatePage = () => {
 
   const onClickSubmit = () => {
     store.submitQuiz();
-    navigate("/classroom", {
+    navigate("/", {
       replace: true,
       state: { snackBarMessage: "퀴즈를 생성했습니다." },
     });

@@ -10,11 +10,14 @@ const Scaffold = (props: ScaffoldProps) => {
 
   const isMobile = useMediaQuery(`(max-width: 780px)`);
   const isTablet = useMediaQuery(`(max-width: 960px)`);
+  const isTablet2 = useMediaQuery(`(max-width: 1200px)`);
 
   if (isMobile) {
     pageHorizontalPadding = "40px";
   } else if (isTablet) {
     pageHorizontalPadding = "120px";
+  } else if (isTablet2) {
+    pageHorizontalPadding = "180px";
   } else {
     pageHorizontalPadding = "240px";
   }

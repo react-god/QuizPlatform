@@ -1,8 +1,8 @@
 import { Quiz, QuizItem, QuizType } from "../mockup_data/quiz";
 import { v4 as uuidv4 } from "uuid";
-import { user1 } from "../mockup_data/user";
 import { makeAutoObservable } from "mobx";
 import { classRoomStore } from "./ClassRoomStore";
+import userStore from "./UserStore";
 
 const initQuizItem: QuizItem = {
   uuid: "dsi29gj3f",
@@ -31,9 +31,13 @@ class QuizCreateStore {
   currentItemIndex: number = 0;
 
   constructor(quizName: String, classRoomId: String) {
+    const currentUser = userStore.currentUser;
+    if (currentUser === undefined) {
+      throw Error("로그인 하지 않은 상태로 퀴즈를 생성하려 했습니다.");
+    }
     this.quiz = {
       id: uuidv4(),
-      owner: user1,
+      owner: currentUser,
       name: quizName as string,
       items: [initQuizItem],
     };

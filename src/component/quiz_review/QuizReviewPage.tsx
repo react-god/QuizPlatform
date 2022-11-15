@@ -1,11 +1,14 @@
 import { Divider, Stack, Typography, useTheme } from "@mui/material";
 import { useMemo, useState } from "react";
 import { QuizItem, QuizOption, QuizType } from "../../mockup_data/quiz";
-import { QuizRecord, QuizRecordItem } from "../../mockup_data/quiz_record";
+import { QuizRecordItem } from "../../mockup_data/quiz_record";
 import { NavRail, NavRailItem } from "../NavRail";
 import { Check, Close } from "@mui/icons-material";
 import Scaffold from "../Scaffold";
 import { classRoomStore } from "../../store/ClassRoomStore";
+import { useNavigate, useParams } from "react-router-dom";
+import quizRecordStore from "../../store/QuizRecordStore";
+import userStore from "../../store/UserStore";
 
 export function isCorrect(
   recordItem: QuizRecordItem,
@@ -166,19 +169,29 @@ const SubmittedEssay = (props: SubmittedEssayProps) => {
   );
 };
 
-interface QuizReviewPageProps {
-  quizRecord: QuizRecord;
-}
-
-const QuizReviewPage = (props: QuizReviewPageProps) => {
+const QuizReviewPage = () => {
+  const navigate = useNavigate();
   const [itemIndex, setItemIndex] = useState(0);
-  const quizId = props.quizRecord.quizId;
+  const { quizId } = useParams();
+  const currentUser = userStore.currentUser;
+  if (quizId === undefined) {
+    throw Error("퀴즈 ID가 없이 전환을 시도했습니다.");
+  }
+  if (currentUser === undefined) {
+    throw Error("로그인 하지 않은 상태로 퀴즈 리뷰 페이지에 접근하였습니다.");
+  }
   const quiz = useMemo(() => {
     return classRoomStore.requireQuizById(quizId);
   }, [quizId]);
+  const quizRecord = useMemo(() => {
+    return quizRecordStore.getRecordByUserAndQuizId(currentUser.id, quizId);
+  }, [quizId, currentUser.id]);
+  if (quizRecord === undefined) {
+    throw Error(`현재 유저가 ${quizId} 퀴즈를 푼 기록을 찾을 수 없습니다.`);
+  }
   const currentQuizItem = quiz.items[itemIndex];
-  const quizRecordItems = props.quizRecord.items;
-  const currentRecordItem = props.quizRecord.items[itemIndex];
+  const quizRecordItems = quizRecord.items;
+  const currentRecordItem = quizRecord.items[itemIndex];
 
   let essayOrChoiceList: JSX.Element;
   switch (currentQuizItem.type) {
@@ -203,6 +216,7 @@ const QuizReviewPage = (props: QuizReviewPageProps) => {
     <Scaffold
       navRail={
         <NavRail
+          onBackClick={() => navigate(-1)}
           items={quiz.items.map((quizItem, index) => (
             <NavRailItem
               key={quizItem.uuid as string}

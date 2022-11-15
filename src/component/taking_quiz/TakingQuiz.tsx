@@ -1,94 +1,320 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import {
   Button,
   Typography,
-  Card,
   TextField,
-  Box,
   Container,
+  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  ButtonGroup,
 } from "@mui/material";
-import {Quiz, QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
+import { QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
+import { makeStyles } from "@mui/styles";
+import { NavRail, NavRailItem } from "../NavRail";
+import Scaffold from "../Scaffold";
+import TakingQuizStore from "../../store/TakingQuizStore";
+import { observer } from "mobx-react";
+import { useNavigate, useParams } from "react-router-dom";
+import userStore from "../../store/UserStore";
+import { classRoomStore } from "../../store/ClassRoomStore";
 
-const Question: React.FC<{ item: QuizItem, index: number }> = ({ item,index }) => {
-  return (
-    <Box>
-      <Typography variant="h4">{index+1}</Typography>
-      <Typography>{item.question}</Typography>
-    </Box>
-  );
-};
+/*style*/
+const useStyles = makeStyles({
+  cardAction: {
+    display: "block",
+    width: "100%",
+  },
+  cardStyle: {
+    backgroundColor: "lightgray",
+  },
+});
 
-const QuizChoice: React.FC<{ option: QuizOption }> = ({ option }) => {
-  //퀴즈가 객관식일 때만, 하나의 옵션(보기)
-  //checkbox로 바꾸기?
-  return (
-    <Card>
-      <Typography>{option.title}</Typography>
-      {/*해당 Choice에 onClick 이벤트가 일어나면*/}
-    </Card>
-  );
-};
-
-const QuizChoiceList: React.FC<{ currentItem: QuizItem }> = ({
-  currentItem
+const Question: React.FC<{ item: QuizItem; index: number }> = ({
+  item,
+  index,
 }) => {
   return (
-    <>
-      {currentItem.options.map((option, i) => (
-        <QuizChoice option={option} key={i}/>
-      ))}
-    </>
+    <Stack direction="row" alignItems="center">
+      <Typography variant="h2" marginRight="16px" fontWeight="bold">
+        {index + 1}.
+      </Typography>
+      <Typography variant="h3">{item.question}</Typography>
+    </Stack>
   );
 };
 
-const QuizEssay = () => {
-  return <TextField variant="filled" />; //onChange가 일어났을 때 값을 records에 저장 되어야한다.
+const ExpandableImage: React.FC<{
+  expanded: boolean;
+  onClick: () => void;
+  src: String;
+}> = ({ expanded, onClick, src }) => {
+  const size = expanded ? "100%" : "54px";
+  const borderRadius = expanded ? "3%" : "30%";
+
+  return (
+    <img
+      alt="퀴즈 이미지"
+      src={src as string}
+      style={{
+        borderRadius: borderRadius,
+        maxWidth: size,
+        minWidth: size,
+        margin: "8px",
+        cursor: "pointer",
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+    />
+  );
 };
 
-const TakingQuiz : React.FC<{quiz: Quiz}> = ({quiz}) => {
-  //const quiz = quiz; //mockupdata //나중에 quiz1, quiz2, quiz3...각각 들어가도록 해야되겠지.
-  const [currentItemIndex, setcurrentItemIndex] = useState(0);
-  const currentItem = quiz.items[currentItemIndex];
-  let choiceOrEssay: JSX.Element;
-  switch (currentItem.type) {
-    case QuizType.choice:
-      choiceOrEssay = <QuizChoiceList currentItem={currentItem} />;
-      break;
-    case QuizType.essay:
-      choiceOrEssay = <QuizEssay />;
+const QuizChoice: React.FC<{
+  option: QuizOption;
+  chosen: boolean;
+  onClick: () => void;
+}> = (props) => {
+  const [imageExpanded, setImageExpanded] = useState(false);
+  const cardColor = props.chosen ? "primary" : "inherit";
+  let image: JSX.Element | undefined = undefined;
+
+  if (props.option.imageUrl) {
+    image = (
+      <ExpandableImage
+        src={props.option.imageUrl as string}
+        onClick={() => setImageExpanded(!imageExpanded)}
+        expanded={imageExpanded}
+      />
+    );
   }
 
-  const isFirst : boolean =  currentItemIndex === 0;
-  const isLast : boolean = currentItemIndex === ((quiz.items.length)-1);
+  return (
+    <Button
+      variant="contained"
+      onClick={() => props.onClick()}
+      color={cardColor}
+      disableElevation
+    >
+      <Stack
+        direction={imageExpanded ? "column" : "row"}
+        alignItems="center"
+        justifyContent={imageExpanded ? "center" : "flex-start"}
+        style={{ width: "100%" }}
+      >
+        {image}
+        <Typography variant="subtitle1" padding="12px">
+          {props.option.title}
+        </Typography>
+      </Stack>
+    </Button>
+  );
+};
+
+const QuizChoiceList: React.FC<{
+  currentItem: QuizItem;
+  store: TakingQuizStore;
+}> = ({ currentItem, store }) => {
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  return (
+    <Stack spacing={2}>
+      {currentItem.options.map((option, i) => (
+        <QuizChoice
+          option={option}
+          key={option.uuid as string}
+          chosen={store.isOptionChosen(i)}
+          onClick={() => {
+            store.updateChoiceRecordItem(i);
+            forceUpdate();
+          }}
+        />
+      ))}
+    </Stack>
+  );
+};
+
+const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
+  const classes = useStyles();
+  const [essay, setEssay] = useState(store.getCurrentQuizEssay());
+
+  const onEssayChange = (value: String) => {
+    store.updateEssayRecordItem(value);
+    setEssay(value as string);
+  };
+
+  return (
+    <TextField
+      variant="outlined"
+      fullWidth
+      className={classes.cardAction}
+      placeholder="여기에 정답 입력..."
+      onChange={(event) => onEssayChange(event.currentTarget.value)}
+      value={essay}
+    />
+  );
+};
+
+const TakingQuiz = () => {
+  const navigate = useNavigate();
+  const { quizId } = useParams();
+  const user = userStore.currentUser!;
+  const quiz = classRoomStore.requireQuizById(quizId!);
+
+  const [store] = useState(new TakingQuizStore(quiz, user.id));
+  const currentQuizIndex = store.currentQuizItemIndex;
+  const currentQuiz = quiz.items[currentQuizIndex];
+  const [imageExpandedList, setImageExpandedList] = useState<boolean[]>(
+    [...Array(quiz.items.length)].map((_) => true)
+  );
+  const [openSubmitAlertDialog, setOpenSubmitAlertDialog] = useState(false);
+
+  let choiceOrEssay: JSX.Element;
+  switch (currentQuiz.type) {
+    case QuizType.choice:
+      choiceOrEssay = (
+        <QuizChoiceList currentItem={currentQuiz} store={store} />
+      );
+      break;
+    case QuizType.essay:
+      choiceOrEssay = <QuizEssay store={store} />;
+      break;
+    default:
+      throw Error("존재하지 않는 퀴즈 타입입니다.");
+  }
+
+  const isFirst = (currentItemIndex: number) => {
+    if (currentItemIndex === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const isLast = (currentItemIndex: number) => {
+    if (currentItemIndex === quiz.items.length - 1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   const moveNext = () => {
-    if (currentItemIndex + 1 !== quiz.items.length) {
-      setcurrentItemIndex(currentItemIndex + 1);
+    if (currentQuizIndex + 1 !== quiz.items.length) {
+      store.currentQuizItemIndex = currentQuizIndex + 1;
     } else {
-      isLast();
+      isLast(currentQuizIndex);
     }
   };
 
   const movePrevious = () => {
-    if (currentItemIndex !== 0) {
-      setcurrentItemIndex(currentItemIndex - 1);
+    if (currentQuizIndex !== 0) {
+      store.currentQuizItemIndex = currentQuizIndex - 1;
     } else {
-      isFirst();
+      isFirst(currentQuizIndex);
     }
   };
 
+  const submit = () => {
+    store.submit();
+    navigate("/", { replace: true });
+  };
+
   return (
-    <>
-      <Question item={currentItem} index={currentItemIndex} />
-      {choiceOrEssay}
-      <Button variant="contained" onClick={movePrevious} disabled={isFirst}>
-        이전
-      </Button>
-      <Button variant="contained" onClick={moveNext} disabled={isLast}>
-        다음
-      </Button>
-    </>
+    <Scaffold
+      navRail={
+        <NavRail
+          items={[
+            ...quiz.items.map((item, index) => {
+              return (
+                <NavRailItem
+                  key={item.uuid as string}
+                  label={`${index + 1}`}
+                  color={store.hasQuizRecordAt(index) ? "secondary" : "inherit"}
+                  isSelected={index === currentQuizIndex}
+                  onClick={() => {
+                    store.moveToTheQuestion(index);
+                  }}
+                />
+              );
+            }),
+          ]}
+          trailingItem={
+            <Button
+              disabled={!store.enableSendButton}
+              variant="contained"
+              style={{ margin: "8px" }}
+              onClick={() => setOpenSubmitAlertDialog(true)}
+            >
+              제출
+            </Button>
+          }
+        />
+      }
+    >
+      <Dialog
+        open={openSubmitAlertDialog}
+        onClose={() => setOpenSubmitAlertDialog(false)}
+      >
+        <DialogTitle>답안 제출</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            답안을 제출하고 퀴즈를 종료합니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenSubmitAlertDialog(false)}>취소</Button>
+          <Button onClick={() => submit()}>제출</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Container>
+        <Question item={currentQuiz} index={currentQuizIndex} />
+        <Typography
+          variant="subtitle1"
+          color="primary"
+          fontWeight="bold"
+          marginBottom="24px"
+        >
+          {currentQuiz.score}점
+        </Typography>
+        {currentQuiz.imageUrl !== undefined ? (
+          <ExpandableImage
+            expanded={imageExpandedList[currentQuizIndex]}
+            onClick={() => {
+              const newList = [...imageExpandedList];
+              newList[currentQuizIndex] = !imageExpandedList[currentQuizIndex];
+              setImageExpandedList(newList);
+            }}
+            src={currentQuiz.imageUrl}
+          />
+        ) : undefined}
+        {choiceOrEssay}
+        <Stack alignItems="flex-end">
+          <ButtonGroup style={{ marginTop: "54px" }}>
+            <Button
+              disabled={currentQuizIndex === 0}
+              variant="contained"
+              color="secondary"
+              onClick={movePrevious}
+            >
+              이전
+            </Button>
+            <Button
+              disabled={quiz.items.length - 1 === currentQuizIndex}
+              variant="contained"
+              color="secondary"
+              onClick={moveNext}
+            >
+              다음
+            </Button>
+          </ButtonGroup>
+        </Stack>
+      </Container>
+    </Scaffold>
   );
 };
 
-export default TakingQuiz;
+export default observer(TakingQuiz);
