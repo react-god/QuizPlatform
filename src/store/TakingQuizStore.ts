@@ -128,6 +128,9 @@ class TakingQuizStore {
   }
 
   submit() {
+    this.answerRecord.items = this.answerRecord.items.sort(
+      (a, b) => a.index - b.index
+    );
     quizRecordStore.addRecord(this.answerRecord);
   }
 }
