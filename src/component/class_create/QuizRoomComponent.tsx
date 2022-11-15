@@ -56,7 +56,7 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
       currentUser.id,
       selectedQuiz.id
     );
-  }, [selectedQuiz]);
+  }, [selectedQuiz, currentUser.id]);
 
   const scoreOfSelectedQuiz = useMemo(() => {
     if (recordOfSelectedQuiz === undefined || selectedQuiz === undefined) {

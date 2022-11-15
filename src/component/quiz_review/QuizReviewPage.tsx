@@ -185,7 +185,7 @@ const QuizReviewPage = () => {
   }, [quizId]);
   const quizRecord = useMemo(() => {
     return quizRecordStore.getRecordByUserAndQuizId(currentUser.id, quizId);
-  }, [quizId]);
+  }, [quizId, currentUser.id]);
   if (quizRecord === undefined) {
     throw Error(`현재 유저가 ${quizId} 퀴즈를 푼 기록을 찾을 수 없습니다.`);
   }
