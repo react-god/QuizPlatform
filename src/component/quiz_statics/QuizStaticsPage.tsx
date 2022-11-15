@@ -110,7 +110,7 @@ const chartOptions = {
   },
 };
 
-function getScore(record: QuizRecord, quizItems: QuizItem[]): number {
+export function getScore(record: QuizRecord, quizItems: QuizItem[]): number {
   let score: number = 0;
   record.items.forEach((recordItem) => {
     const quizItem = quizItems[recordItem.index];
