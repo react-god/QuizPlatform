@@ -1,7 +1,7 @@
 import { Divider, Stack, Typography, useTheme } from "@mui/material";
 import { useMemo, useState } from "react";
 import { QuizItem, QuizOption, QuizType } from "../../mockup_data/quiz";
-import { QuizRecord, QuizRecordItem } from "../../mockup_data/quiz_record";
+import { QuizRecordItem } from "../../mockup_data/quiz_record";
 import { NavRail, NavRailItem } from "../NavRail";
 import { Check, Close } from "@mui/icons-material";
 import Scaffold from "../Scaffold";
