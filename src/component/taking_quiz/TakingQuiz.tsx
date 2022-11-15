@@ -98,6 +98,7 @@ const QuizChoice: React.FC<{
       variant="contained"
       onClick={() => props.onClick()}
       color={cardColor}
+      disableElevation
     >
       <Stack
         direction={imageExpanded ? "column" : "row"}
