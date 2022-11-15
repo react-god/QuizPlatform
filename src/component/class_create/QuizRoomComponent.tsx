@@ -3,6 +3,8 @@ import {
   CardContent,
   Dialog,
   DialogActions,
+  DialogContent,
+  DialogContentText,
   DialogTitle,
   Grid,
   Paper,
@@ -11,11 +13,13 @@ import {
   Typography,
 } from "@mui/material";
 import Card from "@mui/material/Card";
-import React from "react";
+import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Quiz } from "../../mockup_data/quiz";
 import quizRecordStore from "../../store/QuizRecordStore";
 import userStore from "../../store/UserStore";
+import { isCorrect } from "../quiz_review/QuizReviewPage";
+import { getScore } from "../quiz_statics/QuizStaticsPage";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -30,35 +34,67 @@ interface QuizRoomComponentProps {
   ownerName: String;
 }
 
+// TODO: 퀴즈 개설자의 경우 몇 명이 풀었는지 보이기, 평균 점수 보이기
 const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
   const navigate = useNavigate();
   const [openQuizStartDialog, setOpenQuizStartDialog] = React.useState(false);
+  const [openQuizReviewDialog, setOpenQuizReviewDialog] = React.useState(false);
   const [selectedQuiz, setSelectedQuiz] = React.useState<Quiz | undefined>(
     undefined
   );
+  const currentUser = userStore.currentUser;
+
+  if (currentUser === undefined) {
+    throw Error("로그인 하지 않고 클래스 룸 페이지에 접근함.");
+  }
+
+  const recordOfSelectedQuiz = useMemo(() => {
+    if (selectedQuiz === undefined) {
+      return undefined;
+    }
+    return quizRecordStore.getRecordByUserAndQuizId(
+      currentUser.id,
+      selectedQuiz.id
+    );
+  }, [selectedQuiz]);
+
+  const scoreOfSelectedQuiz = useMemo(() => {
+    if (recordOfSelectedQuiz === undefined || selectedQuiz === undefined) {
+      return undefined;
+    }
+    return getScore(recordOfSelectedQuiz, selectedQuiz.items);
+  }, [recordOfSelectedQuiz, selectedQuiz]);
 
   const onCardClick = (quiz: Quiz) => {
-    const currentUser = userStore.currentUser;
-    if (currentUser === undefined) {
-      throw Error("로그인 하지 않고 퀴즈를 클릭함");
-    }
     const isQuizMine = currentUser.id === quiz.owner.id;
     if (isQuizMine) {
       navigate(`/statics/${quiz.id}`);
       return;
     }
     const didTakeQuiz = quizRecordStore.didTakeQuiz(currentUser.id, quiz.id);
+    setSelectedQuiz(quiz);
     if (didTakeQuiz) {
-      navigate(`/review/${quiz.id}`);
+      setOpenQuizReviewDialog(true);
       return;
     }
-    setSelectedQuiz(quiz);
     setOpenQuizStartDialog(true);
   };
 
-  const onCancelClick = () => {
+  const onQuizStartDialogCancelClick = () => {
     setOpenQuizStartDialog(false);
     setSelectedQuiz(undefined);
+  };
+
+  const onQuizReviewDialogCancelClick = () => {
+    setOpenQuizReviewDialog(false);
+    setSelectedQuiz(undefined);
+  };
+
+  const onReviewQuizClick = () => {
+    if (selectedQuiz === undefined) {
+      throw Error("선택된 퀴즈 없이 퀴즈를 시작하려 했습니다.");
+    }
+    navigate(`/review/${selectedQuiz.id}`);
   };
 
   const onStartQuizClick = () => {
@@ -73,17 +109,62 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
       <Dialog
         open={openQuizStartDialog}
         keepMounted
-        onClose={onCancelClick}
+        onClose={onQuizStartDialogCancelClick}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>{`${selectedQuiz?.name} 퀴즈를 시작할까요?`}</DialogTitle>
         <DialogActions>
-          <Button onClick={onCancelClick}>취소</Button>
+          <Button onClick={onQuizStartDialogCancelClick}>취소</Button>
           <Button onClick={onStartQuizClick}>시작</Button>
         </DialogActions>
       </Dialog>
 
+      <Dialog
+        open={openQuizReviewDialog}
+        keepMounted
+        onClose={onQuizReviewDialogCancelClick}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{`${selectedQuiz?.name} 퀴즈 성적`}</DialogTitle>
+        {selectedQuiz !== undefined && recordOfSelectedQuiz !== undefined ? (
+          <DialogContent>
+            <DialogContentText>
+              <Typography
+                variant="h3"
+                color="secondary"
+                align="center"
+                fontWeight="bold"
+                mb="8px"
+              >
+                {scoreOfSelectedQuiz}점
+              </Typography>
+            </DialogContentText>
+            <DialogContentText align="center">
+              {selectedQuiz.items.length}문제 중{" "}
+              <Typography fontWeight="bold" display="inline">
+                {
+                  recordOfSelectedQuiz.items.filter((record, index) =>
+                    isCorrect(record, selectedQuiz.items[index])
+                  ).length
+                }
+                문제 정답
+              </Typography>
+            </DialogContentText>
+          </DialogContent>
+        ) : (
+          <></>
+        )}
+        <DialogActions>
+          <Button onClick={onQuizReviewDialogCancelClick}>취소</Button>
+          <Button onClick={onReviewQuizClick}>답안 확인하기</Button>
+        </DialogActions>
+      </Dialog>
+
       {quizs.map((quiz: Quiz) => {
+        const didTakeQuiz = quizRecordStore.didTakeQuiz(
+          currentUser.id,
+          quiz.id
+        );
         return (
           <Grid key={quiz.id as string} item xs={4}>
             <Card
@@ -101,7 +182,14 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
                 {/* important 말고 다른방법 찾기 */}
                 <Item sx={{ padding: "20px" }}>
                   <Stack spacing={3}>
-                    <Typography variant="h5">{quiz.name}</Typography>
+                    <Typography variant="h5">
+                      {quiz.name}
+                      {didTakeQuiz ? (
+                        <Typography variant="caption" textAlign="center">
+                          (응시완료)
+                        </Typography>
+                      ) : undefined}
+                    </Typography>
                     <Typography
                       variant="caption"
                       display={"block"}
