@@ -67,6 +67,20 @@ class UserStore {
   }
 
   /**
+   * 로그아웃을 시도한다.
+   *
+   * 로그아웃에 성공하면 세션이 초기화된다.
+   */
+  signOut() {
+    try {
+      sessionStorage.clear();
+      return true;
+    } catch (e) {
+      throw Error("로그아웃 실패");
+    }
+  }
+
+  /**
    * 퀴즈에 참여한다.
    *
    * 로그인되지 않은 상태로 시도하면 에러를 던진다.

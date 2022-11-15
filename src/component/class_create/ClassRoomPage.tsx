@@ -17,11 +17,15 @@ import QuizRoomComponent from "./QuizRoomComponent";
 import "../../css/sidebar.css";
 import { NavRail, NavRailItem } from "../NavRail";
 import Scaffold from "../Scaffold";
-import { Stack } from "@mui/system";
 import userStore from "../../store/UserStore";
 import { ClassRoom } from "../../mockup_data/classroom";
 import { useLocation, useNavigate } from "react-router-dom";
 import useSnackBarMessage from "../../util/SnackBarMessage";
+import SpeedDialTooltipOpen, { Action } from "../SpeedDial";
+import AddIcon from "@mui/icons-material/Add";
+import InputIcon from "@mui/icons-material/Input";
+import LogoutIcon from "@mui/icons-material/Logout";
+import QuizIcon from "@mui/icons-material/Quiz";
 
 interface CreateClassRoomDialogProps {
   open: boolean;
@@ -148,6 +152,27 @@ const AddClassRoomByCodeDialog = (props: AddClassRoomCodeDialog) => {
   );
 };
 
+const LogoutDialog = (props: any) => {
+  return (
+    <Dialog
+      open={props.open}
+      onClose={() => props.onClose()}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">
+        {"로그아웃 하시겠습니까?"}
+      </DialogTitle>
+      <DialogActions>
+        <Button onClick={() => props.onClose()}>취소</Button>
+        <Button onClick={() => props.onLogout()} style={{ color: "red" }}>
+          로그아웃
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
 const ClassRoomPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -162,8 +187,32 @@ const ClassRoomPage = () => {
     useState(false);
   const [openCreateQuizDialog, setOpenCreateQuizDialog] = useState(false);
   const [openRoomCodeDialog, setOpenRoomCodeDialog] = useState(false);
+  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
   const [snackBarMessage, showSnackBar] = useSnackBarMessage();
+
+  const actions: Array<Action> = [
+    {
+      icon: <LogoutIcon />,
+      name: "로그아웃",
+      action: () => setOpenLogoutDialog(true),
+    },
+    {
+      icon: <QuizIcon />,
+      name: "퀴즈 만들기",
+      action: () => setOpenCreateQuizDialog(true),
+    },
+    {
+      icon: <AddIcon />,
+      name: "클래스 생성",
+      action: () => setOpenCreateClassRoomDialog(true),
+    },
+    {
+      icon: <InputIcon />,
+      name: "클래스 룸 코드 입력",
+      action: () => setOpenRoomCodeDialog(true),
+    },
+  ];
 
   useEffect(() => {
     classRoomStore.fetchClassRooms();
@@ -199,108 +248,118 @@ const ClassRoomPage = () => {
     }
   };
 
-  return (
-    <Scaffold
-      navRail={
-        <NavRail
-          items={[
-            ...invitedRooms.map((item, index) => {
-              return (
-                <NavRailItem
-                  key={item.id as string}
-                  label={item.name[0]}
-                  color={
-                    classRoomStore.currentTabIndex === index
-                      ? "secondary"
-                      : "inherit"
-                  }
-                  isSelected={classRoomStore.currentTabIndex === index}
-                  onClick={() => (classRoomStore.currentTabIndex = index)}
-                />
-              );
-            }),
-          ]}
-          trailingItem={
-            <Stack>
-              <Button
-                variant="outlined"
-                style={{ margin: "8px", minWidth: "80px" }}
-                onClick={() => setOpenRoomCodeDialog(true)}
-              >
-                <Typography variant="button">
-                  코드<br></br>입력
-                </Typography>
-              </Button>
-              <Button
-                variant="contained"
-                style={{ margin: "8px", minWidth: "80px" }}
-                onClick={() => setOpenCreateClassRoomDialog(true)}
-              >
-                <Typography variant="button">
-                  클래스<br></br>생성
-                </Typography>
-              </Button>
-            </Stack>
-          }
-        />
+  const logout = () => {
+    setOpenLogoutDialog(false);
+    try {
+      userStore.signOut();
+      navigate("/login");
+    } catch (e) {
+      if (e instanceof Error) {
+        showSnackBar(e.message);
       }
-    >
-      <CreateClassRoomDialog
-        open={openCreateClassRoomDialog}
-        onClose={() => setOpenCreateClassRoomDialog(false)}
-        onClickCreate={(roomName) => createClassRoom(roomName)}
-      />
-      <CreateQuizDialog
-        open={openCreateQuizDialog}
-        onClose={() => setOpenCreateQuizDialog(false)}
-        onClickCreate={(quizName) => createQuiz(quizName)}
-      />
-      <AddClassRoomByCodeDialog
-        open={openRoomCodeDialog}
-        onClose={() => setOpenRoomCodeDialog(false)}
-        onClickAdd={(classRoomCode) => joinClassRoom(classRoomCode)}
-      />
-      <Snackbar
-        open={snackBarMessage.open}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        message={snackBarMessage.data}
-      />
+    }
+  };
 
-      {!currentRoom ? (
-        <>
-          <Typography variant="h4">아직 참여한 클래스가 없습니다.</Typography>
-          <br></br>
-          <Typography variant="body1">
-            클래스 코드를 추가하거나 클래스를 생성해보세요.
-          </Typography>
-        </>
-      ) : (
-        <>
-          <Typography variant="h2" sx={{ display: "flex" }}>
-            <p style={{ flexGrow: 1 }}>{currentRoom.name}</p>
-            <Button
-              variant="contained"
-              style={{ maxHeight: "36px", margin: "auto" }}
-              onClick={() => setOpenCreateQuizDialog(true)}
+  const ClassroomPage = () => {
+    return (
+      <Scaffold
+        navRail={
+          <NavRail
+            items={[
+              ...invitedRooms.map((item, index) => {
+                return (
+                  <NavRailItem
+                    key={item.id as string}
+                    label={item.name[0]}
+                    color={
+                      classRoomStore.currentTabIndex === index
+                        ? "secondary"
+                        : "inherit"
+                    }
+                    isSelected={classRoomStore.currentTabIndex === index}
+                    onClick={() => (classRoomStore.currentTabIndex = index)}
+                  />
+                );
+              }),
+            ]}
+          />
+        }
+      >
+        <CreateClassRoomDialog
+          open={openCreateClassRoomDialog}
+          onClose={() => setOpenCreateClassRoomDialog(false)}
+          onClickCreate={(roomName) => createClassRoom(roomName)}
+        />
+        <CreateQuizDialog
+          open={openCreateQuizDialog}
+          onClose={() => setOpenCreateQuizDialog(false)}
+          onClickCreate={(quizName) => createQuiz(quizName)}
+        />
+        <AddClassRoomByCodeDialog
+          open={openRoomCodeDialog}
+          onClose={() => setOpenRoomCodeDialog(false)}
+          onClickAdd={(classRoomCode) => joinClassRoom(classRoomCode)}
+        />
+        <LogoutDialog
+          open={openLogoutDialog}
+          onClose={() => setOpenLogoutDialog(false)}
+          onLogout={() => logout()}
+        />
+        <Snackbar
+          open={snackBarMessage.open}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          message={snackBarMessage.data}
+        />
+
+        {!currentRoom ? (
+          <>
+            <Typography variant="h4">아직 참여한 클래스가 없습니다.</Typography>
+            <br></br>
+            <Typography variant="body1">
+              클래스 코드를 추가하거나 클래스를 생성해보세요.
+            </Typography>
+          </>
+        ) : (
+          <>
+            <Typography variant="h2" sx={{ display: "flex" }}>
+              <p style={{ flexGrow: 1 }}>{currentRoom.name}</p>
+              <Button
+                variant="text"
+                style={{ maxHeight: "36px", margin: "auto" }}
+                onClick={() => setOpenCreateQuizDialog(true)}
+              >
+                <Typography variant="button">퀴즈 만들기</Typography>
+              </Button>
+            </Typography>
+
+            <br />
+            <Grid
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
             >
-              <Typography variant="button">퀴즈 만들기</Typography>
-            </Button>
-          </Typography>
+              {currentRoom === undefined ? (
+                "텅"
+              ) : (
+                <QuizRoomComponent
+                  quizs={currentRoom.quizs}
+                  ownerName={userStore.getUserById(currentRoom.ownerId)!.name}
+                ></QuizRoomComponent>
+              )}
+            </Grid>
+          </>
+        )}
+      </Scaffold>
+    );
+  };
 
-          <br />
-          <Grid container spacing={2}>
-            {currentRoom === undefined ? (
-              "텅"
-            ) : (
-              <QuizRoomComponent
-                quizs={currentRoom.quizs}
-                ownerName={userStore.getUserById(currentRoom.ownerId)!.name}
-              ></QuizRoomComponent>
-            )}
-          </Grid>
-        </>
-      )}
-    </Scaffold>
+  return (
+    <>
+      <SpeedDialTooltipOpen
+        menu={actions}
+        main={<ClassroomPage />}
+      ></SpeedDialTooltipOpen>
+    </>
   );
 };
 
