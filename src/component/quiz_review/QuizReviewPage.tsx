@@ -6,7 +6,7 @@ import { NavRail, NavRailItem } from "../NavRail";
 import { Check, Close } from "@mui/icons-material";
 import Scaffold from "../Scaffold";
 import { classRoomStore } from "../../store/ClassRoomStore";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import quizRecordStore from "../../store/QuizRecordStore";
 import userStore from "../../store/UserStore";
 
@@ -170,6 +170,7 @@ const SubmittedEssay = (props: SubmittedEssayProps) => {
 };
 
 const QuizReviewPage = () => {
+  const navigate = useNavigate();
   const [itemIndex, setItemIndex] = useState(0);
   const { quizId } = useParams();
   const currentUser = userStore.currentUser;
@@ -215,6 +216,7 @@ const QuizReviewPage = () => {
     <Scaffold
       navRail={
         <NavRail
+          onBackClick={() => navigate(-1)}
           items={quiz.items.map((quizItem, index) => (
             <NavRailItem
               key={quizItem.uuid as string}
