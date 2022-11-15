@@ -11,6 +11,7 @@ import QuizCreatePage from "./component/quiz_create/QuizCreatePage";
 import QuizStaticsPage from "./component/quiz_statics/QuizStaticsPage";
 import SignUpPage from "./component/SignUpPage";
 import PrivateRoute from "./component/PrivateRoute";
+import TakingQuiz from "./component/taking_quiz/TakingQuiz";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
@@ -30,6 +31,9 @@ root.render(
           </Route>
           <Route element={<PrivateRoute />}>
             <Route path="/statics/:quizId" element={<QuizStaticsPage />} />
+          </Route>
+          <Route element={<PrivateRoute />}>
+            <Route path="/take-quiz/:quizId" element={<TakingQuiz />} />
           </Route>
         </Routes>
       </ThemeProvider>
