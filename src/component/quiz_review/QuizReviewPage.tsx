@@ -6,6 +6,9 @@ import { NavRail, NavRailItem } from "../NavRail";
 import { Check, Close } from "@mui/icons-material";
 import Scaffold from "../Scaffold";
 import { classRoomStore } from "../../store/ClassRoomStore";
+import { useParams } from "react-router-dom";
+import quizRecordStore from "../../store/QuizRecordStore";
+import userStore from "../../store/UserStore";
 
 export function isCorrect(
   recordItem: QuizRecordItem,
@@ -166,19 +169,28 @@ const SubmittedEssay = (props: SubmittedEssayProps) => {
   );
 };
 
-interface QuizReviewPageProps {
-  quizRecord: QuizRecord;
-}
-
-const QuizReviewPage = (props: QuizReviewPageProps) => {
+const QuizReviewPage = () => {
   const [itemIndex, setItemIndex] = useState(0);
-  const quizId = props.quizRecord.quizId;
+  const { quizId } = useParams();
+  const currentUser = userStore.currentUser;
+  if (quizId === undefined) {
+    throw Error("퀴즈 ID가 없이 전환을 시도했습니다.");
+  }
+  if (currentUser === undefined) {
+    throw Error("로그인 하지 않은 상태로 퀴즈 리뷰 페이지에 접근하였습니다.");
+  }
   const quiz = useMemo(() => {
     return classRoomStore.requireQuizById(quizId);
   }, [quizId]);
+  const quizRecord = useMemo(() => {
+    return quizRecordStore.getRecordByUserAndQuizId(currentUser.id, quizId);
+  }, [quizId]);
+  if (quizRecord === undefined) {
+    throw Error(`현재 유저가 ${quizId} 퀴즈를 푼 기록을 찾을 수 없습니다.`);
+  }
   const currentQuizItem = quiz.items[itemIndex];
-  const quizRecordItems = props.quizRecord.items;
-  const currentRecordItem = props.quizRecord.items[itemIndex];
+  const quizRecordItems = quizRecord.items;
+  const currentRecordItem = quizRecord.items[itemIndex];
 
   let essayOrChoiceList: JSX.Element;
   switch (currentQuizItem.type) {

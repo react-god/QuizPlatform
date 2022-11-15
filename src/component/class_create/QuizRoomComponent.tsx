@@ -14,6 +14,7 @@ import Card from "@mui/material/Card";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Quiz } from "../../mockup_data/quiz";
+import quizRecordStore from "../../store/QuizRecordStore";
 import userStore from "../../store/UserStore";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -44,10 +45,15 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
     const isQuizMine = currentUser.id === quiz.owner.id;
     if (isQuizMine) {
       navigate(`/statics/${quiz.id}`);
-    } else {
-      setSelectedQuiz(quiz);
-      setOpenQuizStartDialog(true);
+      return;
     }
+    const didTakeQuiz = quizRecordStore.didTakeQuiz(currentUser.id, quiz.id);
+    if (didTakeQuiz) {
+      navigate(`/review/${quiz.id}`);
+      return;
+    }
+    setSelectedQuiz(quiz);
+    setOpenQuizStartDialog(true);
   };
 
   const onCancelClick = () => {

@@ -17,6 +17,23 @@ class QuizRecordStore {
     const records = readJsonFromLocalStorage<QuizRecord[]>(RECORD_KEY) ?? [];
     return records.filter((record) => record.quizId === quizId);
   }
+
+  getRecordByUserAndQuizId(
+    userId: String,
+    quizId: String
+  ): QuizRecord | undefined {
+    const records = readJsonFromLocalStorage<QuizRecord[]>(RECORD_KEY) ?? [];
+    return records.find(
+      (record) => record.candidateId === userId && record.quizId === quizId
+    );
+  }
+
+  didTakeQuiz(userId: String, quizId: String): boolean {
+    const records = readJsonFromLocalStorage<QuizRecord[]>(RECORD_KEY) ?? [];
+    return records.some(
+      (record) => record.candidateId === userId && record.quizId === quizId
+    );
+  }
 }
 
 const quizRecordStore = new QuizRecordStore();

@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { Quiz } from "../mockup_data/quiz";
 import { QuizRecord, QuizRecordItem } from "../mockup_data/quiz_record";
-import recordStore from "./RecordStore";
+import quizRecordStore from "./QuizRecordStore";
 
 class TakingQuizStore {
   quiz: Quiz;
@@ -128,7 +128,7 @@ class TakingQuizStore {
   }
 
   submit() {
-    recordStore.addRecord(this.answerRecord);
+    quizRecordStore.addRecord(this.answerRecord);
   }
 }
 
