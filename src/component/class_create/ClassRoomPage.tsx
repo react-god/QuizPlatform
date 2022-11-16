@@ -26,7 +26,6 @@ import AddIcon from "@mui/icons-material/Add";
 import InputIcon from "@mui/icons-material/Input";
 import LogoutIcon from "@mui/icons-material/Logout";
 import useCopyToClipboard from "../../util/CopyToClipboard";
-import { Store } from "@mui/icons-material";
 
 interface CreateClassRoomDialogProps {
   open: boolean;
@@ -175,7 +174,7 @@ const LogoutDialog = (props: any) => {
 };
 
 const CopyClassCode = (props: any) => {
-  const [value, copy] = useCopyToClipboard();
+  const [, copy] = useCopyToClipboard();
   const [snackBarMessage, showSnackBar] = useSnackBarMessage();
   const code = props.currentRoom.id;
 
@@ -188,7 +187,7 @@ const CopyClassCode = (props: any) => {
           showSnackBar("클래스룸 코드가 클립보드에 복사되었습니다.");
         }}
       >
-        Copy Classroom Code
+      Copy Classroom Code
       </Button>
       <Snackbar
         open={snackBarMessage.open}
