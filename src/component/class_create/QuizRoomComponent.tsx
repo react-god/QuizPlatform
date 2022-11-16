@@ -104,6 +104,26 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
     navigate(`/take-quiz/${selectedQuiz.id}`);
   };
 
+  const CandidateCount = (props: { quiz: Quiz }) => {
+    const records = useMemo(() => {
+      return quizRecordStore.getRecordsByQuizId(props.quiz.id);
+    }, [props.quiz.id]);
+
+    const candidateIds = useMemo(
+      () => [...new Set(records.map((record) => record.candidateId))],
+      [records]
+    );
+    const candidateUsers = useMemo(() => {
+      return userStore.getUserList(candidateIds);
+    }, [candidateIds]);
+
+    return (
+      <Typography variant="caption" textAlign="center">
+        ({candidateUsers.length})
+      </Typography>
+    );
+  };
+
   return (
     <>
       <Dialog
@@ -184,6 +204,9 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
                   <Stack spacing={3}>
                     <Typography variant="h5">
                       {quiz.name}
+                      {quiz.owner.id === currentUser.id ? (
+                        <CandidateCount quiz={quiz}></CandidateCount>
+                      ) : undefined}
                       {didTakeQuiz ? (
                         <Typography variant="caption" textAlign="center">
                           (응시완료)
