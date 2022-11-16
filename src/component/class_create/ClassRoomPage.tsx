@@ -25,6 +25,8 @@ import SpeedDialTooltipOpen, { Action } from "../SpeedDial";
 import AddIcon from "@mui/icons-material/Add";
 import InputIcon from "@mui/icons-material/Input";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useCopyToClipboard } from "usehooks-ts";
+import { Store } from "@mui/icons-material";
 
 interface CreateClassRoomDialogProps {
   open: boolean;
@@ -172,6 +174,31 @@ const LogoutDialog = (props: any) => {
   );
 };
 
+const CopyClassCode = (props: any) => {
+  const [value, copy] = useCopyToClipboard();
+  const [snackBarMessage, showSnackBar] = useSnackBarMessage();
+  const code = props.currentRoom.id;
+
+  return (
+    <>
+      <Button
+        style={{ margin: 0, padding: 0, width: "200px", bottom: "50px" }}
+        onClick={() => {
+          copy(code);
+          showSnackBar("클래스룸 코드가 클립보드에 복사되었습니다.");
+        }}
+      >
+        Copy Classroom Code
+      </Button>
+      <Snackbar
+        open={snackBarMessage.open}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        message={snackBarMessage.data}
+      />
+    </>
+  );
+};
+
 const ClassRoomPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -289,6 +316,7 @@ const ClassRoomPage = () => {
           onClose={() => setOpenCreateQuizDialog(false)}
           onClickCreate={(quizName) => createQuiz(quizName)}
         />
+
         <AddClassRoomByCodeDialog
           open={openRoomCodeDialog}
           onClose={() => setOpenRoomCodeDialog(false)}
@@ -325,6 +353,8 @@ const ClassRoomPage = () => {
                 <Typography variant="button">퀴즈 만들기</Typography>
               </Button>
             </Typography>
+
+            <CopyClassCode currentRoom={currentRoom}></CopyClassCode>
 
             <br />
             <Grid
