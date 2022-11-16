@@ -18,6 +18,7 @@ export interface QuizItem {
   uuid: String;
   question: String;
   type: QuizType;
+  multipleChoice?: boolean;
   options: Array<QuizOption>;
   reason?: String;
   essayAnswer?: String;
@@ -74,6 +75,7 @@ const quizItem1_2: QuizItem = {
   uuid: "fio8f2wn3",
   question: "1 + 1 = ?",
   reason: "수학적으로 1 + 1은 답이 2입니다.",
+  multipleChoice: false,
   type: QuizType.choice,
   options: [quizOption1_2_1, quizOption1_2_2, quizOption1_2_3, quizOption1_2_4],
   score: 5,
@@ -109,6 +111,7 @@ const quizOption1_3_4: QuizOption = {
 const quizItem1_3: QuizItem = {
   uuid: "fio8fow43",
   question: "다음 중 홀수인 것은?",
+  multipleChoice: true,
   type: QuizType.choice,
   options: [quizOption1_3_1, quizOption1_3_2, quizOption1_3_3, quizOption1_3_4],
   score: 5,
@@ -132,6 +135,7 @@ const quiz2: Quiz = {
       question: "2조 조장 킹갓정시현이 일하는 카페는?",
       type: 0,
       score: 25,
+      multipleChoice: false,
       options: [
         {
           uuid: "1748e5b6-a06b-40d5-b978-80df5d6f1f06",
@@ -160,6 +164,7 @@ const quiz2: Quiz = {
       question: "환승연애2에 나오지 않는 등장인물은?",
       type: 0,
       score: 20,
+      multipleChoice: true,
       options: [
         {
           uuid: "1748e5b6-a06b-40d5-b978-80df5d6f1f06",
@@ -205,6 +210,7 @@ const quiz3: Quiz = {
         "BTS 봉준호 손흥민 ooo Let’s go 벌스에서 ooo 안에 들어갈 인물은?",
       type: 0,
       score: 30,
+      multipleChoice: false,
       options: [
         {
           uuid: "1748e5b6-a06b-40d5-b978-80df5d6f1f06",
@@ -233,6 +239,7 @@ const quiz3: Quiz = {
       question: "술을 많이 먹고 다음날 하는 국룰 멘트는?",
       score: 20,
       type: 0,
+      multipleChoice: true,
       options: [
         {
           uuid: "ab16dad4-5f0f-4b3b-93bd-71373b9513b1",
@@ -279,6 +286,7 @@ const quiz4: Quiz = {
         "범죄 신고 번호는 112, 재난 신고 번호는 119입니다. 그렇다면 간첩 신고 번호는 무엇일까요?",
       type: 1,
       score: 30,
+      multipleChoice: false,
       options: [],
       essayAnswer: "111",
     },
@@ -330,6 +338,7 @@ const quiz5: Quiz = {
       uuid: "cf8c5709-cc53-4fda-9c7e-e3b58a5f2937",
       question: "1 + 2 x 3 = ?",
       type: 0,
+      multipleChoice: false,
       reason: "곱셈의 우선순위가 높기 때문에 답은 7이다.",
       score: 30,
       options: [
@@ -361,6 +370,7 @@ const quiz5: Quiz = {
         "18세기 중엽 영국에서 시작된 기술 혁신과 이에 수반하여 일어난 사회, 경제 구조의 변혁을 무엇이라 할까요?",
       type: 0,
       score: 30,
+      multipleChoice: false,
       options: [
         {
           uuid: "5b866166-f56b-497b-9c56-91ffebf87280",
@@ -390,6 +400,7 @@ const quiz5: Quiz = {
         "다음 중 프로세스가 메모리에 적재될때 프로세스를 구성하는 영역인 것을 모두 고르세요.",
       type: 0,
       score: 40,
+      multipleChoice: true,
       options: [
         {
           uuid: "5b866166-f56b-497b-9c56-91ffebf87280",
@@ -426,18 +437,7 @@ const quiz6: Quiz = {
       question: "API의 약어를 소문자로 풀어 쓰시오.",
       type: 1,
       score: 40,
-      options: [
-        {
-          uuid: "9df01185-7528-4987-97f3-187120b1165f",
-          title: "",
-          isAnswer: true,
-        },
-        {
-          uuid: "a49de503-85c3-431e-a98d-07f1ea07e0f6",
-          title: "",
-          isAnswer: false,
-        },
-      ],
+      options: [],
       essayAnswer: "application programming interface",
     },
     {
@@ -445,6 +445,7 @@ const quiz6: Quiz = {
       question: "모든 경우에 퀵정렬이 항상 빠르다.",
       type: 0,
       score: 30,
+      multipleChoice: false,
       options: [
         {
           uuid: "9df01185-7528-4987-97f3-187120b1165f",
@@ -463,6 +464,7 @@ const quiz6: Quiz = {
       question: "js에서 배열 순회 함수를 모두 고르시오",
       type: 0,
       score: 30,
+      multipleChoice: true,
       options: [
         {
           uuid: "9df01185-7528-4987-97f3-187120b1165f",
@@ -499,6 +501,7 @@ const quiz7: Quiz = {
       question: "한성대학교에 살던 동물의 이름이 아닌 것을 모두 고르시오.",
       type: 0,
       score: 30,
+      multipleChoice: true,
       options: [
         {
           uuid: "982a7167-8216-4328-bae8-83815d38fd10",
@@ -532,6 +535,7 @@ const quiz7: Quiz = {
       question: "시카고는 미시간 주에 속해있다.",
       type: 0,
       score: 30,
+      multipleChoice: false,
       options: [
         {
           uuid: "982a7167-8216-4328-bae8-83815d38fd10",
@@ -574,6 +578,7 @@ const quiz8: Quiz = {
       question: "Black Friday는 어떤 기념일 다음 날인가?",
       type: 0,
       score: 30,
+      multipleChoice: false,
       options: [
         {
           uuid: "1908294b-a863-463e-8def-3e601f681cd1",
@@ -597,6 +602,7 @@ const quiz8: Quiz = {
       question: "다음 중 찻잎이 들어가지 않은 차를 고르시오",
       type: 0,
       score: 30,
+      multipleChoice: true,
       options: [
         {
           uuid: "1908294b-a863-463e-8def-3e601f681cd1",
@@ -633,6 +639,7 @@ const quiz9: Quiz = {
       question: "윤도현 밴드 노래가 아닌 것은?",
       type: 0,
       score: 50,
+      multipleChoice: true,
       reason: "Next Level은 에스파, 사랑했나봐는 윤도현 개인의 곡이다.",
       options: [
         {
@@ -670,6 +677,7 @@ const quiz9: Quiz = {
       question: "손흥민이 뛰었던 팀을 모두 고르시오.",
       type: 0,
       score: 20,
+      multipleChoice: true,
       options: [
         {
           uuid: "2e33abc3-7c76-4a6f-9380-1e726b7cb95b",

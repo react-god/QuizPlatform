@@ -128,7 +128,9 @@ const QuizChoiceList: React.FC<{
           key={option.uuid as string}
           chosen={store.isOptionChosen(i)}
           onClick={() => {
-            store.updateChoiceRecordItem(i);
+            currentItem.multipleChoice
+              ? store.updateChoiceRecordItemWhenMultipleChoice(i)
+              : store.updateChoiceRecordItemWhenSingleChoice(i);
             forceUpdate();
           }}
         />
@@ -279,6 +281,7 @@ const TakingQuiz = () => {
           marginBottom="24px"
         >
           {currentQuiz.score}점
+          {currentQuiz.multipleChoice === true ? ", 복수정답" : undefined}
         </Typography>
         {currentQuiz.imageUrl !== undefined ? (
           <ExpandableImage

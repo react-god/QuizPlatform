@@ -9,6 +9,7 @@ const initQuizItem: QuizItem = {
   question: "",
   type: QuizType.choice,
   score: 10,
+  multipleChoice: false,
   options: [
     {
       uuid: uuidv4(),
@@ -59,6 +60,7 @@ class QuizCreateStore {
     this.quiz.items = this.quiz.items.map<QuizItem>((item) => {
       if (item.type === QuizType.essay) {
         item.options = [];
+        item.multipleChoice = undefined;
       }
       return item;
     });
@@ -121,6 +123,23 @@ class QuizCreateStore {
     item.type = newType;
   }
 
+  updateQuizItemMultipleChoice(multipleChoice: boolean) {
+    this.currentQuizItem.multipleChoice = multipleChoice;
+    if (!multipleChoice) {
+      const firstAnswerIndex = this.currentQuizItem.options.findIndex(
+        (option) => option.isAnswer
+      );
+      this.currentQuizItem.options = this.currentQuizItem.options.map(
+        (option, index) => {
+          if (index !== firstAnswerIndex) {
+            option.isAnswer = false;
+          }
+          return option;
+        }
+      );
+    }
+  }
+
   updateQuizImageUrl(imageUrl?: String) {
     this.currentQuizItem.imageUrl = imageUrl;
   }
@@ -165,6 +184,14 @@ class QuizCreateStore {
 
   updateQuizOptionIsAnswer(optionIndex: number, isAnswer: boolean) {
     const option = this.currentQuizItem.options[optionIndex];
+    if (this.currentQuizItem.multipleChoice === false) {
+      this.currentQuizItem.options = this.currentQuizItem.options.map(
+        (option) => {
+          option.isAnswer = false;
+          return option;
+        }
+      );
+    }
     option.isAnswer = isAnswer;
   }
 
