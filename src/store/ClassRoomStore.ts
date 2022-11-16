@@ -35,6 +35,10 @@ class ClassRoomStore {
     return this._rooms;
   }
 
+  getCurrentClassRoom() {
+    return this._rooms[this.currentTabIndex];
+  }
+
   fetchClassRooms() {
     this._rooms = readJsonFromLocalStorage<ClassRoom[]>(CLASS_ROOM_KEY) ?? [];
   }
