@@ -26,6 +26,7 @@ import AddIcon from "@mui/icons-material/Add";
 import InputIcon from "@mui/icons-material/Input";
 import LogoutIcon from "@mui/icons-material/Logout";
 import useCopyToClipboard from "../../util/CopyToClipboard";
+import { Stack } from "@mui/system";
 
 interface CreateClassRoomDialogProps {
   open: boolean;
@@ -173,41 +174,29 @@ const LogoutDialog = (props: any) => {
   );
 };
 
-const CopyClassCode = (props: any) => {
-  const [, copy] = useCopyToClipboard();
-  const [snackBarMessage, showSnackBar] = useSnackBarMessage();
-  const code = props.currentRoom.id;
+const CopyClassCode = (props: { roomId: string; onClick: () => void }) => {
+  const code = props.roomId;
 
   return (
-    <>
-      <Button
-        style={{ margin: 0, padding: 0, width: "200px", bottom: "50px" }}
-        onClick={() => {
-          copy(code);
-          showSnackBar("클래스룸 코드가 클립보드에 복사되었습니다.");
-        }}
-      >
-      Copy Classroom Code
+    <Stack alignContent="start" direction="row">
+      <Button onClick={() => props.onClick()} style={{ marginBottom: "40px" }}>
+        <Typography variant="caption">{code}</Typography>
       </Button>
-      <Snackbar
-        open={snackBarMessage.open}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        message={snackBarMessage.data}
-      />
-    </>
+    </Stack>
   );
 };
 
 const ClassRoomPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-
+  const [, copyToClipboard] = useCopyToClipboard();
   const invitedRooms = classRoomStore.invitedRooms;
   const currentRoom: ClassRoom | undefined =
     invitedRooms.length === 0
       ? undefined
       : invitedRooms[classRoomStore.currentTabIndex];
 
+  const isMine = currentRoom?.ownerId === userStore.currentUser?.id;
   const [openCreateClassRoomDialog, setOpenCreateClassRoomDialog] =
     useState(false);
   const [openCreateQuizDialog, setOpenCreateQuizDialog] = useState(false);
@@ -328,7 +317,7 @@ const ClassRoomPage = () => {
         />
         <Snackbar
           open={snackBarMessage.open}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           message={snackBarMessage.data}
         />
 
@@ -343,19 +332,26 @@ const ClassRoomPage = () => {
         ) : (
           <>
             <Typography variant="h2" sx={{ display: "flex" }}>
-              <p style={{ flexGrow: 1 }}>{currentRoom.name}</p>
-              <Button
-                variant="text"
-                style={{ maxHeight: "36px", margin: "auto" }}
-                onClick={() => setOpenCreateQuizDialog(true)}
-              >
-                <Typography variant="button">퀴즈 만들기</Typography>
-              </Button>
+              <span style={{ flexGrow: 1 }}>{currentRoom.name}</span>
+              {isMine ? (
+                <Button
+                  variant="text"
+                  style={{ maxHeight: "36px", margin: "auto" }}
+                  onClick={() => setOpenCreateQuizDialog(true)}
+                >
+                  <Typography variant="button">퀴즈 만들기</Typography>
+                </Button>
+              ) : undefined}
             </Typography>
 
-            <CopyClassCode currentRoom={currentRoom}></CopyClassCode>
+            <CopyClassCode
+              roomId={currentRoom.id as string}
+              onClick={() => {
+                showSnackBar("클립보드에 방코드 복사됨");
+                copyToClipboard(currentRoom.id as string);
+              }}
+            />
 
-            <br />
             <Grid
               container
               spacing={{ xs: 2, md: 3 }}
