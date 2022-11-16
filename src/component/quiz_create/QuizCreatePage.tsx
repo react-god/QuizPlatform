@@ -1,8 +1,10 @@
 import {
   Avatar,
   Button,
+  Checkbox,
   Chip,
   Divider,
+  FormControlLabel,
   IconButton,
   Stack,
   TextField,
@@ -457,6 +459,20 @@ const QuizCreatePage = () => {
         onImageChange={(imageUrl) => store.updateQuizImageUrl(imageUrl)}
         onScoreChange={(score) => store.updateQuizItemScore(score)}
       />
+      {currentQuizItem.type === QuizType.choice ? (
+        <FormControlLabel
+          style={{ marginBottom: "20px" }}
+          control={
+            <Checkbox
+              checked={currentQuizItem.multipleChoice}
+              onChange={(_, checked) =>
+                store.updateQuizItemMultipleChoice(checked)
+              }
+            />
+          }
+          label="복수정답"
+        />
+      ) : undefined}
       {optionListOrEssay}
       <AnswerReasonTextField
         reason={currentQuizItem.reason ?? ""}

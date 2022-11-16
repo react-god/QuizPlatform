@@ -9,6 +9,7 @@ const initQuizItem: QuizItem = {
   question: "",
   type: QuizType.choice,
   score: 10,
+  multipleChoice: false,
   options: [
     {
       uuid: uuidv4(),
@@ -59,6 +60,7 @@ class QuizCreateStore {
     this.quiz.items = this.quiz.items.map<QuizItem>((item) => {
       if (item.type === QuizType.essay) {
         item.options = [];
+        item.multipleChoice = undefined;
       }
       return item;
     });
@@ -119,6 +121,10 @@ class QuizCreateStore {
       return;
     }
     item.type = newType;
+  }
+
+  updateQuizItemMultipleChoice(multipleChoice: boolean) {
+    this.currentQuizItem.multipleChoice = multipleChoice;
   }
 
   updateQuizImageUrl(imageUrl?: String) {

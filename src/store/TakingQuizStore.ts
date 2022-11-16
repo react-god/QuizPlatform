@@ -37,7 +37,31 @@ class TakingQuizStore {
     return this.getRecordItemAt(this.currentQuizItemIndex);
   }
 
-  updateChoiceRecordItem(clickedChoiceIndex: number) {
+  updateChoiceRecordItemWhenSingleChoice(clickedChoiceIndex: number) {
+    const recordItem = this.getCurrentRecordItem();
+
+    if (recordItem === undefined) {
+      this.answerRecord.items = [
+        ...this.answerRecord.items,
+        { index: this.currentQuizItemIndex, choice: [clickedChoiceIndex] },
+      ];
+      return;
+    }
+    const choices = recordItem.choice;
+    if (choices === undefined) {
+      throw Error("객관식 문항이 아닌 다른 유형에서 호출했습니다.");
+    }
+    const alreadyChosen = choices.some(
+      (choice) => choice === clickedChoiceIndex
+    );
+    if (alreadyChosen) {
+      recordItem.choice = [];
+    } else {
+      recordItem.choice = [clickedChoiceIndex];
+    }
+  }
+
+  updateChoiceRecordItemWhenMultipleChoice(clickedChoiceIndex: number) {
     const recordItem = this.getCurrentRecordItem();
 
     if (recordItem === undefined) {
