@@ -125,6 +125,19 @@ class QuizCreateStore {
 
   updateQuizItemMultipleChoice(multipleChoice: boolean) {
     this.currentQuizItem.multipleChoice = multipleChoice;
+    if (!multipleChoice) {
+      const firstAnswerIndex = this.currentQuizItem.options.findIndex(
+        (option) => option.isAnswer
+      );
+      this.currentQuizItem.options = this.currentQuizItem.options.map(
+        (option, index) => {
+          if (index !== firstAnswerIndex) {
+            option.isAnswer = false;
+          }
+          return option;
+        }
+      );
+    }
   }
 
   updateQuizImageUrl(imageUrl?: String) {
@@ -171,6 +184,14 @@ class QuizCreateStore {
 
   updateQuizOptionIsAnswer(optionIndex: number, isAnswer: boolean) {
     const option = this.currentQuizItem.options[optionIndex];
+    if (this.currentQuizItem.multipleChoice === false) {
+      this.currentQuizItem.options = this.currentQuizItem.options.map(
+        (option) => {
+          option.isAnswer = false;
+          return option;
+        }
+      );
+    }
     option.isAnswer = isAnswer;
   }
 
