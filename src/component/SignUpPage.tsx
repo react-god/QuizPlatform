@@ -135,7 +135,7 @@ const SignUpPage = () => {
               >
                 <Button
                   variant="text"
-                  onClick={() => navigate(`/`, { replace: true })}
+                  onClick={() => navigate(`/login`, { replace: true })}
                 >
                   로그인 화면으로 돌아가기
                 </Button>
