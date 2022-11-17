@@ -90,31 +90,44 @@ interface OptionCardProps {
 
 const OptionCard = (props: OptionCardProps) => {
   const theme = useTheme();
+  const [imageExpanded, setImageExpanded] = useState(false);
+  let image: JSX.Element | undefined = undefined;
+
+  if (props.imageUrl) {
+    image = (
+      <ExpandableImage
+        style={{ margin: "8px" }}
+        src={props.imageUrl as string}
+        onClick={() => setImageExpanded(!imageExpanded)}
+        expanded={imageExpanded}
+      />
+    );
+  }
 
   return (
     <Stack
-      direction="row"
+      direction={imageExpanded ? "column" : "row"}
       alignItems="center"
       style={{
         borderRadius: "20px",
-        paddingTop: "20px",
-        paddingBottom: "20px",
-        paddingLeft: "20px",
-        paddingRight: "20px",
+        padding: image !== undefined ? "8px" : "20px",
         marginBottom: "16px",
         backgroundColor: theme.palette.grey[200],
       }}
     >
-      <Typography variant="subtitle1" marginRight="8px">
-        {props.title}
-      </Typography>
-      {props.wasSelected ? (
-        props.isAnswer ? (
-          <Check color="secondary" />
-        ) : (
-          <Close color="error" />
-        )
-      ) : undefined}
+      {image}
+      <Stack direction="row">
+        <Typography variant="subtitle1" marginRight="8px">
+          {props.title}
+        </Typography>
+        {props.wasSelected ? (
+          props.isAnswer ? (
+            <Check color="secondary" />
+          ) : (
+            <Close color="error" />
+          )
+        ) : undefined}
+      </Stack>
     </Stack>
   );
 };
