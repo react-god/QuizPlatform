@@ -114,7 +114,7 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
 
     return (
       <Typography variant="caption" textAlign="center">
-        ({candidateIds.length})
+        ({candidateIds.length}명 응시함)
       </Typography>
     );
   };
