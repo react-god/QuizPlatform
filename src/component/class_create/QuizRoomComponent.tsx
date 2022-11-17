@@ -113,13 +113,10 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
       () => [...new Set(records.map((record) => record.candidateId))],
       [records]
     );
-    const candidateUsers = useMemo(() => {
-      return userStore.getUserList(candidateIds);
-    }, [candidateIds]);
 
     return (
       <Typography variant="caption" textAlign="center">
-        ({candidateUsers.length})
+        ({candidateIds.length})
       </Typography>
     );
   };
