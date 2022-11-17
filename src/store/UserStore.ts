@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { User } from "../mockup_data/user";
+import { User } from "../model/user";
 import {
   writeJsonToLocalStorage,
   readJsonFromLocalStorage,

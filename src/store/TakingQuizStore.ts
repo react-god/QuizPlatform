@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
-import { Quiz } from "../mockup_data/quiz";
-import { QuizRecord, QuizRecordItem } from "../mockup_data/quiz_record";
+import { Quiz } from "../model/quiz";
+import { QuizRecord, QuizRecordItem } from "../model/quiz_record";
 import quizRecordStore from "./QuizRecordStore";
 
 class TakingQuizStore {

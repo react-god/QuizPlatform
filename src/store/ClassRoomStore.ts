@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import { makeAutoObservable } from "mobx";
-import { ClassRoom } from "../mockup_data/classroom";
+import { ClassRoom } from "../model/classroom";
 import {
   readJsonFromLocalStorage,
   writeJsonToLocalStorage,
 } from "../util/JsonUtil";
 import userStore from "./UserStore";
-import { Quiz } from "../mockup_data/quiz";
+import { Quiz } from "../model/quiz";
 
 const CLASS_ROOM_KEY = "class_rooms";
 

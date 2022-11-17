@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import userStore from "../store/UserStore";
+import userStore from "../../store/UserStore";
 import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {

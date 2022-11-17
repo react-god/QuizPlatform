@@ -12,10 +12,10 @@ import {
   DialogActions,
   ButtonGroup,
 } from "@mui/material";
-import { QuizType, QuizItem, QuizOption } from "../../mockup_data/quiz";
+import { QuizType, QuizItem, QuizOption } from "../../model/quiz";
 import { makeStyles } from "@mui/styles";
-import { NavRail, NavRailItem } from "../NavRail";
-import Scaffold from "../Scaffold";
+import { NavRail, NavRailItem } from "../../component/NavRail";
+import Scaffold from "../../component/Scaffold";
 import TakingQuizStore from "../../store/TakingQuizStore";
 import { observer } from "mobx-react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -160,7 +160,7 @@ const QuizEssay: React.FC<{ store: TakingQuizStore }> = ({ store }) => {
   );
 };
 
-const TakingQuiz = () => {
+const TakingQuizPage = () => {
   const navigate = useNavigate();
   const { quizId } = useParams();
   const user = userStore.currentUser!;
@@ -320,4 +320,4 @@ const TakingQuiz = () => {
   );
 };
 
-export default observer(TakingQuiz);
+export default observer(TakingQuizPage);

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import userStore from "../store/UserStore";
+import userStore from "../../store/UserStore";
 
 function LoginPage() {
   const navigate = useNavigate();

@@ -1,9 +1,9 @@
 import { List, Typography, useTheme } from "@mui/material";
 import { Bar } from "react-chartjs-2";
-import { QuizItem } from "../../mockup_data/quiz";
-import { QuizRecord } from "../../mockup_data/quiz_record";
-import { User } from "../../mockup_data/user";
-import { NavRail } from "../NavRail";
+import { QuizItem } from "../../model/quiz";
+import { QuizRecord } from "../../model/quiz_record";
+import { User } from "../../model/user";
+import { NavRail } from "../../component/NavRail";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,7 +14,7 @@ import {
   Legend,
 } from "chart.js";
 import { isCorrect } from "../quiz_review/QuizReviewPage";
-import Scaffold from "../Scaffold";
+import Scaffold from "../../component/Scaffold";
 import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { classRoomStore } from "../../store/ClassRoomStore";
