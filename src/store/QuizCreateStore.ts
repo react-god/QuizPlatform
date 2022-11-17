@@ -1,4 +1,4 @@
-import { Quiz, QuizItem, QuizType } from "../mockup_data/quiz";
+import { Quiz, QuizItem, QuizType } from "../model/quiz";
 import { v4 as uuidv4 } from "uuid";
 import { makeAutoObservable } from "mobx";
 import { classRoomStore } from "./ClassRoomStore";

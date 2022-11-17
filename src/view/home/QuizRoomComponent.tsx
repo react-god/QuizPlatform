@@ -15,7 +15,7 @@ import {
 import Card from "@mui/material/Card";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Quiz } from "../../mockup_data/quiz";
+import { Quiz } from "../../model/quiz";
 import quizRecordStore from "../../store/QuizRecordStore";
 import userStore from "../../store/UserStore";
 import { isCorrect } from "../quiz_review/QuizReviewPage";

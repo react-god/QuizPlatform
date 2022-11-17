@@ -14,9 +14,9 @@ import {
 import { Add, Delete, Image } from "@mui/icons-material";
 import { observer } from "mobx-react";
 import { ChangeEvent, useReducer, useRef, useState } from "react";
-import { QuizOption, QuizType } from "../../mockup_data/quiz";
-import { NavRail, NavRailItem } from "../NavRail";
-import Scaffold from "../Scaffold";
+import { QuizOption, QuizType } from "../../model/quiz";
+import { NavRail, NavRailItem } from "../../component/NavRail";
+import Scaffold from "../../component/Scaffold";
 import { useLocation, useNavigate } from "react-router-dom";
 import QuizCreateStore from "../../store/QuizCreateStore";
 

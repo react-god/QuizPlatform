@@ -1,10 +1,10 @@
 import { Divider, Stack, Typography, useTheme } from "@mui/material";
 import { useMemo, useState } from "react";
-import { QuizItem, QuizOption, QuizType } from "../../mockup_data/quiz";
-import { QuizRecordItem } from "../../mockup_data/quiz_record";
-import { NavRail, NavRailItem } from "../NavRail";
+import { QuizItem, QuizOption, QuizType } from "../../model/quiz";
+import { QuizRecordItem } from "../../model/quiz_record";
+import { NavRail, NavRailItem } from "../../component/NavRail";
 import { Check, Close } from "@mui/icons-material";
-import Scaffold from "../Scaffold";
+import Scaffold from "../../component/Scaffold";
 import { classRoomStore } from "../../store/ClassRoomStore";
 import { useNavigate, useParams } from "react-router-dom";
 import quizRecordStore from "../../store/QuizRecordStore";

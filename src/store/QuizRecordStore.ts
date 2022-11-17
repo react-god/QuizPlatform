@@ -1,4 +1,4 @@
-import { QuizRecord } from "../mockup_data/quiz_record";
+import { QuizRecord } from "../model/quiz_record";
 import {
   readJsonFromLocalStorage,
   writeJsonToLocalStorage,
