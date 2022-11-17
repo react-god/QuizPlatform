@@ -82,12 +82,10 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
 
   const onQuizStartDialogCancelClick = () => {
     setOpenQuizStartDialog(false);
-    setSelectedQuiz(undefined);
   };
 
   const onQuizReviewDialogCancelClick = () => {
     setOpenQuizReviewDialog(false);
-    setSelectedQuiz(undefined);
   };
 
   const onReviewQuizClick = () => {
