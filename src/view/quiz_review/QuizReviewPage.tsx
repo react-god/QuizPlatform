@@ -9,6 +9,7 @@ import { classRoomStore } from "../../store/ClassRoomStore";
 import { useNavigate, useParams } from "react-router-dom";
 import quizRecordStore from "../../store/QuizRecordStore";
 import userStore from "../../store/UserStore";
+import { ExpandableImage } from "../../component/ExpandableImage";
 
 export function isCorrect(
   recordItem: QuizRecordItem,
@@ -192,6 +193,9 @@ const QuizReviewPage = () => {
   const currentQuizItem = quiz.items[itemIndex];
   const quizRecordItems = quizRecord.items;
   const currentRecordItem = quizRecord.items[itemIndex];
+  const [imageExpandedList, setImageExpandedList] = useState<boolean[]>(
+    [...Array(quiz.items.length)].map((_) => true)
+  );
 
   let essayOrChoiceList: JSX.Element;
   switch (currentQuizItem.type) {
@@ -253,6 +257,18 @@ const QuizReviewPage = () => {
       </Typography>
       <Divider />
       <AnswerAndReason quizItem={currentQuizItem} />
+      {currentQuizItem.imageUrl !== undefined ? (
+        <ExpandableImage
+          src={currentQuizItem.imageUrl}
+          expanded={imageExpandedList[itemIndex]}
+          style={{ marginBottom: "16px" }}
+          onClick={() => {
+            const newList = [...imageExpandedList];
+            newList[itemIndex] = !imageExpandedList[itemIndex];
+            setImageExpandedList(newList);
+          }}
+        />
+      ) : undefined}
       {essayOrChoiceList}
     </Scaffold>
   );
