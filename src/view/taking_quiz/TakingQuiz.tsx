@@ -21,6 +21,7 @@ import { observer } from "mobx-react";
 import { useNavigate, useParams } from "react-router-dom";
 import userStore from "../../store/UserStore";
 import { classRoomStore } from "../../store/ClassRoomStore";
+import { ExpandableImage } from "../../component/ExpandableImage";
 
 /*style*/
 const useStyles = makeStyles({
@@ -44,33 +45,6 @@ const Question: React.FC<{ item: QuizItem; index: number }> = ({
       </Typography>
       <Typography variant="h3">{item.question}</Typography>
     </Stack>
-  );
-};
-
-const ExpandableImage: React.FC<{
-  expanded: boolean;
-  onClick: () => void;
-  src: String;
-}> = ({ expanded, onClick, src }) => {
-  const size = expanded ? "100%" : "54px";
-  const borderRadius = expanded ? "3%" : "30%";
-
-  return (
-    <img
-      alt="퀴즈 이미지"
-      src={src as string}
-      style={{
-        borderRadius: borderRadius,
-        maxWidth: size,
-        minWidth: size,
-        margin: "8px",
-        cursor: "pointer",
-      }}
-      onClick={(e) => {
-        e.stopPropagation();
-        onClick();
-      }}
-    />
   );
 };
 

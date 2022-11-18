@@ -9,6 +9,7 @@ import { classRoomStore } from "../../store/ClassRoomStore";
 import { useNavigate, useParams } from "react-router-dom";
 import quizRecordStore from "../../store/QuizRecordStore";
 import userStore from "../../store/UserStore";
+import { ExpandableImage } from "../../component/ExpandableImage";
 
 export function isCorrect(
   recordItem: QuizRecordItem,
@@ -89,31 +90,44 @@ interface OptionCardProps {
 
 const OptionCard = (props: OptionCardProps) => {
   const theme = useTheme();
+  const [imageExpanded, setImageExpanded] = useState(false);
+  let image: JSX.Element | undefined = undefined;
+
+  if (props.imageUrl) {
+    image = (
+      <ExpandableImage
+        style={{ margin: "8px" }}
+        src={props.imageUrl as string}
+        onClick={() => setImageExpanded(!imageExpanded)}
+        expanded={imageExpanded}
+      />
+    );
+  }
 
   return (
     <Stack
-      direction="row"
+      direction={imageExpanded ? "column" : "row"}
       alignItems="center"
       style={{
         borderRadius: "20px",
-        paddingTop: "20px",
-        paddingBottom: "20px",
-        paddingLeft: "20px",
-        paddingRight: "20px",
+        padding: image !== undefined ? "8px" : "20px",
         marginBottom: "16px",
         backgroundColor: theme.palette.grey[200],
       }}
     >
-      <Typography variant="subtitle1" marginRight="8px">
-        {props.title}
-      </Typography>
-      {props.wasSelected ? (
-        props.isAnswer ? (
-          <Check color="secondary" />
-        ) : (
-          <Close color="error" />
-        )
-      ) : undefined}
+      {image}
+      <Stack direction="row">
+        <Typography variant="subtitle1" marginRight="8px">
+          {props.title}
+        </Typography>
+        {props.wasSelected ? (
+          props.isAnswer ? (
+            <Check color="secondary" />
+          ) : (
+            <Close color="error" />
+          )
+        ) : undefined}
+      </Stack>
     </Stack>
   );
 };
@@ -192,6 +206,9 @@ const QuizReviewPage = () => {
   const currentQuizItem = quiz.items[itemIndex];
   const quizRecordItems = quizRecord.items;
   const currentRecordItem = quizRecord.items[itemIndex];
+  const [imageExpandedList, setImageExpandedList] = useState<boolean[]>(
+    [...Array(quiz.items.length)].map((_) => true)
+  );
 
   let essayOrChoiceList: JSX.Element;
   switch (currentQuizItem.type) {
@@ -253,6 +270,18 @@ const QuizReviewPage = () => {
       </Typography>
       <Divider />
       <AnswerAndReason quizItem={currentQuizItem} />
+      {currentQuizItem.imageUrl !== undefined ? (
+        <ExpandableImage
+          src={currentQuizItem.imageUrl}
+          expanded={imageExpandedList[itemIndex]}
+          style={{ marginBottom: "16px" }}
+          onClick={() => {
+            const newList = [...imageExpandedList];
+            newList[itemIndex] = !imageExpandedList[itemIndex];
+            setImageExpandedList(newList);
+          }}
+        />
+      ) : undefined}
       {essayOrChoiceList}
     </Scaffold>
   );
