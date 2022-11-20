@@ -261,7 +261,7 @@ const ClassRoomPage = () => {
     setOpenLogoutDialog(false);
     try {
       userStore.signOut();
-      navigate("/login");
+      navigate("/login", { replace: true });
     } catch (e) {
       if (e instanceof Error) {
         showSnackBar(e.message);
