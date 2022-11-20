@@ -5,7 +5,6 @@ import reportWebVitals from "./reportWebVitals";
 import ClassRoomPage from "./view/home/ClassRoomPage";
 import LoginPage from "./view/login/LoginPage";
 import { ThemeProvider } from "@emotion/react";
-import { theme } from "./theme";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import QuizCreatePage from "./view/quiz_create/QuizCreatePage";
 import QuizStaticsPage from "./view/quiz_statics/QuizStaticsPage";
@@ -13,6 +12,7 @@ import SignUpPage from "./view/sign_up/SignUpPage";
 import PrivateRoute from "./component/PrivateRoute";
 import TakingQuizPage from "./view/taking_quiz/TakingQuiz";
 import QuizReviewPage from "./view/quiz_review/QuizReviewPage";
+import { ToggleColorMode } from "./component/ToggleColorMode";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
@@ -20,7 +20,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <React.StrictMode>
-      <ThemeProvider theme={theme}>
+      <ToggleColorMode>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signUp" element={<SignUpPage />} />
@@ -40,7 +40,7 @@ root.render(
             <Route path="/review/:quizId" element={<QuizReviewPage />} />
           </Route>
         </Routes>
-      </ThemeProvider>
+      </ToggleColorMode>
     </React.StrictMode>
   </BrowserRouter>
 );

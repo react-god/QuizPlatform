@@ -1,8 +1,11 @@
 import { Stack, useMediaQuery } from "@mui/material";
+import React from "react";
 
 interface ScaffoldProps {
   navRail?: JSX.Element;
+  appBar?: JSX.Element;
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
 const Scaffold = (props: ScaffoldProps) => {
@@ -25,18 +28,21 @@ const Scaffold = (props: ScaffoldProps) => {
   return (
     <Stack direction="row" style={{ height: "100%" }}>
       {props.navRail}
-      <Stack
-        direction="column"
-        width="100%"
-        style={{
-          paddingLeft: pageHorizontalPadding,
-          paddingRight: pageHorizontalPadding,
-          paddingTop: "80px",
-          paddingBottom: "80px",
-          overflowY: "scroll",
-        }}
-      >
-        {props.children}
+      <Stack direction="column" width="100%">
+        {props.appBar}
+        <Stack
+          direction="column"
+          style={{
+            paddingLeft: pageHorizontalPadding,
+            paddingRight: pageHorizontalPadding,
+            paddingTop: "80px",
+            paddingBottom: "80px",
+            overflowY: "scroll",
+            ...props.style,
+          }}
+        >
+          {props.children}
+        </Stack>
       </Stack>
     </Stack>
   );

@@ -1,4 +1,5 @@
 import {
+  AppBar,
   Button,
   Dialog,
   DialogActions,
@@ -6,8 +7,12 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
   Snackbar,
   TextField,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -27,6 +32,74 @@ import InputIcon from "@mui/icons-material/Input";
 import LogoutIcon from "@mui/icons-material/Logout";
 import useCopyToClipboard from "../../util/CopyToClipboard";
 import { Stack } from "@mui/system";
+import { AccountCircle } from "@mui/icons-material";
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { ColorModeContext } from "../../component/ToggleColorMode";
+
+const QuizPlatformAppBar = () => {
+  const theme = useTheme();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const colorMode = React.useContext(ColorModeContext);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <AppBar position="static" elevation={0} color="inherit">
+      <Toolbar>
+        <div style={{ flexGrow: 1 }} />
+        <IconButton
+          sx={{ ml: 1 }}
+          onClick={colorMode.toggleColorMode}
+          color="inherit"
+        >
+          {theme.palette.mode === "dark" ? (
+            <Brightness7Icon />
+          ) : (
+            <Brightness4Icon />
+          )}
+        </IconButton>
+        <div>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleMenu}
+            color="inherit"
+          >
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>로그아웃</MenuItem>
+          </Menu>
+        </div>
+      </Toolbar>
+    </AppBar>
+  );
+};
 
 interface CreateClassRoomDialogProps {
   open: boolean;
@@ -272,6 +345,8 @@ const ClassRoomPage = () => {
   const ClassroomPage = () => {
     return (
       <Scaffold
+        style={{ paddingTop: "16px" }}
+        appBar={<QuizPlatformAppBar />}
         navRail={
           <NavRail
             items={[
