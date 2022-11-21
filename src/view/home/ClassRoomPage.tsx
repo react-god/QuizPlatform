@@ -53,14 +53,14 @@ const QuizPlatformAppBar = () => {
   };
 
   return (
-    <AppBar position="static" elevation={0} color="inherit">
+    <AppBar
+      position="static"
+      elevation={0}
+      style={{ backgroundColor: theme.palette.background.default }}
+    >
       <Toolbar>
         <div style={{ flexGrow: 1 }} />
-        <IconButton
-          sx={{ ml: 1 }}
-          onClick={colorMode.toggleColorMode}
-          color="inherit"
-        >
+        <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode}>
           {theme.palette.mode === "dark" ? (
             <Brightness7Icon />
           ) : (
@@ -74,7 +74,6 @@ const QuizPlatformAppBar = () => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleMenu}
-            color="inherit"
           >
             <AccountCircle />
           </IconButton>

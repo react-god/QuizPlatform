@@ -7,6 +7,15 @@ import {
 } from "@mui/material";
 import React from "react";
 
+declare module "@mui/material/styles" {
+  interface Palette {
+    card: Palette["primary"];
+  }
+  interface PaletteOptions {
+    card: PaletteOptions["primary"];
+  }
+}
+
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
 });
@@ -29,6 +38,9 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
           background: {
             default: "#ffffff",
           },
+          card: {
+            main: "#efefef",
+          },
         }
       : {
           primary: {
@@ -39,6 +51,9 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
           },
           background: {
             default: "#242424",
+          },
+          card: {
+            main: "#323232",
           },
         }),
   },

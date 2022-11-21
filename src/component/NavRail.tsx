@@ -1,4 +1,11 @@
-import { Button, IconButton, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import "../css/sidebar.css";
 
@@ -58,7 +65,7 @@ const NavRail = (props: NavRailProps) => {
   return (
     <Stack
       style={{
-        backgroundColor: theme.palette.grey[100],
+        backgroundColor: theme.palette.card.main,
       }}
     >
       <Stack
