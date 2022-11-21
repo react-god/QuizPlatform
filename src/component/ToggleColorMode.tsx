@@ -1,5 +1,6 @@
 import {
   createTheme,
+  CssBaseline,
   PaletteMode,
   ThemeOptions,
   ThemeProvider,
@@ -14,7 +15,7 @@ interface Prop {
   children: React.ReactElement;
 }
 
-const getDesignTokens = (mode: PaletteMode) => ({
+const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
   palette: {
     mode,
     ...(mode === "light"
@@ -25,6 +26,9 @@ const getDesignTokens = (mode: PaletteMode) => ({
           secondary: {
             main: "#00c795",
           },
+          background: {
+            default: "#ffffff",
+          },
         }
       : {
           primary: {
@@ -32,6 +36,9 @@ const getDesignTokens = (mode: PaletteMode) => ({
           },
           secondary: {
             main: "#00c795",
+          },
+          background: {
+            default: "#242424",
           },
         }),
   },
@@ -65,7 +72,9 @@ export const ToggleColorMode = (props: Prop) => {
 
   return (
     <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline>{props.children}</CssBaseline>
+      </ThemeProvider>
     </ColorModeContext.Provider>
   );
 };
