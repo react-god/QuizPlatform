@@ -11,6 +11,7 @@ import {
   Stack,
   styled,
   Typography,
+  useTheme,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import React, { useMemo } from "react";
@@ -26,7 +27,7 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   flexGrow: 0,
   textAlign: "center",
-  color: theme.palette.text.secondary,
+  color: theme.palette.text.primary,
 }));
 
 interface QuizRoomComponentProps {
@@ -36,6 +37,7 @@ interface QuizRoomComponentProps {
 
 // TODO: 퀴즈 개설자의 경우 몇 명이 풀었는지 보이기, 평균 점수 보이기
 const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const [openQuizStartDialog, setOpenQuizStartDialog] = React.useState(false);
   const [openQuizReviewDialog, setOpenQuizReviewDialog] = React.useState(false);
@@ -184,7 +186,7 @@ const QuizRoomComponent = ({ quizs, ownerName }: QuizRoomComponentProps) => {
           <Grid key={quiz.id as string} item xs={4}>
             <Card
               sx={{
-                backgroundColor: "#E6E6E6",
+                backgroundColor: theme.palette.card.main,
                 minWidth: "180px",
                 maxWidth: "285px",
                 maxHeight: "293px",
