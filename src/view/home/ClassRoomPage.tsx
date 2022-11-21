@@ -39,7 +39,11 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { ColorModeContext } from "../../component/ToggleColorMode";
 
-const QuizPlatformAppBar = () => {
+interface QuizPlatformAppBarProps {
+  onLogoutClick: () => void;
+}
+
+const QuizPlatformAppBar = ({ onLogoutClick }: QuizPlatformAppBarProps) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const colorMode = React.useContext(ColorModeContext);
@@ -92,7 +96,14 @@ const QuizPlatformAppBar = () => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>로그아웃</MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                onLogoutClick();
+              }}
+            >
+              로그아웃
+            </MenuItem>
           </Menu>
         </div>
       </Toolbar>
@@ -279,11 +290,6 @@ const ClassRoomPage = () => {
 
   const actions: Array<Action> = [
     {
-      icon: <LogoutIcon />,
-      name: "로그아웃",
-      action: () => setOpenLogoutDialog(true),
-    },
-    {
       icon: <AddIcon />,
       name: "클래스 생성",
       action: () => setOpenCreateClassRoomDialog(true),
@@ -345,7 +351,9 @@ const ClassRoomPage = () => {
     return (
       <Scaffold
         style={{ paddingTop: "16px" }}
-        appBar={<QuizPlatformAppBar />}
+        appBar={
+          <QuizPlatformAppBar onLogoutClick={() => setOpenLogoutDialog(true)} />
+        }
         navRail={
           <NavRail
             items={[
