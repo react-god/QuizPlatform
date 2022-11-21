@@ -112,7 +112,7 @@ const OptionCard = (props: OptionCardProps) => {
         borderRadius: "20px",
         padding: image !== undefined ? "8px" : "20px",
         marginBottom: "16px",
-        backgroundColor: theme.palette.grey[200],
+        backgroundColor: theme.palette.card.light,
       }}
     >
       {image}
