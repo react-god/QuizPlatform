@@ -40,6 +40,7 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
           },
           card: {
             main: "#efefef",
+            light: "#dddddd",
           },
         }
       : {
@@ -54,6 +55,7 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
           },
           card: {
             main: "#323232",
+            light: "#484848",
           },
         }),
   },

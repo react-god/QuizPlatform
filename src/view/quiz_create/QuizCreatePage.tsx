@@ -237,7 +237,7 @@ interface OptionBarProps {
 const OptioinBar = (props: OptionBarProps) => {
   const theme = useTheme();
   const answerTextColor = props.option.isAnswer
-    ? theme.palette.text.primary
+    ? undefined
     : theme.palette.grey[700];
 
   return (
@@ -250,7 +250,7 @@ const OptioinBar = (props: OptionBarProps) => {
         paddingLeft: "20px",
         paddingRight: "20px",
         marginBottom: "16px",
-        backgroundColor: theme.palette.grey[200],
+        backgroundColor: theme.palette.card.main,
       }}
     >
       <Stack
@@ -355,6 +355,7 @@ const OptionAddButton = (props: OptionAddBarProps) => {
 const QuizCreatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const theme = useTheme();
   const state = location.state as { quizName: String; classRoomId: String };
   const [store] = useState(
     new QuizCreateStore(state.quizName, state.classRoomId)
