@@ -4,7 +4,6 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import ClassRoomPage from "./view/home/ClassRoomPage";
 import LoginPage from "./view/login/LoginPage";
-import { ThemeProvider } from "@emotion/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import QuizCreatePage from "./view/quiz_create/QuizCreatePage";
 import QuizStaticsPage from "./view/quiz_statics/QuizStaticsPage";

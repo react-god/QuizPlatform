@@ -355,7 +355,6 @@ const OptionAddButton = (props: OptionAddBarProps) => {
 const QuizCreatePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
   const state = location.state as { quizName: String; classRoomId: String };
   const [store] = useState(
     new QuizCreateStore(state.quizName, state.classRoomId)

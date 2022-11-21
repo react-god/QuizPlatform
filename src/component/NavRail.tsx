@@ -1,11 +1,4 @@
-import {
-  Button,
-  IconButton,
-  Paper,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Button, IconButton, Stack, Typography, useTheme } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import "../css/sidebar.css";
 

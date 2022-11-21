@@ -29,7 +29,6 @@ import useSnackBarMessage from "../../util/SnackBarMessage";
 import SpeedDialTooltipOpen, { Action } from "../../component/SpeedDial";
 import AddIcon from "@mui/icons-material/Add";
 import InputIcon from "@mui/icons-material/Input";
-import LogoutIcon from "@mui/icons-material/Logout";
 import useCopyToClipboard from "../../util/CopyToClipboard";
 import { Stack } from "@mui/system";
 import { AccountCircle } from "@mui/icons-material";
