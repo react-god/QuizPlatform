@@ -42,6 +42,9 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
             main: "#efefef",
             light: "#dddddd",
           },
+          error: {
+            main: "#ff0000",
+          },
         }
       : {
           primary: {
@@ -56,6 +59,9 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
           card: {
             main: "#323232",
             light: "#484848",
+          },
+          error: {
+            main: "#ff7777",
           },
         }),
   },

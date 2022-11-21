@@ -249,7 +249,7 @@ const LogoutDialog = (props: any) => {
       </DialogTitle>
       <DialogActions>
         <Button onClick={() => props.onClose()}>취소</Button>
-        <Button onClick={() => props.onLogout()} style={{ color: "red" }}>
+        <Button onClick={() => props.onLogout()} color="error">
           로그아웃
         </Button>
       </DialogActions>
