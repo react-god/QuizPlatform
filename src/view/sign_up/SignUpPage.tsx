@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   Paper,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import userStore from "../../store/UserStore";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +21,7 @@ const SignUpPage = () => {
     undefined
   );
   const navigate = useNavigate();
+  const theme = useTheme();
 
   useEffect(() => {
     if (error === undefined && email !== "" && password !== "" && name !== "") {
@@ -73,8 +75,14 @@ const SignUpPage = () => {
         </header>
         <main>
           <Container maxWidth="sm" style={{ paddingTop: "80px" }}>
-            <h4>계정을 생성하세요.</h4>
-            <Paper variant="outlined" style={{ padding: "12px" }}>
+            <h4>계정을 생성을 위해 정보를 입력해주세요.</h4>
+            <Paper
+              variant="outlined"
+              style={{
+                padding: "12px",
+                backgroundColor: theme.palette.card.main,
+              }}
+            >
               <form>
                 <TextField
                   placeholder="abc@gmail.com"

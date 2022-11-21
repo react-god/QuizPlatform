@@ -11,6 +11,7 @@ import {
   DialogContentText,
   DialogActions,
   ButtonGroup,
+  useTheme,
 } from "@mui/material";
 import { QuizType, QuizItem, QuizOption } from "../../model/quiz";
 import { makeStyles } from "@mui/styles";
@@ -53,6 +54,7 @@ const QuizChoice: React.FC<{
   chosen: boolean;
   onClick: () => void;
 }> = (props) => {
+  const theme = useTheme();
   const [imageExpanded, setImageExpanded] = useState(false);
   const cardColor = props.chosen ? "primary" : "inherit";
   let image: JSX.Element | undefined = undefined;
@@ -71,6 +73,10 @@ const QuizChoice: React.FC<{
     <Button
       variant="contained"
       onClick={() => props.onClick()}
+      style={{
+        backgroundColor:
+          cardColor === "inherit" ? theme.palette.card.light : undefined,
+      }}
       color={cardColor}
       disableElevation
     >

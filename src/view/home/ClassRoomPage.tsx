@@ -1,4 +1,5 @@
 import {
+  AppBar,
   Button,
   Dialog,
   DialogActions,
@@ -6,8 +7,12 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
   Snackbar,
   TextField,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -24,9 +29,86 @@ import useSnackBarMessage from "../../util/SnackBarMessage";
 import SpeedDialTooltipOpen, { Action } from "../../component/SpeedDial";
 import AddIcon from "@mui/icons-material/Add";
 import InputIcon from "@mui/icons-material/Input";
-import LogoutIcon from "@mui/icons-material/Logout";
 import useCopyToClipboard from "../../util/CopyToClipboard";
 import { Stack } from "@mui/system";
+import { AccountCircle } from "@mui/icons-material";
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { ColorModeContext } from "../../component/ToggleColorMode";
+
+interface QuizPlatformAppBarProps {
+  onLogoutClick: () => void;
+}
+
+const QuizPlatformAppBar = ({ onLogoutClick }: QuizPlatformAppBarProps) => {
+  const theme = useTheme();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const colorMode = React.useContext(ColorModeContext);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <AppBar
+      position="static"
+      elevation={0}
+      style={{ backgroundColor: theme.palette.background.default }}
+    >
+      <Toolbar>
+        <div style={{ flexGrow: 1 }} />
+        <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode}>
+          {theme.palette.mode === "dark" ? (
+            <Brightness7Icon />
+          ) : (
+            <Brightness4Icon />
+          )}
+        </IconButton>
+        <div>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleMenu}
+          >
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                onLogoutClick();
+              }}
+            >
+              로그아웃
+            </MenuItem>
+          </Menu>
+        </div>
+      </Toolbar>
+    </AppBar>
+  );
+};
 
 interface CreateClassRoomDialogProps {
   open: boolean;
@@ -166,7 +248,7 @@ const LogoutDialog = (props: any) => {
       </DialogTitle>
       <DialogActions>
         <Button onClick={() => props.onClose()}>취소</Button>
-        <Button onClick={() => props.onLogout()} style={{ color: "red" }}>
+        <Button onClick={() => props.onLogout()} color="error">
           로그아웃
         </Button>
       </DialogActions>
@@ -206,11 +288,6 @@ const ClassRoomPage = () => {
   const [snackBarMessage, showSnackBar] = useSnackBarMessage();
 
   const actions: Array<Action> = [
-    {
-      icon: <LogoutIcon />,
-      name: "로그아웃",
-      action: () => setOpenLogoutDialog(true),
-    },
     {
       icon: <AddIcon />,
       name: "클래스 생성",
@@ -261,7 +338,7 @@ const ClassRoomPage = () => {
     setOpenLogoutDialog(false);
     try {
       userStore.signOut();
-      navigate("/login");
+      navigate("/login", { replace: true });
     } catch (e) {
       if (e instanceof Error) {
         showSnackBar(e.message);
@@ -272,6 +349,10 @@ const ClassRoomPage = () => {
   const ClassroomPage = () => {
     return (
       <Scaffold
+        style={{ paddingTop: "16px" }}
+        appBar={
+          <QuizPlatformAppBar onLogoutClick={() => setOpenLogoutDialog(true)} />
+        }
         navRail={
           <NavRail
             items={[

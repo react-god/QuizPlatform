@@ -18,6 +18,8 @@ interface NavRailItemProps {
 }
 
 const NavRailItem = (props: NavRailItemProps) => {
+  const theme = useTheme();
+
   return (
     <Button
       variant="contained"
@@ -26,6 +28,8 @@ const NavRailItem = (props: NavRailItemProps) => {
         marginBottom: "4px",
         marginLeft: "12px",
         marginRight: "12px",
+        backgroundColor:
+          props.color === "inherit" ? theme.palette.card.light : undefined,
       }}
       disableElevation={true}
       color={props.color}
@@ -58,7 +62,7 @@ const NavRail = (props: NavRailProps) => {
   return (
     <Stack
       style={{
-        backgroundColor: theme.palette.grey[100],
+        backgroundColor: theme.palette.card.main,
       }}
     >
       <Stack
