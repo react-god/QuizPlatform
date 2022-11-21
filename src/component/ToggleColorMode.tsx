@@ -32,10 +32,10 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
         }
       : {
           primary: {
-            main: "#2f50ff",
+            main: "#6fa0ff",
           },
           secondary: {
-            main: "#00c795",
+            main: "#30d795",
           },
           background: {
             default: "#242424",
