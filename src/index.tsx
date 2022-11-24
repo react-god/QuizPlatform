@@ -12,6 +12,7 @@ import PrivateRoute from "./component/PrivateRoute";
 import TakingQuizPage from "./view/taking_quiz/TakingQuiz";
 import QuizReviewPage from "./view/quiz_review/QuizReviewPage";
 import { ToggleColorMode } from "./component/ToggleColorMode";
+import NotFoundPage from "./view/not_found/NotFoundPage";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
@@ -38,6 +39,7 @@ root.render(
           <Route element={<PrivateRoute />}>
             <Route path="/review/:quizId" element={<QuizReviewPage />} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ToggleColorMode>
     </React.StrictMode>
