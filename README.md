@@ -2,7 +2,7 @@
 > 학생들과 선생님을 위한 상호 소통형 퀴즈 플랫폼
 <br>
 
-## Team Introduction - 2팀 A쁠이보2조
+## 🤹🏼 Team Introduction - 2팀 A쁠이보2조
 정시현|김민성|권대현|곽은서|
 :-:|:-:|:-:|:-:|
 <img src='https://avatars.githubusercontent.com/u/54366260?s=400&u=9a99cd58cd5237481301ae553f0d01e3f7c6292d&v=4' height=80 width=80px></img>|<img src='https://avatars.githubusercontent.com/u/57604817?v=4' height=80 width=80px></img>|<img src='https://avatars.githubusercontent.com/u/83750244?v=4' height=80 width=80px></img>|<img src='https://avatars.githubusercontent.com/u/50993103?v=4' height=80 width=80px></img>
@@ -10,7 +10,7 @@
 
 <br>
 
-## Framework & Libraries
+## 🔗 Framework & Libraries
 * **React-Typescript**
 * **MobX**
 * **Material Design UI**
@@ -18,7 +18,87 @@
 
 <br>
 
-## Getting Started
+## 🚁 Architecture
+
+```bash
+.
+├── README.md
+├── assets
+│   └── fonts
+│       └── LuckiestGuy-Regular.ttf
+├── package-lock.json
+├── package.json
+├── public
+│   ├── favicon.ico
+│   ├── index.css
+│   ├── index.html
+│   ├── logo192.png
+│   ├── logo512.png
+│   ├── manifest.json
+│   └── robots.txt
+├── sample_data
+├── src
+│   ├── component
+│   │   ├── ExpandableImage.tsx
+│   │   ├── NavRail.tsx
+│   │   ├── PrivateRoute.tsx
+│   │   ├── Scaffold.tsx
+│   │   ├── SpeedDial.tsx
+│   │   └── ToggleColorMode.tsx
+│   ├── css
+│   │   ├── sidebar.css
+│   │   └── sidebarLink.css
+│   ├── custom.d.ts
+│   ├── index.css
+│   ├── index.tsx
+│   ├── logo.svg
+│   ├── model
+│   │   ├── classroom.ts
+│   │   ├── mockup_export.ts
+│   │   ├── quiz.ts
+│   │   ├── quiz_record.ts
+│   │   ├── records.ts
+│   │   └── user.ts
+│   ├── reportWebVitals.js
+│   ├── setupTests.js
+│   ├── store
+│   │   ├── ClassRoomStore.ts
+│   │   ├── QuizCreateStore.ts
+│   │   ├── QuizRecordStore.ts
+│   │   ├── TakingQuizStore.ts
+│   │   └── UserStore.ts
+│   ├── util
+│   │   ├── CopyToClipboard.ts
+│   │   ├── JsonUtil.ts
+│   │   └── SnackBarMessage.ts
+│   └── view
+│       ├── home
+│       │   ├── ClassRoomPage.tsx
+│       │   └── QuizRoomComponent.tsx
+│       ├── login
+│       │   └── LoginPage.tsx
+│       ├── not_found
+│       │   └── NotFoundPage.tsx
+│       ├── quiz_create
+│       │   └── QuizCreatePage.tsx
+│       ├── quiz_review
+│       │   └── QuizReviewPage.tsx
+│       ├── quiz_statics
+│       │   └── QuizStaticsPage.tsx
+│       ├── sign_up
+│       │   └── SignUpPage.tsx
+│       └── taking_quiz
+│           └── TakingQuiz.tsx
+├── tree
+├── tree.txt
+└── tsconfig.json
+
+19 directories, 51 files
+
+```
+
+
+## 🚀 Getting Started
 
 
 ```bash
@@ -30,7 +110,7 @@ npm start
 
 <br>
 
-## Screenshots
+## 📀 Screenshots
 ### Login Page
 
 ![image](https://user-images.githubusercontent.com/54366260/203888342-a5308285-8200-427a-8217-26c128274e92.png)
