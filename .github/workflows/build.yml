@@ -4,9 +4,13 @@ name: Build React Application
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
+    paths-ignore:
+      - "**/README.md"
     branches:
       - main
   pull_request:
+    paths-ignore:
+      - "**/README.md"
     branches:
       - main
 
